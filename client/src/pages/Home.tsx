@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
 import { GrowthTree } from "@/components/GrowthTree";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -17,9 +17,21 @@ const dailyQuotes = [
 ];
 
 export default function Home() {
-  const { user } = useAuth();
+  const { data: user } = useQuery({
+    queryKey: ["/api/auth/user"],
+    retry: false,
+  });
   
-  if (!user) return null;
+  if (!user) return (
+    <div className="min-h-screen bg-light-gray flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-16 h-16 bg-gradient-to-r from-navy to-cyan rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <i className="fas fa-brain text-white text-2xl"></i>
+        </div>
+        <p className="text-gray-600">Loading...</p>
+      </div>
+    </div>
+  );
 
   const currentXP = user.xp || 0;
   const currentLevel = user.level || 1;

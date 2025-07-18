@@ -1,13 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { ProgressChart } from "@/components/ProgressChart";
 import { GrowthTree } from "@/components/GrowthTree";
-import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
 export default function ProgressPage() {
-  const { user } = useAuth();
+  const { data: user } = useQuery({
+    queryKey: ["/api/auth/user"],
+    retry: false,
+  });
   
   const { data: gameProgress } = useQuery({
     queryKey: ["/api/game-progress"],

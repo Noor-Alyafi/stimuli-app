@@ -106,3 +106,4 @@ export type InsertSkillProgress = typeof skillProgress.$inferInsert;
 export const insertGameProgressSchema = createInsertSchema(gameProgress);
 export const insertJournalEntrySchema = createInsertSchema(journalEntries);
 export const insertSkillProgressSchema = createInsertSchema(skillProgress);
+export const insertAchievementSchema = createInsertSchema(achievements);

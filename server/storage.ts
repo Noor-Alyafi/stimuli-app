@@ -10,6 +10,7 @@ import {
   type GameProgress,
   type InsertGameProgress,
   type Achievement,
+  type InsertAchievement,
   type UserAchievement,
   type InsertUserAchievement,
   type JournalEntry,
@@ -34,6 +35,7 @@ export interface IStorage {
   
   // Achievement operations
   getAchievements(): Promise<Achievement[]>;
+  createAchievement(achievement: InsertAchievement): Promise<Achievement>;
   getUserAchievements(userId: string): Promise<UserAchievement[]>;
   unlockAchievement(userId: string, achievementId: number): Promise<void>;
   checkAndUnlockAchievements(userId: string): Promise<UserAchievement[]>;
@@ -156,6 +158,14 @@ export class DatabaseStorage implements IStorage {
   // Achievement operations
   async getAchievements(): Promise<Achievement[]> {
     return db.select().from(achievements);
+  }
+
+  async createAchievement(achievement: InsertAchievement): Promise<Achievement> {
+    const [newAchievement] = await db
+      .insert(achievements)
+      .values(achievement)
+      .returning();
+    return newAchievement;
   }
 
   async getUserAchievements(userId: string): Promise<UserAchievement[]> {

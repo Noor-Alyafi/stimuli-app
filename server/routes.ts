@@ -15,6 +15,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     profileImageUrl: null,
   });
 
+  // Seed initial achievements
+  try {
+    const existingAchievements = await storage.getAchievements();
+    if (existingAchievements.length === 0) {
+      await storage.createAchievement({
+        key: "neural-spark",
+        name: "Neural Spark",
+        description: "Complete your first brain training session",
+        xpReward: 50,
+        iconType: "brain",
+        requirement: { type: "xp", value: 10 },
+      });
+      await storage.createAchievement({
+        key: "focused-flame",
+        name: "Focused Flame",
+        description: "Maintain a 7-day training streak",
+        xpReward: 100,
+        iconType: "flame",
+        requirement: { type: "streak", value: 7 },
+      });
+      await storage.createAchievement({
+        key: "synesthetic-pro",
+        name: "Synesthetic Pro",
+        description: "Complete 5 color-echo games",
+        xpReward: 75,
+        iconType: "palette",
+        requirement: { type: "game_count", game: "color-echo", value: 5 },
+      });
+    }
+  } catch (error) {
+    console.log("Achievements already exist or error seeding:", error);
+  }
+
   // Auth routes (simplified for demo)
   app.get('/api/auth/user', async (req: any, res) => {
     try {
@@ -82,7 +115,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Achievement routes
-  app.get('/api/achievements', isAuthenticated, async (req: any, res) => {
+  app.get('/api/achievements', async (req: any, res) => {
     try {
       const achievements = await storage.getAchievements();
       res.json(achievements);
@@ -92,9 +125,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/user-achievements', isAuthenticated, async (req: any, res) => {
+  app.get('/api/user-achievements', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = demoUserId;
       const userAchievements = await storage.getUserAchievements(userId);
       res.json(userAchievements);
     } catch (error) {
@@ -104,9 +137,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Journal routes
-  app.post('/api/journal', isAuthenticated, async (req: any, res) => {
+  app.post('/api/journal', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = demoUserId;
       const entryData = insertJournalEntrySchema.parse({
         ...req.body,
         userId,
@@ -124,9 +157,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/journal', isAuthenticated, async (req: any, res) => {
+  app.get('/api/journal', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = demoUserId;
       const { limit } = req.query;
       
       const entries = await storage.getUserJournalEntries(userId, limit ? parseInt(limit as string) : undefined);
@@ -138,9 +171,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Skill progress routes
-  app.get('/api/skill-progress', isAuthenticated, async (req: any, res) => {
+  app.get('/api/skill-progress', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = demoUserId;
       const skillProgress = await storage.getUserSkillProgress(userId);
       res.json(skillProgress);
     } catch (error) {
@@ -149,9 +182,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put('/api/skill-progress', isAuthenticated, async (req: any, res) => {
+  app.put('/api/skill-progress', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = demoUserId;
       const { skillType, level } = req.body;
       
       await storage.updateSkillProgress(userId, skillType, level);

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Home, Gamepad2, TrendingUp, Trophy, BookOpen, User, LogOut } from "lucide-react";
+import { Home, Gamepad2, TrendingUp, Trophy, BookOpen, User, LogOut, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAuth } from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
 
 interface NavigationProps {
   activeTab: string;
@@ -18,7 +18,10 @@ const tabs = [
 ];
 
 export function Navigation({ activeTab, onTabChange }: NavigationProps) {
-  const { user } = useAuth();
+  const { data: user } = useQuery({
+    queryKey: ["/api/auth/user"],
+    retry: false,
+  });
 
   return (
     <>
@@ -49,10 +52,12 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
               <Button 
                 variant="ghost" 
                 size="sm"
-                onClick={() => window.location.href = "/api/logout"}
-                className="text-gray-500 hover:text-gray-700"
+                onClick={() => window.location.href = "/api/login"}
+                className="text-gray-500 hover:text-gray-700 flex items-center space-x-1"
+                title="Save your progress"
               >
-                <LogOut size={16} />
+                <Save size={16} />
+                <span className="hidden sm:inline">Save</span>
               </Button>
             </div>
           </div>
