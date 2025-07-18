@@ -7,46 +7,67 @@ import { z } from "zod";
 export async function registerRoutes(app: Express): Promise<Server> {
   // Create a demo user for testing
   const demoUserId = "demo-user";
-  await storage.upsertUser({
-    id: demoUserId,
-    email: "demo@stimuli.com",
-    firstName: "Demo",
-    lastName: "User",
-    profileImageUrl: null,
-  });
+  
+  // Initialize database connection with retry logic
+  const initializeDatabase = async (retries = 3) => {
+    for (let i = 0; i < retries; i++) {
+      try {
+        console.log(`Attempting to connect to database (attempt ${i + 1}/${retries})...`);
+        
+        await storage.upsertUser({
+          id: demoUserId,
+          email: "demo@stimuli.com",
+          firstName: "Demo",
+          lastName: "User",
+          profileImageUrl: null,
+        });
 
-  // Seed initial achievements
-  try {
-    const existingAchievements = await storage.getAchievements();
-    if (existingAchievements.length === 0) {
-      await storage.createAchievement({
-        key: "neural-spark",
-        name: "Neural Spark",
-        description: "Complete your first brain training session",
-        xpReward: 50,
-        iconType: "brain",
-        requirement: { type: "xp", value: 10 },
-      });
-      await storage.createAchievement({
-        key: "focused-flame",
-        name: "Focused Flame",
-        description: "Maintain a 7-day training streak",
-        xpReward: 100,
-        iconType: "flame",
-        requirement: { type: "streak", value: 7 },
-      });
-      await storage.createAchievement({
-        key: "synesthetic-pro",
-        name: "Synesthetic Pro",
-        description: "Complete 5 color-echo games",
-        xpReward: 75,
-        iconType: "palette",
-        requirement: { type: "game_count", game: "color-echo", value: 5 },
-      });
+        // Seed initial achievements
+        const existingAchievements = await storage.getAchievements();
+        if (existingAchievements.length === 0) {
+          await storage.createAchievement({
+            key: "neural-spark",
+            name: "Neural Spark",
+            description: "Complete your first brain training session",
+            xpReward: 50,
+            iconType: "brain",
+            requirement: { type: "xp", value: 10 },
+          });
+          await storage.createAchievement({
+            key: "focused-flame",
+            name: "Focused Flame",
+            description: "Maintain a 7-day training streak",
+            xpReward: 100,
+            iconType: "flame",
+            requirement: { type: "streak", value: 7 },
+          });
+          await storage.createAchievement({
+            key: "synesthetic-pro",
+            name: "Synesthetic Pro",
+            description: "Complete 5 color-echo games",
+            xpReward: 75,
+            iconType: "palette",
+            requirement: { type: "game_count", game: "color-echo", value: 5 },
+          });
+        }
+        
+        console.log("Database initialized successfully");
+        return;
+      } catch (error) {
+        console.error(`Database initialization error (attempt ${i + 1}):`, error);
+        if (i === retries - 1) {
+          console.error("Failed to initialize database after all retries");
+          // Don't throw error, let the app continue without database initialization
+        } else {
+          // Wait before retry
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+      }
     }
-  } catch (error) {
-    console.log("Achievements already exist or error seeding:", error);
-  }
+  };
+
+  // Initialize database asynchronously
+  initializeDatabase().catch(console.error);
 
   // Auth routes (simplified for demo)
   app.get('/api/auth/user', async (req: any, res) => {
