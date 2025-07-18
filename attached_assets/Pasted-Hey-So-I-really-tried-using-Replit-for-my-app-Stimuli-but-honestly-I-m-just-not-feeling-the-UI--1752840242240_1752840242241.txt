@@ -1,0 +1,134 @@
+Hey! So I really tried using Replit for my app Stimuli, but honestly... I’m just not feeling the UI.
+
+It’s way too plain, kinda clunky, and doesn't give me the vibe I’m going for. I want tabbed navigation (like Games, Progress, Achievements, Journal, etc.) and a design that actually feels motivational and alive, not just "hello world" and plain white.
+
+I need animated UI elements that reflect user engagement — for example:
+
+A tree that grows with more XP 🌱→🌳
+
+Flowers bloom as part of the user's streak
+
+Tabs that feel like an actual app, not just a static webpage
+
+Something more ✨interactive✨ and friendly for neurodivergent users
+
+I want bubbly fonts, light/black & white color options, emojis, XP bars, and badges.
+
+TLDR: I want Replit to look like a modern web app, not a blank Google Doc with code.
+
+💡 New Replit/Glide Prompt (Complete Vision, Updated for Tree + Tabs + Design Aesthetic)
+🧠 APP NAME: Stimuli
+Tagline: Train your senses. Grow your mind.
+
+🎨 DESIGN AESTHETIC:
+Font: Bubbly, rounded — try Baloo, Nunito, or Poppins
+
+Color Modes:
+
+Mode 1: Electric blue & white
+
+#0057E7 for primary
+
+#F5FAFF for background
+
+#00C2CB as an XP/streak highlight
+
+Mode 2: Black & white
+
+#121212 background
+
+#FFFFFF text
+
+Pop of cyan or green for badges and highlights
+
+🌲 INTERACTIVE STREAK TREE
+The Tree is the Main Progress Indicator:
+
+🌱 0–10 XP = small sprout
+
+🌿 11–50 XP = baby tree
+
+🌸 51–100 XP = flowers bloom
+
+🌳 100+ XP = tall blooming tree, animated birds, or stars
+
+Tree appears on home screen + progress page
+
+🗂️ APP STRUCTURE (TABBED LAYOUT)
+🏠 HOME / DASHBOARD
+“Welcome to Stimuli 🌈”
+
+Show:
+
+Current XP bar
+
+🌲 Tree stage
+
+🔥 Streak count
+
+Daily quote (“You’re literally smarter than yesterday”)
+
+“✨ Start Today’s Game” button
+
+🎮 GAMES TAB
+Game Cards: Color Echo, Synesthetic Recall, Shape Sequence, Spotlight
+
+Each card shows:
+
+🎨 Icon
+
+💬 Description
+
+📲 [Play] button (embed Replit/HTML5 game)
+
+📈 PROGRESS TAB
+Tree Visualization with animation
+
+XP bar + % to next level
+
+Chart of game scores
+
+Streak counter
+
+Mood tracker graph
+
+🏆 ACHIEVEMENTS
+Badges like:
+
+🧠 “Neural Spark” — First Game Played
+
+🔥 “Streak Queen/King” — 5-Day Streak
+
+🌺 “Tree Bloomer” — Reached 100 XP
+
+Date earned + mini animation when unlocked
+
+📓 JOURNAL / FEEDBACK
+Mood Check: “How focused are you today?” (slider)
+
+Open text: “What did today’s game make you feel?”
+
+Submission adds XP
+
+🧩 XP SYSTEM (Operant Conditioning Style)
++10 XP: Play a game
+
++5 XP: Submit mood tracker
+
++15 XP: Streak hit
+
+Badges drop on XP thresholds
+
+Tree visually grows with XP and streaks — instant dopamine reward loop
+
+✨ AESTHETIC ELEMENTS
+Rounded buttons with emojis
+
+Bouncy transitions
+
+Cloud or geometric backgrounds
+
+Minimalist but fun
+
+Works for ADHD/neurodivergent brains — clean, no clutter, colorful feedback
+

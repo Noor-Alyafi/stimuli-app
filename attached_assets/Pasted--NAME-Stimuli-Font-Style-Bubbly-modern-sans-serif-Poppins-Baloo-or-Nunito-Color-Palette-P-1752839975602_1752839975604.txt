@@ -1,0 +1,167 @@
+🧠 NAME: Stimuli
+Font Style: Bubbly, modern sans-serif (Poppins, Baloo, or Nunito)
+Color Palette:
+
+Primary: #0057E7 (electric blue)
+
+Secondary: #F5FAFF (soft white)
+
+Accent: #87CEEB (sky blue) or #D6E4F0 (pastel blue)
+
+Text: #222222
+
+Highlight: #00C2CB (for XP/streak indicators)
+
+Theme Vibe: Calm, clean, neurodivergent-friendly, playful-but-scientific.
+
+Logo:
+The word "Stimuli" in bubbly lettering, colored blue gradient with a small brain or swirl emoji at the end. Example:
+Stimuli 🧠 or Stimuli 🌈
+
+🌐 GENERAL LAYOUT
+Landing Page / Home Screen:
+
+Big welcoming text: “Welcome to Stimuli – Train Your Brain in Color!”
+
+Subheader: “Daily 2-minute games to boost focus, memory, and mental agility.”
+
+Button: [Play Today’s Game]
+
+Display: XP bar + current streak 🔥 + progress summary
+
+Floating badge/level icon in top corner
+
+📄 APP SECTIONS
+1. 🎮 Games
+Embed Replit games using Glide’s Web View Component
+
+Each game shown as a card with:
+
+Game Name (e.g., “Color Echo”)
+
+Icon (🎨, 🎧, 🧠, etc.)
+
+Short description:
+“Match the color to the sound — how strong are your senses today?”
+
+Button: [Play]
+
+Game Ideas to Embed:
+
+🧠 Color–Sound Match ("Color Echo")
+
+🔤 Word–Color Match ("Synesthetic Recall")
+
+🔲 Pattern Memory ("Shape Sequence")
+
+🔍 Find the Odd One Out ("Spotlight")
+
+2. 📈 Progress
+XP bar (based on daily games played)
+
+Current streak count: 🔥 3-Day Streak!
+
+Level system:
+
+“Sensory Newbie” → “Neural Adventurer” → “Synesthesia Master”
+
+Visual graph of performance (using charts from Sheet data)
+
+Mood Tracker results (e.g., “Felt focused after game? Yes/No”)
+
+3. 🏆 Achievements
+Badge unlocks:
+
+“Completed 5 Days in a Row”
+
+“Hit 100 XP!”
+
+“Unlocked All Games”
+
+Each badge is a fun icon (💡, 🎖️, 🌈)
+
+Pop-up: “🎉 You just unlocked: Neural Spark!”
+
+4. ✨ Daily Motivation
+Rotating quotes like:
+
+“You’re literally smarter than yesterday.”
+
+“Synesthetic senses activated 💥”
+
+“Tiny wins = big brain”
+
+Use a List Collection in Glide with 7 rotating quotes and random display each day.
+
+5. 📥 Feedback / Journal (Optional)
+Google Form embedded or native form in Glide
+
+Questions:
+
+“How focused did you feel today?”
+
+“Did today’s game feel helpful?”
+
+“Any suggestions for new sensory games?”
+
+Data goes to your connected Google Sheet for insights or research.
+
+📦 DATA SETUP (Google Sheets)
+Make a Google Sheet with these columns:
+
+Username	XP	Streak	Last Login	Mood	Game 1 Score	Game 2 Score
+
+Use Glide's data logic to:
+
+Reset streak if 48h passes
+
+Add XP based on button clicks or form submissions
+
+Track mood and game performance
+
+🎨 AESTHETIC ELEMENTS
+Icons: Rounded, flat-style (Glide has a library)
+
+Buttons: Rounded corners, blue background, white text
+
+Use emojis where possible (adds warmth)
+
+Background: Very light blue gradient or soft cloud background (optional)
+
+Layout: Clean card-based system, spacing between elements, generous white space
+
+🧩 EXAMPLE UI FLOW
+text
+Copy
+Edit
+[Home Screen]
+  ↳ Welcome to Stimuli!
+  ↳ XP: 220 | 🔥 3-Day Streak
+  ↳ [Play Today’s Game] → Goes to Game #1 (Color Echo)
+  ↳ Quote of the Day: “Tiny wins = big brain 💡”
+
+[Games Tab]
+  ↳ Game Cards (Color Echo, Synesthetic Recall, etc.)
+  ↳ [Play] buttons embed Replit games
+
+[Progress Tab]
+  ↳ Bar chart of XP, line graph of performance
+  ↳ Level: Neural Explorer
+  ↳ Unlocks + badges
+
+[Achievements Tab]
+  ↳ List of badges with icons + dates earned
+
+[Journal Tab]
+  ↳ Mood input + open response feedback
+✅ NEXT STEPS FOR YOU:
+Go to https://www.glideapps.com → Start with Google Sheet
+
+Use the sheet structure above
+
+Paste this full prompt into your Glide app description or keep it as your design blueprint
+
+I’ll send you the Replit game code (just tell me which one you want first!)
+
+Embed the Replit game using Web View in the Games tab
+
