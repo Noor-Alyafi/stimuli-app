@@ -73,7 +73,7 @@ export class DatabaseStorage implements IStorage {
     const user = await this.getUser(userId);
     if (!user) return;
 
-    const newXP = user.xp + xpGain;
+    const newXP = (user.xp || 0) + xpGain;
     const newLevel = Math.floor(newXP / 100) + 1; // Level up every 100 XP
 
     await db
@@ -97,9 +97,9 @@ export class DatabaseStorage implements IStorage {
     if (lastLogin) {
       const daysDiff = Math.floor((today.getTime() - lastLogin.getTime()) / (1000 * 60 * 60 * 24));
       if (daysDiff === 1) {
-        newStreak = user.streak + 1;
+        newStreak = (user.streak || 0) + 1;
       } else if (daysDiff === 0) {
-        newStreak = user.streak; // Same day, no change
+        newStreak = user.streak || 0; // Same day, no change
       }
     }
 
@@ -123,14 +123,18 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserGameProgress(userId: string, gameType?: string): Promise<GameProgress[]> {
-    const query = db
+    let query = db
       .select()
       .from(gameProgress)
       .where(eq(gameProgress.userId, userId))
       .orderBy(desc(gameProgress.completedAt));
 
     if (gameType) {
-      return query.where(and(eq(gameProgress.userId, userId), eq(gameProgress.gameType, gameType)));
+      query = db
+        .select()
+        .from(gameProgress)
+        .where(and(eq(gameProgress.userId, userId), eq(gameProgress.gameType, gameType)))
+        .orderBy(desc(gameProgress.completedAt));
     }
 
     return query;
@@ -177,8 +181,8 @@ export class DatabaseStorage implements IStorage {
     if (!user) return [];
 
     const allAchievements = await this.getAchievements();
-    const userAchievements = await this.getUserAchievements(userId);
-    const unlockedIds = userAchievements.map(ua => ua.achievementId);
+    const userAchievementsData = await this.getUserAchievements(userId);
+    const unlockedIds = userAchievementsData.map(ua => ua.achievementId);
 
     const newlyUnlocked: UserAchievement[] = [];
 
@@ -190,10 +194,10 @@ export class DatabaseStorage implements IStorage {
 
       switch (achievement.key) {
         case 'neural-spark':
-          shouldUnlock = user.xp >= 10; // First game played
+          shouldUnlock = (user.xp || 0) >= 10; // First game played
           break;
         case 'focused-flame':
-          shouldUnlock = user.streak >= 7; // 7-day streak
+          shouldUnlock = (user.streak || 0) >= 7; // 7-day streak
           break;
         case 'synesthetic-pro':
           const colorEchoGames = await this.getUserGameProgress(userId, 'color-echo');

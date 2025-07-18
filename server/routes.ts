@@ -1,19 +1,24 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
 import { insertGameProgressSchema, insertJournalEntrySchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware
-  await setupAuth(app);
+  // Create a demo user for testing
+  const demoUserId = "demo-user";
+  await storage.upsertUser({
+    id: demoUserId,
+    email: "demo@stimuli.com",
+    firstName: "Demo",
+    lastName: "User",
+    profileImageUrl: null,
+  });
 
-  // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+  // Auth routes (simplified for demo)
+  app.get('/api/auth/user', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
+      const user = await storage.getUser(demoUserId);
       res.json(user);
     } catch (error) {
       console.error("Error fetching user:", error);
@@ -22,9 +27,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Game progress routes
-  app.post('/api/game-progress', isAuthenticated, async (req: any, res) => {
+  app.post('/api/game-progress', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = demoUserId;
       const progressData = insertGameProgressSchema.parse({
         ...req.body,
         userId,
@@ -52,9 +57,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/game-progress', isAuthenticated, async (req: any, res) => {
+  app.get('/api/game-progress', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = demoUserId;
       const { gameType } = req.query;
       
       const progress = await storage.getUserGameProgress(userId, gameType as string);
@@ -65,9 +70,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/best-scores', isAuthenticated, async (req: any, res) => {
+  app.get('/api/best-scores', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = demoUserId;
       const bestScores = await storage.getUserBestScores(userId);
       res.json(bestScores);
     } catch (error) {
