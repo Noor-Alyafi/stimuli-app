@@ -202,23 +202,35 @@ export class DatabaseStorage implements IStorage {
       const requirement = achievement.requirement as any;
       let shouldUnlock = false;
 
-      switch (achievement.key) {
-        case 'neural-spark':
-          shouldUnlock = (user.xp || 0) >= 10; // First game played
+      switch (requirement.type) {
+        case 'xp':
+          shouldUnlock = (user.xp || 0) >= requirement.value;
           break;
-        case 'focused-flame':
-          shouldUnlock = (user.streak || 0) >= 7; // 7-day streak
+        case 'streak':
+          shouldUnlock = (user.streak || 0) >= requirement.value;
           break;
-        case 'synesthetic-pro':
-          const colorEchoGames = await this.getUserGameProgress(userId, 'color-echo');
-          shouldUnlock = colorEchoGames.length >= 5; // 5 color echo games
+        case 'game_count':
+          if (requirement.game) {
+            const games = await this.getUserGameProgress(userId, requirement.game);
+            shouldUnlock = games.length >= requirement.value;
+          }
           break;
-        // Add more achievement logic here
+        case 'journal_count':
+          const journalEntries = await this.getUserJournalEntries(userId, 100);
+          shouldUnlock = journalEntries.length >= requirement.value;
+          break;
+        case 'games_played':
+          const allGames = await this.getUserGameProgress(userId);
+          const uniqueGames = new Set(allGames.map(g => g.gameType));
+          shouldUnlock = uniqueGames.size >= requirement.value;
+          break;
       }
 
       if (shouldUnlock) {
         await this.unlockAchievement(userId, achievement.id);
-        await this.updateUserXP(userId, achievement.xpReward);
+        if (achievement.xpReward > 0) {
+          await this.updateUserXP(userId, achievement.xpReward);
+        }
         const [newAchievement] = await db
           .select()
           .from(userAchievements)

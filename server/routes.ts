@@ -25,28 +25,89 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Seed initial achievements
         const existingAchievements = await storage.getAchievements();
         if (existingAchievements.length === 0) {
+          // XP Milestone Badges
           await storage.createAchievement({
             key: "neural-spark",
             name: "Neural Spark",
-            description: "Complete your first brain training session",
-            xpReward: 50,
-            iconType: "brain",
-            requirement: { type: "xp", value: 10 },
+            description: "Your brain's warming up!",
+            xpReward: 0,
+            iconType: "⚡",
+            requirement: { type: "xp", value: 50 },
           });
           await storage.createAchievement({
-            key: "focused-flame",
-            name: "Focused Flame",
-            description: "Maintain a 7-day training streak",
+            key: "cortex-climber",
+            name: "Cortex Climber",
+            description: "Scaling the mental mountain!",
+            xpReward: 0,
+            iconType: "🧗‍♀️",
+            requirement: { type: "xp", value: 100 },
+          });
+          await storage.createAchievement({
+            key: "memory-mage",
+            name: "Memory Mage",
+            description: "You've got memory magic!",
+            xpReward: 0,
+            iconType: "🪄",
+            requirement: { type: "xp", value: 250 },
+          });
+          await storage.createAchievement({
+            key: "synesthesia-savant",
+            name: "Synesthesia Savant",
+            description: "You see sounds. You feel colors. You slay.",
+            xpReward: 0,
+            iconType: "🌈",
+            requirement: { type: "xp", value: 500 },
+          });
+          await storage.createAchievement({
+            key: "neuro-legend",
+            name: "NeuroLegend",
+            description: "Cognitive Queen/King 👑 unlocked.",
+            xpReward: 0,
+            iconType: "👑",
+            requirement: { type: "xp", value: 1000 },
+          });
+
+          // Streak Rewards
+          await storage.createAchievement({
+            key: "baby-brainiac",
+            name: "Baby Brainiac",
+            description: "3 days of brain training!",
+            xpReward: 20,
+            iconType: "🍼",
+            requirement: { type: "streak", value: 3 },
+          });
+          await storage.createAchievement({
+            key: "neural-discipline",
+            name: "Neural Discipline",
+            description: "14+ days of cognitive commitment!",
             xpReward: 100,
-            iconType: "flame",
-            requirement: { type: "streak", value: 7 },
+            iconType: "🏅",
+            requirement: { type: "streak", value: 14 },
+          });
+
+          // Behavioral Achievements
+          await storage.createAchievement({
+            key: "mindful-moment",
+            name: "Mindful Moment",
+            description: "For tracking emotions consistently",
+            xpReward: 30,
+            iconType: "🧘",
+            requirement: { type: "journal_count", value: 3 },
+          });
+          await storage.createAchievement({
+            key: "sensory-explorer",
+            name: "Sensory Explorer",
+            description: "For being curious AF",
+            xpReward: 50,
+            iconType: "🔍",
+            requirement: { type: "games_played", value: 6 },
           });
           await storage.createAchievement({
             key: "synesthetic-pro",
             name: "Synesthetic Pro",
             description: "Complete 5 color-echo games",
             xpReward: 75,
-            iconType: "palette",
+            iconType: "🎨",
             requirement: { type: "game_count", game: "color-echo", value: 5 },
           });
         }

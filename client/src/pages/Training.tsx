@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { GameCard } from "@/components/GameCard";
+import { GameContainer } from "@/components/games/GameContainer";
+import { ColorEchoGame } from "@/components/games/ColorEchoGame";
+import { ShapeSequenceGame } from "@/components/games/ShapeSequenceGame";
+import { SpotlightGame } from "@/components/games/SpotlightGame";
+import { SynestheticRecallGame } from "@/components/games/SynestheticRecallGame";
+import { MemoryMatrixGame } from "@/components/games/MemoryMatrixGame";
+import { QuickResponseGame } from "@/components/games/QuickResponseGame";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
@@ -48,6 +55,7 @@ const games = [
 export default function Training() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [activeGame, setActiveGame] = useState<string | null>(null);
   
   const { data: bestScores, isLoading } = useQuery({
     queryKey: ["/api/best-scores"],
@@ -87,16 +95,46 @@ export default function Training() {
   });
 
   const handlePlayGame = (gameType: string) => {
-    // For now, simulate game completion with random score
-    // In a real app, this would open the actual game
-    const randomScore = Math.floor(Math.random() * 40) + 60; // 60-100
-    const randomTime = Math.floor(Math.random() * 120) + 30; // 30-150 seconds
-    
-    gameProgressMutation.mutate({
-      gameType,
-      score: randomScore,
-      timeTaken: randomTime,
-    });
+    setActiveGame(gameType);
+  };
+
+  const handleGameComplete = (gameType: string, score: number, timeTaken: number) => {
+    // The GameContainer will handle the API call and feedback
+    setActiveGame(null);
+  };
+
+  const handleBackToGames = () => {
+    setActiveGame(null);
+  };
+
+  const renderGame = (gameType: string) => {
+    const game = games.find(g => g.gameType === gameType);
+    if (!game) return null;
+
+    const gameComponents = {
+      'color-echo': ColorEchoGame,
+      'shape-sequence': ShapeSequenceGame,
+      'spotlight': SpotlightGame,
+      'synesthetic-recall': SynestheticRecallGame,
+      'memory-matrix': MemoryMatrixGame,
+      'quick-response': QuickResponseGame,
+    };
+
+    const GameComponent = gameComponents[gameType as keyof typeof gameComponents];
+    if (!GameComponent) return null;
+
+    return (
+      <GameContainer
+        gameType={gameType}
+        name={game.name}
+        onBack={handleBackToGames}
+        onGameComplete={(score, timeTaken) => handleGameComplete(gameType, score, timeTaken)}
+      >
+        <GameComponent onComplete={(score, timeTaken) => {
+          (window as any).completeGame?.(score, timeTaken);
+        }} />
+      </GameContainer>
+    );
   };
 
   const getBestScore = (gameType: string) => {
@@ -119,6 +157,11 @@ export default function Training() {
         </div>
       </div>
     );
+  }
+
+  // If a game is active, render the game
+  if (activeGame) {
+    return renderGame(activeGame);
   }
 
   return (
