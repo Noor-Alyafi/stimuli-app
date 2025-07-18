@@ -1,0 +1,144 @@
+import { useAuth } from "@/hooks/useAuth";
+import { GrowthTree } from "@/components/GrowthTree";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Quote } from "lucide-react";
+
+const dailyQuotes = [
+  "Your mind is like a muscle - the more you challenge it, the stronger it becomes.",
+  "Every expert was once a beginner. Every pro was once an amateur.",
+  "The brain that changes itself is the brain that grows.",
+  "Small daily improvements lead to stunning long-term results.",
+  "Your potential is limitless when you train consistently.",
+  "Each challenge is an opportunity to grow stronger.",
+  "Progress, not perfection, is the goal.",
+];
+
+export default function Home() {
+  const { user } = useAuth();
+  
+  if (!user) return null;
+
+  const currentXP = user.xp || 0;
+  const currentLevel = user.level || 1;
+  const nextLevelXP = currentLevel * 100;
+  const progressPercentage = ((currentXP % 100) / 100) * 100;
+  
+  const todayQuote = dailyQuotes[new Date().getDay()];
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Welcome Section */}
+        <div className="lg:col-span-2 space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Card>
+              <CardContent className="p-8">
+                <h2 className="text-3xl font-inter font-bold text-navy mb-2">
+                  Welcome back{user.firstName ? `, ${user.firstName}` : ''}!
+                </h2>
+                <p className="text-gray-600 text-lg mb-6">
+                  Ready to train your mind today?
+                </p>
+                
+                {/* XP Progress Bar */}
+                <div className="mb-6">
+                  <div className="flex justify-between text-sm text-gray-600 mb-2">
+                    <span>Level {currentLevel} - Neural Explorer</span>
+                    <span>{currentXP} / {nextLevelXP} XP</span>
+                  </div>
+                  <Progress value={progressPercentage} className="h-3" />
+                </div>
+
+                {/* Daily Challenge */}
+                <div className="bg-gradient-to-r from-cyan/10 to-blue-500/10 rounded-xl p-6 border-l-4 border-cyan">
+                  <h3 className="font-inter font-semibold text-navy mb-2">
+                    Today's Challenge
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    Complete 2 training sessions to maintain your streak
+                  </p>
+                  <Button 
+                    className="bg-navy text-white hover:bg-navy/90"
+                    onClick={() => {
+                      // Navigate to training tab
+                      const event = new CustomEvent('navigate', { detail: 'training' });
+                      window.dispatchEvent(event);
+                    }}
+                  >
+                    Start Training
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Daily Quote */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-3 mb-4">
+                  <Quote className="text-cyan" size={24} />
+                  <h3 className="font-inter font-semibold text-navy">
+                    Daily Motivation
+                  </h3>
+                </div>
+                <p className="text-gray-700 text-lg italic">
+                  "{todayQuote}"
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        {/* Growth Tree Visualization */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <Card>
+            <CardContent className="p-8">
+              <h3 className="font-inter font-semibold text-navy mb-6 text-center">
+                Your Growth Tree
+              </h3>
+              
+              <GrowthTree 
+                xp={currentXP}
+                level={currentLevel}
+                achievements={3} // This would come from actual achievements
+                className="w-full"
+              />
+              
+              {/* Tree Stats */}
+              <div className="mt-6 space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Current Level</span>
+                  <span className="font-medium text-navy">Neural Explorer</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Branches Grown</span>
+                  <span className="font-medium text-green-600">{currentLevel + 3}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Flowers Earned</span>
+                  <span className="font-medium text-yellow-600">3</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
