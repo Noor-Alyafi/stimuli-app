@@ -29,7 +29,7 @@ export const IsometricGrowthTree = ({
         className="relative"
         initial={{ scale: 0.5, opacity: 0 }}
         animate={{ scale: treeScale, opacity: 1 }}
-        transition={{ duration: 1, ease: "easeOutBack" }}
+        transition={{ duration: 1, ease: "backOut" }}
       >
         {/* Ground Shadow */}
         <div 
@@ -66,120 +66,78 @@ export const IsometricGrowthTree = ({
           transition={{ duration: 4, repeat: Infinity }}
         />
         
-        {/* Tree Foliage - Multiple layered sections like your reference image */}
+        {/* Tree Crown - Chunky layered foliage exactly like reference image */}
         
-        {/* Back/Bottom layer - darkest green */}
+        {/* Bottom layer - large bumpy foliage base */}
         <motion.div
           className="absolute left-1/2 transform -translate-x-1/2 z-20"
           style={{
-            bottom: `${15 + (stage * 4)}px`,
-            width: `${70 + (stage * 12)}px`,
-            height: `${65 + (stage * 10)}px`,
+            bottom: `${12 + (stage * 3)}px`,
+            width: `${80 + (stage * 8)}px`,
+            height: `${50 + (stage * 6)}px`,
             background: type === 'oak' 
-              ? `radial-gradient(ellipse at center bottom,
-                  #1a4d1a 0%,
-                  #2d7d2d 30%,
-                  #4a9d4a 60%,
-                  #2d7d2d 100%
-                )`
+              ? `linear-gradient(135deg, #4a7c4a 0%, #5d9c5d 40%, #6bb16b 100%)`
               : type === 'cherry'
-              ? `radial-gradient(ellipse at center bottom,
-                  #8B2635 0%,
-                  #CD5C7F 30%,
-                  #FFB6C1 60%,
-                  #CD5C7F 100%
-                )`
-              : `radial-gradient(ellipse at center bottom,
-                  #1a4d1a 0%,
-                  #2d7d2d 30%,
-                  #4a9d4a 60%,
-                  #2d7d2d 100%
-                )`,
-            borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
-            transform: 'perspective(200px) rotateX(8deg) rotateY(-5deg)',
-            filter: 'drop-shadow(4px 4px 12px rgba(0,0,0,0.3))',
+              ? `linear-gradient(135deg, #8B4A6B 0%, #B56B8B 40%, #D48BAB 100%)`
+              : `linear-gradient(135deg, #4a7c4a 0%, #5d9c5d 40%, #6bb16b 100%)`,
+            clipPath: `polygon(
+              15% 100%, 25% 85%, 35% 90%, 45% 80%, 55% 85%, 65% 75%, 
+              75% 80%, 85% 100%, 50% 0%
+            )`,
+            filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.3))',
           }}
           animate={{
-            rotateY: [-5, -3, -5],
             scale: [1, 1.01, 1]
-          }}
-          transition={{ duration: 6, repeat: Infinity }}
-        />
-        
-        {/* Middle layer - medium green */}
-        <motion.div
-          className="absolute left-1/2 transform -translate-x-1/2 z-30"
-          style={{
-            bottom: `${25 + (stage * 5)}px`,
-            width: `${60 + (stage * 10)}px`,
-            height: `${55 + (stage * 8)}px`,
-            background: type === 'oak'
-              ? `radial-gradient(ellipse at center bottom,
-                  #2d7d2d 0%,
-                  #4a9d4a 30%,
-                  #66cc66 60%,
-                  #4a9d4a 100%
-                )`
-              : type === 'cherry'
-              ? `radial-gradient(ellipse at center bottom,
-                  #CD5C7F 0%,
-                  #FFB6C1 30%,
-                  #FFCCCB 60%,
-                  #FFB6C1 100%
-                )`
-              : `radial-gradient(ellipse at center bottom,
-                  #2d7d2d 0%,
-                  #4a9d4a 30%,
-                  #66cc66 60%,
-                  #4a9d4a 100%
-                )`,
-            borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
-            transform: 'perspective(200px) rotateX(5deg) rotateY(3deg)',
-            filter: 'drop-shadow(2px 2px 8px rgba(0,0,0,0.25))',
-          }}
-          animate={{
-            rotateY: [3, 5, 3],
-            scale: [1, 1.015, 1]
           }}
           transition={{ duration: 5, repeat: Infinity }}
         />
         
-        {/* Front/Top layer - lightest green */}
+        {/* Middle layer - medium bumpy sections */}
         <motion.div
-          className="absolute left-1/2 transform -translate-x-1/2 z-40"
+          className="absolute left-1/2 transform -translate-x-1/2 z-30"
           style={{
-            bottom: `${35 + (stage * 6)}px`,
-            width: `${50 + (stage * 8)}px`,
-            height: `${45 + (stage * 6)}px`,
+            bottom: `${20 + (stage * 4)}px`,
+            width: `${65 + (stage * 7)}px`,
+            height: `${42 + (stage * 5)}px`,
             background: type === 'oak'
-              ? `radial-gradient(ellipse at center bottom,
-                  #4a9d4a 0%,
-                  #66cc66 30%,
-                  #99ff99 60%,
-                  #66cc66 100%
-                )`
+              ? `linear-gradient(135deg, #5d9c5d 0%, #7db87d 40%, #9dd19d 100%)`
               : type === 'cherry'
-              ? `radial-gradient(ellipse at center bottom,
-                  #FFB6C1 0%,
-                  #FFCCCB 30%,
-                  #FFF0F5 60%,
-                  #FFCCCB 100%
-                )`
-              : `radial-gradient(ellipse at center bottom,
-                  #4a9d4a 0%,
-                  #66cc66 30%,
-                  #99ff99 60%,
-                  #66cc66 100%
-                )`,
-            borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
-            transform: 'perspective(200px) rotateX(2deg) rotateY(-2deg)',
-            filter: 'drop-shadow(1px 1px 4px rgba(0,0,0,0.2))',
+              ? `linear-gradient(135deg, #B56B8B 0%, #D48BAB 40%, #F3ABCB 100%)`
+              : `linear-gradient(135deg, #5d9c5d 0%, #7db87d 40%, #9dd19d 100%)`,
+            clipPath: `polygon(
+              20% 100%, 30% 80%, 40% 85%, 50% 75%, 60% 80%, 70% 70%, 
+              80% 100%, 50% 0%
+            )`,
+            filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.25))',
           }}
           animate={{
-            rotateY: [-2, 0, -2],
             scale: [1, 1.008, 1]
           }}
           transition={{ duration: 4, repeat: Infinity }}
+        />
+        
+        {/* Top layer - small bright crown */}
+        <motion.div
+          className="absolute left-1/2 transform -translate-x-1/2 z-40"
+          style={{
+            bottom: `${28 + (stage * 5)}px`,
+            width: `${50 + (stage * 6)}px`,
+            height: `${35 + (stage * 4)}px`,
+            background: type === 'oak'
+              ? `linear-gradient(135deg, #7db87d 0%, #9dd19d 40%, #bde8bd 100%)`
+              : type === 'cherry'
+              ? `linear-gradient(135deg, #D48BAB 0%, #F3ABCB 40%, #FFCBEB 100%)`
+              : `linear-gradient(135deg, #7db87d 0%, #9dd19d 40%, #bde8bd 100%)`,
+            clipPath: `polygon(
+              25% 100%, 35% 85%, 45% 90%, 55% 80%, 65% 85%, 75% 100%, 
+              50% 0%
+            )`,
+            filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.15))',
+          }}
+          animate={{
+            scale: [1, 1.005, 1]
+          }}
+          transition={{ duration: 3, repeat: Infinity }}
         />
         
         {/* XP Growth Sparkles */}
