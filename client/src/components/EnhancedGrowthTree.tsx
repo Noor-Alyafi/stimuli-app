@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { UserTree, User, UserInventory, StoreItem } from '@shared/schema';
 import { Coins, Sparkles, Droplet, TreePine, Plus, Package } from 'lucide-react';
 import { TreeVisual3D } from './TreeVisual3D';
+import { IsometricGrowthTree } from './IsometricGrowthTree';
 
 interface TreeVisualProps {
   tree: UserTree;
@@ -40,9 +41,10 @@ const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow }) => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex justify-center">
-          <TreeVisual3D 
+          <IsometricGrowthTree 
             type={tree.treeType} 
             stage={tree.growthStage || 1}
+            xpContributed={tree.xpContributed || 0}
             className="hover:scale-105 transition-transform duration-300"
           />
         </div>
@@ -123,7 +125,7 @@ export default function EnhancedGrowthTree() {
   // Mutations
   const plantTreeMutation = useMutation({
     mutationFn: async ({ treeType, seedItemId }: { treeType: string; seedItemId?: number }) => 
-      apiRequest('/api/trees/plant', 'POST', { treeType, seedItemId }),
+      apiRequest('POST', '/api/trees/plant', { treeType, seedItemId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/trees'] });
       queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
@@ -141,7 +143,7 @@ export default function EnhancedGrowthTree() {
 
   const waterTreeMutation = useMutation({
     mutationFn: async (treeId: number) => 
-      apiRequest(`/api/trees/${treeId}/water`, 'POST'),
+      apiRequest('POST', `/api/trees/${treeId}/water`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/trees'] });
       toast({ title: 'Tree watered!', description: 'Your tree feels refreshed.' });
@@ -157,7 +159,7 @@ export default function EnhancedGrowthTree() {
 
   const growTreeMutation = useMutation({
     mutationFn: async (treeId: number) => 
-      apiRequest(`/api/trees/${treeId}/grow`, 'POST', { xpToContribute: 10 }),
+      apiRequest('POST', `/api/trees/${treeId}/grow`, { xpToContribute: 10 }),
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ['/api/trees'] });
       queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
