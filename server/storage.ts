@@ -469,15 +469,39 @@ export class DatabaseStorage implements IStorage {
       throw new Error('Insufficient coins');
     }
 
-    // Add to inventory
+    // Deduct coins first
     await db
-      .insert(userInventory)
-      .values({
-        userId,
-        storeItemId: itemId,
-        quantity,
+      .update(users)
+      .set({
+        coins: (user.coins || 0) - totalCost,
+        updatedAt: new Date(),
       })
-      .onConflictDoNothing();
+      .where(eq(users.id, userId));
+
+    // Check if user already has this item in inventory
+    const [existingItem] = await db
+      .select()
+      .from(userInventory)
+      .where(and(eq(userInventory.userId, userId), eq(userInventory.storeItemId, itemId)));
+
+    if (existingItem) {
+      // Update existing quantity
+      await db
+        .update(userInventory)
+        .set({
+          quantity: (existingItem.quantity || 0) + quantity,
+        })
+        .where(and(eq(userInventory.userId, userId), eq(userInventory.storeItemId, itemId)));
+    } else {
+      // Add new inventory item
+      await db
+        .insert(userInventory)
+        .values({
+          userId,
+          storeItemId: itemId,
+          quantity,
+        });
+    }
 
     // Create coin transaction
     await this.addCoinTransaction({

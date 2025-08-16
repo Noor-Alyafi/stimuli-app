@@ -39,11 +39,12 @@ export function ReactionTimeGame({ onComplete }: ReactionTimeGameProps) {
     const delay = 2000 + Math.random() * 3000; // 2-5 seconds
     setWaitingTime(delay);
     
-    setTimeout(() => {
-      if (gameState !== 'waiting') return; // Prevent if user clicked too early
+    const timeoutId = setTimeout(() => {
       setGameState('ready');
       setStartTime(Date.now());
     }, delay);
+
+    return () => clearTimeout(timeoutId);
   }, [round, maxRounds, reactionTimes, gameStartTime, onComplete, gameState, colors]);
 
   const handleClick = () => {

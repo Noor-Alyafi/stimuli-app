@@ -20,29 +20,68 @@ export const TreeVisual3D = ({ type, stage, className = "" }: TreeVisual3DProps)
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
-              {/* Tree Crown */}
+              {/* 3D Layered Evergreen Tree - like the reference image */}
+              {/* Top layer */}
               <motion.div
-                className={`rounded-full ${getCrownColor()} ${getCrownSize(stage)}`}
-                animate={{ 
-                  scale: [1, 1.02, 1],
-                  opacity: [0.9, 1, 0.9]
-                }}
-                transition={{ duration: 3, repeat: Infinity }}
-              />
-              
-              {/* Tree Trunk */}
-              <div
-                className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 bg-gradient-to-b from-amber-800 to-amber-900 ${getTrunkSize(stage)}`}
+                className={`absolute top-0 left-1/2 transform -translate-x-1/2 ${getLayerSize(stage, 'top')} bg-gradient-to-b from-green-400 to-green-600 rotate-12`}
                 style={{
-                  clipPath: 'polygon(30% 0%, 70% 0%, 85% 100%, 15% 100%)'
+                  clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+                  filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))'
+                }}
+                animate={{ 
+                  rotateZ: [12, 14, 12],
+                  scale: [1, 1.02, 1]
+                }}
+                transition={{ duration: 4, repeat: Infinity }}
+              />
+              
+              {/* Middle layer */}
+              <motion.div
+                className={`absolute ${getLayerPosition(stage, 'middle')} left-1/2 transform -translate-x-1/2 ${getLayerSize(stage, 'middle')} bg-gradient-to-b from-green-500 to-green-700 -rotate-12`}
+                style={{
+                  clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+                  filter: 'drop-shadow(2px 2px 6px rgba(0,0,0,0.4))'
+                }}
+                animate={{ 
+                  rotateZ: [-12, -14, -12],
+                  scale: [1, 1.01, 1]
+                }}
+                transition={{ duration: 3.5, repeat: Infinity }}
+              />
+              
+              {/* Bottom layer */}
+              {stage >= 2 && (
+                <motion.div
+                  className={`absolute ${getLayerPosition(stage, 'bottom')} left-1/2 transform -translate-x-1/2 ${getLayerSize(stage, 'bottom')} bg-gradient-to-b from-green-600 to-green-800 rotate-6`}
+                  style={{
+                    clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+                    filter: 'drop-shadow(3px 3px 8px rgba(0,0,0,0.5))'
+                  }}
+                  animate={{ 
+                    rotateZ: [6, 8, 6],
+                    scale: [1, 1.015, 1]
+                  }}
+                  transition={{ duration: 5, repeat: Infinity }}
+                />
+              )}
+              
+              {/* Tree Trunk - 3D isometric style */}
+              <div
+                className={`absolute ${getTrunkPosition(stage)} left-1/2 transform -translate-x-1/2 bg-gradient-to-br from-amber-700 via-amber-800 to-amber-900 ${getTrunkSize3D(stage)}`}
+                style={{
+                  clipPath: 'polygon(35% 0%, 65% 0%, 80% 100%, 20% 100%)',
+                  filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.6))'
                 }}
               />
               
-              {/* Stage indicators */}
+              {/* Growth sparkles */}
               {stage >= 3 && (
                 <motion.div
-                  className="absolute top-2 left-2 text-yellow-300 text-sm"
-                  animate={{ rotate: [0, 10, -10, 0] }}
+                  className="absolute top-1 left-2 text-yellow-300 text-sm"
+                  animate={{ 
+                    rotate: [0, 15, -15, 0],
+                    scale: [1, 1.2, 1]
+                  }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
                   ✨
@@ -51,12 +90,13 @@ export const TreeVisual3D = ({ type, stage, className = "" }: TreeVisual3DProps)
               
               {stage === 5 && (
                 <motion.div
-                  className="absolute -top-1 right-1 text-green-300 text-lg"
+                  className="absolute -top-2 right-2 text-amber-300 text-lg"
                   animate={{ 
-                    scale: [1, 1.2, 1],
-                    opacity: [0.7, 1, 0.7]
+                    scale: [1, 1.3, 1],
+                    opacity: [0.7, 1, 0.7],
+                    rotate: [0, 360]
                   }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
+                  transition={{ duration: 2, repeat: Infinity }}
                 >
                   🌟
                 </motion.div>

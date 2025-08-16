@@ -83,7 +83,7 @@ const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow }) => {
         </div>
 
         <div className="text-xs text-gray-500 space-y-1">
-          <p>Planted: {new Date(tree.plantedAt).toLocaleDateString()}</p>
+          <p>Planted: {tree.plantedAt ? new Date(tree.plantedAt).toLocaleDateString() : 'Unknown'}</p>
           {tree.lastWatered && (
             <p>Watered: {new Date(tree.lastWatered).toLocaleDateString()}</p>
           )}
@@ -117,16 +117,13 @@ export default function EnhancedGrowthTree() {
 
   const seedItems = storeItems.filter(item => item.itemType === 'tree_seed');
   const userSeeds = inventory.filter(item => 
-    seedItems.some(seed => seed.id === item.storeItemId) && item.quantity > 0
+    seedItems.some(seed => seed.id === item.storeItemId) && (item.quantity || 0) > 0
   );
 
   // Mutations
   const plantTreeMutation = useMutation({
     mutationFn: async ({ treeType, seedItemId }: { treeType: string; seedItemId?: number }) => 
-      apiRequest('/api/trees/plant', { 
-        method: 'POST', 
-        body: { treeType, seedItemId } 
-      }),
+      apiRequest('/api/trees/plant', 'POST', { treeType, seedItemId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/trees'] });
       queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
@@ -144,7 +141,7 @@ export default function EnhancedGrowthTree() {
 
   const waterTreeMutation = useMutation({
     mutationFn: async (treeId: number) => 
-      apiRequest(`/api/trees/${treeId}/water`, { method: 'POST' }),
+      apiRequest(`/api/trees/${treeId}/water`, 'POST'),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/trees'] });
       toast({ title: 'Tree watered!', description: 'Your tree feels refreshed.' });
@@ -160,10 +157,7 @@ export default function EnhancedGrowthTree() {
 
   const growTreeMutation = useMutation({
     mutationFn: async (treeId: number) => 
-      apiRequest(`/api/trees/${treeId}/grow`, { 
-        method: 'POST', 
-        body: { xpToContribute: 10 } 
-      }),
+      apiRequest(`/api/trees/${treeId}/grow`, 'POST', { xpToContribute: 10 }),
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ['/api/trees'] });
       queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
@@ -331,7 +325,7 @@ export default function EnhancedGrowthTree() {
                     item.description.toLowerCase().includes(treeType.type)
                   );
                   const userSeed = userSeeds.find(seed => seed.storeItemId === seedItem?.id);
-                  const canPlant = userSeed && userSeed.quantity > 0;
+                  const canPlant = userSeed && (userSeed.quantity || 0) > 0;
                   
                   return (
                     <Card 
@@ -339,14 +333,14 @@ export default function EnhancedGrowthTree() {
                       className={`hover:shadow-lg transition-shadow ${canPlant ? 'border-green-200 dark:border-green-800' : 'opacity-60'}`}
                     >
                       <CardHeader className="text-center">
-                        <TreeVisual3D treeType={treeType.type} growthStage={1} className="mx-auto mb-2" />
+                        <TreeVisual3D type={treeType.type} stage={1} className="mx-auto mb-2" />
                         <CardTitle>{treeType.name}</CardTitle>
                         <CardDescription>{treeType.description}</CardDescription>
                       </CardHeader>
                       <CardContent className="text-center space-y-3">
                         {canPlant ? (
                           <>
-                            <Badge variant="success" className="mb-2">
+                            <Badge variant="default" className="mb-2">
                               {userSeed?.quantity} seeds available
                             </Badge>
                             <Button

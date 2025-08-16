@@ -384,9 +384,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if user has the required seed in inventory
       if (seedItemId) {
         const inventory = await storage.getUserInventory(userId);
-        const seedItem = inventory.find(item => item.storeItemId === seedItemId && item.quantity > 0);
+        const seedItem = inventory.find(item => item.storeItemId === seedItemId && (item.quantity || 0) > 0);
         
-        if (!seedItem) {
+        if (!seedItem || (seedItem.quantity || 0) < 1) {
           return res.status(400).json({ message: "You need to purchase a seed first!" });
         }
         
