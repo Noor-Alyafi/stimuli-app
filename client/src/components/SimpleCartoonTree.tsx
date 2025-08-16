@@ -103,19 +103,7 @@ export const SimpleCartoonTree = ({
           }}
         />
         
-        {/* XP Growth Effect */}
-        {xpContributed > 0 && (
-          <motion.div
-            className="absolute top-1 right-1 text-yellow-400 text-lg z-30"
-            animate={{ 
-              rotate: [0, 10, -10, 0],
-              scale: [1, 1.2, 1]
-            }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            ✨
-          </motion.div>
-        )}
+
         
         {/* Maturity indicator */}
         {stage >= 5 && (
