@@ -30,7 +30,7 @@ const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow }) => {
 
   const nextReq = getNextStageRequirement(tree.growthStage || 1);
   const currentXP = tree.xpContributed || 0;
-  const progressPercent = tree.growthStage >= 5 ? 100 : (currentXP / nextReq) * 100;
+  const progressPercent = (tree.growthStage || 1) >= 5 ? 100 : (currentXP / nextReq) * 100;
 
   return (
     <Card className="h-full hover:shadow-xl transition-shadow duration-300">
@@ -41,13 +41,13 @@ const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow }) => {
       <CardContent className="space-y-4">
         <div className="flex justify-center">
           <TreeVisual3D 
-            treeType={tree.treeType} 
-            growthStage={tree.growthStage || 1}
+            type={tree.treeType} 
+            stage={tree.growthStage || 1}
             className="hover:scale-105 transition-transform duration-300"
           />
         </div>
 
-        <Badge variant={tree.growthStage >= 5 ? "default" : "secondary"} className="w-full justify-center">
+        <Badge variant={(tree.growthStage || 1) >= 5 ? "default" : "secondary"} className="w-full justify-center">
           Stage {tree.growthStage || 1}/5
         </Badge>
 

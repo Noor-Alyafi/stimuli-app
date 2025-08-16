@@ -477,12 +477,7 @@ export class DatabaseStorage implements IStorage {
         storeItemId: itemId,
         quantity,
       })
-      .onConflictDoUpdate({
-        target: [userInventory.userId, userInventory.storeItemId],
-        set: {
-          quantity: sql`${userInventory.quantity} + ${quantity}`,
-        },
-      });
+      .onConflictDoNothing();
 
     // Create coin transaction
     await this.addCoinTransaction({
@@ -507,11 +502,11 @@ export class DatabaseStorage implements IStorage {
       .from(userInventory)
       .where(and(eq(userInventory.userId, userId), eq(userInventory.storeItemId, itemId)));
 
-    if (!inventoryItem || inventoryItem.quantity < quantity) {
+    if (!inventoryItem || (inventoryItem.quantity || 0) < quantity) {
       throw new Error('Insufficient items in inventory');
     }
 
-    if (inventoryItem.quantity === quantity) {
+    if ((inventoryItem.quantity || 0) === quantity) {
       // Remove the entire entry if using all items
       await db
         .delete(userInventory)
@@ -521,7 +516,7 @@ export class DatabaseStorage implements IStorage {
       await db
         .update(userInventory)
         .set({
-          quantity: inventoryItem.quantity - quantity,
+          quantity: (inventoryItem.quantity || 0) - quantity,
         })
         .where(and(eq(userInventory.userId, userId), eq(userInventory.storeItemId, itemId)));
     }
