@@ -5,8 +5,7 @@ import { TreeVisual3D } from '@/components/TreeVisual3D';
 
 export default function Garden() {
   return (
-    <div className="container mx-auto py-8 px-4 space-y-8">
-      <TreeStyleShowcase />
+    <div className="container mx-auto py-8 px-4">
       <EnhancedGrowthTree />
     </div>
   );
