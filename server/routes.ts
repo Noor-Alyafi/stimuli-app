@@ -379,7 +379,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/trees/plant', async (req: any, res) => {
     try {
       const userId = demoUserId;
-      const { treeType } = req.body;
+      const { treeType, seedItemId } = req.body;
+      
+      // Check if user has the required seed in inventory
+      if (seedItemId) {
+        const inventory = await storage.getUserInventory(userId);
+        const seedItem = inventory.find(item => item.storeItemId === seedItemId && item.quantity > 0);
+        
+        if (!seedItem) {
+          return res.status(400).json({ message: "You need to purchase a seed first!" });
+        }
+        
+        // Remove one seed from inventory
+        await storage.useInventoryItem(userId, seedItemId, 1);
+      }
       
       const tree = await storage.plantTree({
         userId,
@@ -388,15 +401,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         xpContributed: 0,
       });
       
-      // Award coins for planting
-      await storage.addCoinTransaction({
-        userId,
-        amount: 5,
-        transactionType: 'achievement',
-        description: 'Planted a new tree',
-      });
-      
-      res.json({ tree, message: "Tree planted! +5 coins" });
+      res.json({ tree, message: "Tree planted successfully!" });
     } catch (error) {
       console.error("Error planting tree:", error);
       res.status(500).json({ message: "Failed to plant tree" });
@@ -476,6 +481,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching inventory:", error);
       res.status(500).json({ message: "Failed to fetch inventory" });
+    }
+  });
+
+  // Initialize store items route (dev only)
+  app.post('/api/admin/seed-store', async (req, res) => {
+    try {
+      const { seedStore } = await import('./seed');
+      await seedStore();
+      res.json({ message: 'Store seeded successfully' });
+    } catch (error) {
+      console.error('Error seeding store:', error);
+      res.status(500).json({ message: 'Failed to seed store' });
     }
   });
 

@@ -7,8 +7,9 @@ import { Progress } from '@/components/ui/progress';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import { UserTree, User } from '@shared/schema';
-import { Coins, Sparkles, Droplet, TreePine } from 'lucide-react';
+import { UserTree, User, UserInventory, StoreItem } from '@shared/schema';
+import { Coins, Sparkles, Droplet, TreePine, Plus, Package } from 'lucide-react';
+import { TreeVisual3D } from './TreeVisual3D';
 
 interface TreeVisualProps {
   tree: UserTree;
@@ -17,16 +18,6 @@ interface TreeVisualProps {
 }
 
 const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow }) => {
-  const getTreeEmoji = (treeType: string, growthStage: number) => {
-    const stages = {
-      oak: ['🌱', '🌿', '🌳', '🌳', '🌲'],
-      cherry: ['🌱', '🌿', '🌸', '🌸', '🌺'],
-      willow: ['🌱', '🌿', '🌾', '🌾', '🌿'],
-      rainbow: ['🌱', '🌈', '🌈🌳', '🌈🌳✨', '🌈🌳✨🎆']
-    };
-    return stages[tree.treeType as keyof typeof stages]?.[growthStage - 1] || '🌱';
-  };
-
   const getGrowthLabel = (stage: number) => {
     const labels = ['Seed', 'Sprout', 'Sapling', 'Tree', 'Mature'];
     return labels[stage - 1] || 'Seed';
@@ -42,25 +33,30 @@ const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow }) => {
   const progressPercent = tree.growthStage >= 5 ? 100 : (currentXP / nextReq) * 100;
 
   return (
-    <Card className="h-full">
+    <Card className="h-full hover:shadow-xl transition-shadow duration-300">
       <CardHeader className="text-center pb-2">
         <CardTitle className="text-lg capitalize">{tree.treeType} Tree</CardTitle>
         <CardDescription>{getGrowthLabel(tree.growthStage || 1)}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="text-center">
-          <div className="text-6xl mb-2">{getTreeEmoji(tree.treeType, tree.growthStage || 1)}</div>
-          <Badge variant={tree.growthStage >= 5 ? "default" : "secondary"}>
-            Stage {tree.growthStage || 1}/5
-          </Badge>
+        <div className="flex justify-center">
+          <TreeVisual3D 
+            treeType={tree.treeType} 
+            growthStage={tree.growthStage || 1}
+            className="hover:scale-105 transition-transform duration-300"
+          />
         </div>
+
+        <Badge variant={tree.growthStage >= 5 ? "default" : "secondary"} className="w-full justify-center">
+          Stage {tree.growthStage || 1}/5
+        </Badge>
 
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span>XP: {currentXP}</span>
             <span>Next: {nextReq}</span>
           </div>
-          <Progress value={progressPercent} className="h-2" />
+          <Progress value={progressPercent} className="h-3" />
         </div>
 
         <div className="flex gap-2">
@@ -109,22 +105,38 @@ export default function EnhancedGrowthTree() {
     queryKey: ['/api/trees'],
   });
 
+  // Fetch user inventory to check for available seeds
+  const { data: inventory = [] } = useQuery<UserInventory[]>({
+    queryKey: ['/api/inventory'],
+  });
+
+  // Fetch store items to get seed information
+  const { data: storeItems = [] } = useQuery<StoreItem[]>({
+    queryKey: ['/api/store'],
+  });
+
+  const seedItems = storeItems.filter(item => item.itemType === 'tree_seed');
+  const userSeeds = inventory.filter(item => 
+    seedItems.some(seed => seed.id === item.storeItemId) && item.quantity > 0
+  );
+
   // Mutations
   const plantTreeMutation = useMutation({
-    mutationFn: async (treeType: string) => 
+    mutationFn: async ({ treeType, seedItemId }: { treeType: string; seedItemId?: number }) => 
       apiRequest('/api/trees/plant', { 
         method: 'POST', 
-        body: { treeType } 
+        body: { treeType, seedItemId } 
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/trees'] });
       queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
-      toast({ title: 'Tree planted successfully!', description: '+5 coins earned' });
+      queryClient.invalidateQueries({ queryKey: ['/api/inventory'] });
+      toast({ title: 'Tree planted successfully!', description: 'Your tree is now growing in the garden!' });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       toast({ 
         title: 'Failed to plant tree', 
-        description: error.message,
+        description: error.message || 'Unknown error',
         variant: 'destructive' 
       });
     },
@@ -272,30 +284,106 @@ export default function EnhancedGrowthTree() {
         </TabsContent>
 
         <TabsContent value="plant" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {treeTypes.map((treeType) => (
-              <Card key={treeType.type} className="cursor-pointer hover:shadow-lg transition-shadow">
-                <CardHeader className="text-center">
-                  <div className="text-4xl mb-2">{treeType.emoji}</div>
-                  <CardTitle>{treeType.name}</CardTitle>
-                  <CardDescription>{treeType.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <Button
-                    onClick={() => plantTreeMutation.mutate(treeType.type)}
-                    disabled={plantTreeMutation.isPending}
-                    className="w-full"
-                    data-testid={`button-plant-${treeType.type}`}
-                  >
-                    {plantTreeMutation.isPending ? 'Planting...' : 'Plant Tree'}
-                  </Button>
-                  <p className="text-xs text-gray-500 mt-2">
-                    Earn 5 coins when you plant!
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          {userSeeds.length === 0 ? (
+            <Card className="text-center py-12">
+              <CardContent>
+                <Package className="h-16 w-16 mx-auto text-gray-400 mb-4" />
+                <h3 className="text-xl font-semibold mb-2">No Seeds Available</h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  You need to buy seeds from the Store before you can plant trees!
+                </p>
+                <Button 
+                  onClick={() => window.location.href = '/store'}
+                  data-testid="button-goto-store"
+                >
+                  Visit Store
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-4">
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                <h3 className="font-semibold mb-2 flex items-center gap-2">
+                  <Package className="h-4 w-4" />
+                  Your Seeds
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                  {userSeeds.map((seedInventory) => {
+                    const seedItem = seedItems.find(item => item.id === seedInventory.storeItemId);
+                    if (!seedItem) return null;
+                    
+                    return (
+                      <div key={seedInventory.id} className="bg-white dark:bg-gray-800 p-2 rounded text-center">
+                        <div>{seedItem.name}</div>
+                        <Badge variant="secondary" className="text-xs">
+                          {seedInventory.quantity} available
+                        </Badge>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {treeTypes.map((treeType) => {
+                  const seedItem = seedItems.find(item => 
+                    item.name.toLowerCase().includes(treeType.type) ||
+                    item.description.toLowerCase().includes(treeType.type)
+                  );
+                  const userSeed = userSeeds.find(seed => seed.storeItemId === seedItem?.id);
+                  const canPlant = userSeed && userSeed.quantity > 0;
+                  
+                  return (
+                    <Card 
+                      key={treeType.type} 
+                      className={`hover:shadow-lg transition-shadow ${canPlant ? 'border-green-200 dark:border-green-800' : 'opacity-60'}`}
+                    >
+                      <CardHeader className="text-center">
+                        <TreeVisual3D treeType={treeType.type} growthStage={1} className="mx-auto mb-2" />
+                        <CardTitle>{treeType.name}</CardTitle>
+                        <CardDescription>{treeType.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent className="text-center space-y-3">
+                        {canPlant ? (
+                          <>
+                            <Badge variant="success" className="mb-2">
+                              {userSeed?.quantity} seeds available
+                            </Badge>
+                            <Button
+                              onClick={() => plantTreeMutation.mutate({ 
+                                treeType: treeType.type,
+                                seedItemId: seedItem?.id
+                              })}
+                              disabled={plantTreeMutation.isPending}
+                              className="w-full"
+                              data-testid={`button-plant-${treeType.type}`}
+                            >
+                              <Plus className="h-4 w-4 mr-1" />
+                              {plantTreeMutation.isPending ? 'Planting...' : 'Plant Tree'}
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <Badge variant="outline" className="mb-2">
+                              No seeds
+                            </Badge>
+                            <Button
+                              onClick={() => window.location.href = '/store'}
+                              variant="outline"
+                              className="w-full"
+                              data-testid={`button-buy-seed-${treeType.type}`}
+                            >
+                              Buy {treeType.name} Seed
+                            </Button>
+                          </>
+                        )}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>

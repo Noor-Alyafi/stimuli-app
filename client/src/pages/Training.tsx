@@ -8,6 +8,9 @@ import { SpotlightGame } from "@/components/games/SpotlightGame";
 import { SynestheticRecallGame } from "@/components/games/SynestheticRecallGame";
 import { MemoryMatrixGame } from "@/components/games/MemoryMatrixGame";
 import { QuickResponseGame } from "@/components/games/QuickResponseGame";
+import { ReactionTimeGame } from "@/components/games/ReactionTimeGame";
+import { NumberSequenceGame } from "@/components/games/NumberSequenceGame";
+import { PatternRecognitionGame } from "@/components/games/PatternRecognitionGame";
 // import StroopTestGame from "@/components/games/StroopTestGame";
 // import DualNBackGame from "@/components/games/DualNBackGame";
 // import VisualAttentionGame from "@/components/games/VisualAttentionGame";
@@ -60,7 +63,29 @@ const games = [
     skillType: "Processing Speed",
     badge: "Speed",
   },
-  // New Scientifically-Backed Games (coming soon)
+  
+  // New Scientifically-Backed Games
+  {
+    gameType: "reaction-time",
+    name: "Reaction Time",
+    description: "Test and improve your reflexes with scientific precision timing.",
+    skillType: "Motor Response",
+    badge: "Science-Backed",
+  },
+  {
+    gameType: "number-sequence",
+    name: "Number Sequence Memory",
+    description: "Challenge your working memory with digit span tasks.",
+    skillType: "Working Memory",
+    badge: "Science-Backed",
+  },
+  {
+    gameType: "pattern-recognition",
+    name: "Pattern Recognition",
+    description: "Develop analytical thinking with complex pattern sequences.",
+    skillType: "Logical Reasoning",
+    badge: "Science-Backed",
+  },
   // {
   //   gameType: "stroop-test",
   //   name: "Stroop Test",
@@ -150,6 +175,9 @@ export default function Training() {
       'synesthetic-recall': SynestheticRecallGame,
       'memory-matrix': MemoryMatrixGame,
       'quick-response': QuickResponseGame,
+      'reaction-time': ReactionTimeGame,
+      'number-sequence': NumberSequenceGame,
+      'pattern-recognition': PatternRecognitionGame,
       // 'stroop-test': StroopTestGame,
       // 'dual-n-back': DualNBackGame,
       // 'visual-attention': VisualAttentionGame,
@@ -173,7 +201,7 @@ export default function Training() {
   };
 
   const getBestScore = (gameType: string) => {
-    if (!bestScores) return undefined;
+    if (!bestScores || !Array.isArray(bestScores)) return undefined;
     const score = bestScores.find((s: any) => s.gameType === gameType);
     return score ? score.bestScore : undefined;
   };

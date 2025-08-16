@@ -500,6 +500,32 @@ export class DatabaseStorage implements IStorage {
       .where(eq(userInventory.userId, userId))
       .orderBy(desc(userInventory.purchasedAt));
   }
+
+  async useInventoryItem(userId: string, itemId: number, quantity: number): Promise<void> {
+    const [inventoryItem] = await db
+      .select()
+      .from(userInventory)
+      .where(and(eq(userInventory.userId, userId), eq(userInventory.storeItemId, itemId)));
+
+    if (!inventoryItem || inventoryItem.quantity < quantity) {
+      throw new Error('Insufficient items in inventory');
+    }
+
+    if (inventoryItem.quantity === quantity) {
+      // Remove the entire entry if using all items
+      await db
+        .delete(userInventory)
+        .where(and(eq(userInventory.userId, userId), eq(userInventory.storeItemId, itemId)));
+    } else {
+      // Decrease quantity
+      await db
+        .update(userInventory)
+        .set({
+          quantity: inventoryItem.quantity - quantity,
+        })
+        .where(and(eq(userInventory.userId, userId), eq(userInventory.storeItemId, itemId)));
+    }
+  }
 }
 
 export const storage = new DatabaseStorage();
