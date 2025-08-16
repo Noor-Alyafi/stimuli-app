@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { UserTree, User, UserInventory, StoreItem } from '@shared/schema';
 import { Coins, Sparkles, Droplet, TreePine, Plus, Package } from 'lucide-react';
 import { TreeVisual3D } from './TreeVisual3D';
-import { IsometricGrowthTree } from './IsometricGrowthTree';
+import { SimpleCartoonTree } from './SimpleCartoonTree';
 
 interface TreeVisualProps {
   tree: UserTree;
@@ -41,7 +41,7 @@ const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow }) => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex justify-center">
-          <IsometricGrowthTree 
+          <SimpleCartoonTree 
             type={tree.treeType} 
             stage={tree.growthStage || 1}
             xpContributed={tree.xpContributed || 0}

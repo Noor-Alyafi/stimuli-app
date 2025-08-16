@@ -49,7 +49,7 @@ export const gameProgress = pgTable("game_progress", {
   score: integer("score").notNull(),
   completedAt: timestamp("completed_at").defaultNow(),
   difficulty: varchar("difficulty").default("normal"),
-  timeTaken: real("time_taken"), // in seconds
+  timeTaken: real("time_taken").notNull(), // in seconds
 });
 
 // Achievements

@@ -36,10 +36,7 @@ export default function CoinStore() {
   // Purchase mutation
   const purchaseMutation = useMutation({
     mutationFn: async ({ itemId, quantity }: { itemId: number; quantity: number }) => 
-      apiRequest('/api/store/purchase', { 
-        method: 'POST', 
-        body: { itemId, quantity } 
-      }),
+      apiRequest('POST', '/api/store/purchase', { itemId, quantity }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
       queryClient.invalidateQueries({ queryKey: ['/api/inventory'] });
@@ -220,7 +217,7 @@ export default function CoinStore() {
                         Quantity: {item.quantity}
                       </Badge>
                       <p className="text-xs text-gray-500 mt-2">
-                        Purchased: {new Date(item.purchasedAt).toLocaleDateString()}
+                        Purchased: {item.purchasedAt ? new Date(item.purchasedAt).toLocaleDateString() : 'Unknown'}
                       </p>
                     </CardContent>
                   </Card>
