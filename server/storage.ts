@@ -5,6 +5,10 @@ import {
   userAchievements,
   journalEntries,
   skillProgress,
+  userTrees,
+  coinTransactions,
+  storeItems,
+  userInventory,
   type User,
   type UpsertUser,
   type GameProgress,
@@ -17,6 +21,14 @@ import {
   type InsertJournalEntry,
   type SkillProgress,
   type InsertSkillProgress,
+  type UserTree,
+  type InsertUserTree,
+  type CoinTransaction,
+  type InsertCoinTransaction,
+  type StoreItem,
+  type InsertStoreItem,
+  type UserInventory,
+  type InsertUserInventory,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, sql } from "drizzle-orm";
@@ -27,6 +39,7 @@ export interface IStorage {
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserXP(userId: string, xpGain: number): Promise<void>;
   updateUserStreak(userId: string): Promise<void>;
+  updateUserCoins(userId: string, coinChange: number): Promise<void>;
   
   // Game progress operations
   addGameProgress(progress: InsertGameProgress): Promise<GameProgress>;
@@ -47,6 +60,22 @@ export interface IStorage {
   // Skill progress operations
   updateSkillProgress(userId: string, skillType: string, level: number): Promise<void>;
   getUserSkillProgress(userId: string): Promise<SkillProgress[]>;
+
+  // Tree operations
+  plantTree(tree: InsertUserTree): Promise<UserTree>;
+  getUserTrees(userId: string): Promise<UserTree[]>;
+  waterTree(treeId: number): Promise<void>;
+  growTree(treeId: number, xpToContribute: number): Promise<UserTree>;
+  
+  // Coin transaction operations
+  addCoinTransaction(transaction: InsertCoinTransaction): Promise<CoinTransaction>;
+  getUserCoinTransactions(userId: string, limit?: number): Promise<CoinTransaction[]>;
+  
+  // Store operations
+  getStoreItems(category?: string): Promise<StoreItem[]>;
+  createStoreItem(item: InsertStoreItem): Promise<StoreItem>;
+  purchaseItem(userId: string, itemId: number, quantity?: number): Promise<void>;
+  getUserInventory(userId: string): Promise<UserInventory[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -288,6 +317,188 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(skillProgress)
       .where(eq(skillProgress.userId, userId));
+  }
+
+  // Coin operations
+  async updateUserCoins(userId: string, coinChange: number): Promise<void> {
+    const user = await this.getUser(userId);
+    if (!user) return;
+
+    const newCoins = Math.max(0, (user.coins || 0) + coinChange);
+    
+    await db
+      .update(users)
+      .set({
+        coins: newCoins,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId));
+  }
+
+  async addCoinTransaction(transaction: InsertCoinTransaction): Promise<CoinTransaction> {
+    // Add transaction record
+    const [newTransaction] = await db
+      .insert(coinTransactions)
+      .values(transaction)
+      .returning();
+
+    // Update user's coin balance
+    await this.updateUserCoins(transaction.userId, transaction.amount);
+
+    return newTransaction;
+  }
+
+  async getUserCoinTransactions(userId: string, limit = 20): Promise<CoinTransaction[]> {
+    return db
+      .select()
+      .from(coinTransactions)
+      .where(eq(coinTransactions.userId, userId))
+      .orderBy(desc(coinTransactions.createdAt))
+      .limit(limit);
+  }
+
+  // Tree operations
+  async plantTree(tree: InsertUserTree): Promise<UserTree> {
+    const [newTree] = await db
+      .insert(userTrees)
+      .values(tree)
+      .returning();
+
+    // Update user's total trees planted
+    const user = await this.getUser(tree.userId);
+    if (user) {
+      await db
+        .update(users)
+        .set({
+          totalTreesPlanted: (user.totalTreesPlanted || 0) + 1,
+          updatedAt: new Date(),
+        })
+        .where(eq(users.id, tree.userId));
+    }
+
+    return newTree;
+  }
+
+  async getUserTrees(userId: string): Promise<UserTree[]> {
+    return db
+      .select()
+      .from(userTrees)
+      .where(eq(userTrees.userId, userId))
+      .orderBy(desc(userTrees.plantedAt));
+  }
+
+  async waterTree(treeId: number): Promise<void> {
+    await db
+      .update(userTrees)
+      .set({
+        lastWatered: new Date(),
+      })
+      .where(eq(userTrees.id, treeId));
+  }
+
+  async growTree(treeId: number, xpToContribute: number): Promise<UserTree> {
+    const [tree] = await db
+      .select()
+      .from(userTrees)
+      .where(eq(userTrees.id, treeId));
+
+    if (!tree) throw new Error('Tree not found');
+
+    const newXpContributed = (tree.xpContributed || 0) + xpToContribute;
+    let newGrowthStage = tree.growthStage || 1;
+
+    // Growth stages based on XP contributed
+    if (newXpContributed >= 500 && newGrowthStage < 5) {
+      newGrowthStage = 5; // Mature tree
+    } else if (newXpContributed >= 300 && newGrowthStage < 4) {
+      newGrowthStage = 4; // Full tree
+    } else if (newXpContributed >= 150 && newGrowthStage < 3) {
+      newGrowthStage = 3; // Sapling
+    } else if (newXpContributed >= 50 && newGrowthStage < 2) {
+      newGrowthStage = 2; // Sprout
+    }
+
+    const [updatedTree] = await db
+      .update(userTrees)
+      .set({
+        xpContributed: newXpContributed,
+        growthStage: newGrowthStage,
+      })
+      .where(eq(userTrees.id, treeId))
+      .returning();
+
+    return updatedTree;
+  }
+
+  // Store operations
+  async getStoreItems(category?: string): Promise<StoreItem[]> {
+    let query = db.select().from(storeItems).where(eq(storeItems.isAvailable, true));
+    
+    if (category) {
+      query = db
+        .select()
+        .from(storeItems)
+        .where(and(eq(storeItems.isAvailable, true), eq(storeItems.category, category)));
+    }
+
+    return query;
+  }
+
+  async createStoreItem(item: InsertStoreItem): Promise<StoreItem> {
+    const [newItem] = await db
+      .insert(storeItems)
+      .values(item)
+      .returning();
+    return newItem;
+  }
+
+  async purchaseItem(userId: string, itemId: number, quantity = 1): Promise<void> {
+    const [storeItem] = await db
+      .select()
+      .from(storeItems)
+      .where(eq(storeItems.id, itemId));
+
+    if (!storeItem || !storeItem.isAvailable) {
+      throw new Error('Item not available');
+    }
+
+    const totalCost = storeItem.price * quantity;
+    const user = await this.getUser(userId);
+    
+    if (!user || (user.coins || 0) < totalCost) {
+      throw new Error('Insufficient coins');
+    }
+
+    // Add to inventory
+    await db
+      .insert(userInventory)
+      .values({
+        userId,
+        storeItemId: itemId,
+        quantity,
+      })
+      .onConflictDoUpdate({
+        target: [userInventory.userId, userInventory.storeItemId],
+        set: {
+          quantity: sql`${userInventory.quantity} + ${quantity}`,
+        },
+      });
+
+    // Create coin transaction
+    await this.addCoinTransaction({
+      userId,
+      amount: -totalCost,
+      transactionType: 'purchase',
+      description: `Purchased ${quantity}x ${storeItem.name}`,
+    });
+  }
+
+  async getUserInventory(userId: string): Promise<UserInventory[]> {
+    return db
+      .select()
+      .from(userInventory)
+      .where(eq(userInventory.userId, userId))
+      .orderBy(desc(userInventory.purchasedAt));
   }
 }
 

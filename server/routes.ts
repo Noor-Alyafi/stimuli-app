@@ -1,7 +1,13 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertGameProgressSchema, insertJournalEntrySchema } from "@shared/schema";
+import { 
+  insertGameProgressSchema, 
+  insertJournalEntrySchema,
+  insertUserTreeSchema,
+  insertCoinTransactionSchema,
+  insertStoreItemSchema 
+} from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -20,6 +26,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           firstName: "Demo",
           lastName: "User",
           profileImageUrl: null,
+          coins: 50, // Start with 50 coins
         });
 
         // Seed initial achievements
@@ -111,6 +118,72 @@ export async function registerRoutes(app: Express): Promise<Server> {
             requirement: { type: "game_count", game: "color-echo", value: 5 },
           });
         }
+
+        // Seed store items if empty
+        const existingStoreItems = await storage.getStoreItems();
+        if (existingStoreItems.length === 0) {
+          // Tree seeds
+          await storage.createStoreItem({
+            itemType: 'tree_seed',
+            name: 'Cherry Blossom Seed',
+            description: 'Plant a beautiful cherry blossom tree that grows pink petals',
+            price: 25,
+            category: 'seeds',
+            isAvailable: true,
+          });
+          await storage.createStoreItem({
+            itemType: 'tree_seed',
+            name: 'Rainbow Eucalyptus Seed',
+            description: 'A magical tree with multicolored bark - rare and special!',
+            price: 50,
+            category: 'seeds',
+            isAvailable: true,
+          });
+          await storage.createStoreItem({
+            itemType: 'tree_seed',
+            name: 'Willow Seed',
+            description: 'Graceful weeping willow for peaceful meditation',
+            price: 15,
+            category: 'seeds',
+            isAvailable: true,
+          });
+          
+          // Tree fertilizers/boosters
+          await storage.createStoreItem({
+            itemType: 'tree_fertilizer',
+            name: 'Growth Booster',
+            description: 'Instantly advance your tree to the next growth stage',
+            price: 30,
+            category: 'boosters',
+            isAvailable: true,
+          });
+          await storage.createStoreItem({
+            itemType: 'tree_fertilizer',
+            name: 'Miracle Grow',
+            description: 'Doubles XP contribution for tree growth',
+            price: 20,
+            category: 'boosters',
+            isAvailable: true,
+          });
+          
+          // Decorative items
+          await storage.createStoreItem({
+            itemType: 'decoration',
+            name: 'Fairy Lights',
+            description: 'Add magical twinkling lights to your trees',
+            price: 35,
+            category: 'decorations',
+            isAvailable: true,
+          });
+          await storage.createStoreItem({
+            itemType: 'decoration',
+            name: 'Garden Gnome',
+            description: 'A friendly gnome to watch over your garden',
+            price: 40,
+            category: 'decorations',
+            isAvailable: true,
+          });
+        }
         
         console.log("Database initialized successfully");
         return;
@@ -158,13 +231,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Update streak
       await storage.updateUserStreak(userId);
       
+      // Award coins based on performance
+      let coinsEarned = 2; // Base coins per game
+      if (progressData.score >= 80) coinsEarned = 5; // Bonus for good performance
+      if (progressData.score >= 95) coinsEarned = 8; // Bonus for excellent performance
+      
+      await storage.addCoinTransaction({
+        userId,
+        amount: coinsEarned,
+        transactionType: 'game_reward',
+        description: `Completed ${progressData.gameType} (Score: ${progressData.score})`,
+        gameType: progressData.gameType,
+      });
+      
       // Check for new achievements
       const newAchievements = await storage.checkAndUnlockAchievements(userId);
       
       res.json({ 
         progress, 
         newAchievements,
-        message: newAchievements.length > 0 ? "Achievement unlocked!" : "Progress saved!"
+        coinsEarned,
+        message: newAchievements.length > 0 ? "Achievement unlocked!" : `Progress saved! +${coinsEarned} coins`
       });
     } catch (error) {
       console.error("Error saving game progress:", error);
@@ -274,6 +361,121 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error updating skill progress:", error);
       res.status(500).json({ message: "Failed to update skill progress" });
+    }
+  });
+
+  // Tree management routes
+  app.get('/api/trees', async (req: any, res) => {
+    try {
+      const userId = demoUserId;
+      const trees = await storage.getUserTrees(userId);
+      res.json(trees);
+    } catch (error) {
+      console.error("Error fetching trees:", error);
+      res.status(500).json({ message: "Failed to fetch trees" });
+    }
+  });
+
+  app.post('/api/trees/plant', async (req: any, res) => {
+    try {
+      const userId = demoUserId;
+      const { treeType } = req.body;
+      
+      const tree = await storage.plantTree({
+        userId,
+        treeType: treeType || 'oak',
+        growthStage: 1,
+        xpContributed: 0,
+      });
+      
+      // Award coins for planting
+      await storage.addCoinTransaction({
+        userId,
+        amount: 5,
+        transactionType: 'achievement',
+        description: 'Planted a new tree',
+      });
+      
+      res.json({ tree, message: "Tree planted! +5 coins" });
+    } catch (error) {
+      console.error("Error planting tree:", error);
+      res.status(500).json({ message: "Failed to plant tree" });
+    }
+  });
+
+  app.post('/api/trees/:treeId/water', async (req: any, res) => {
+    try {
+      const { treeId } = req.params;
+      await storage.waterTree(parseInt(treeId));
+      res.json({ message: "Tree watered!" });
+    } catch (error) {
+      console.error("Error watering tree:", error);
+      res.status(500).json({ message: "Failed to water tree" });
+    }
+  });
+
+  app.post('/api/trees/:treeId/grow', async (req: any, res) => {
+    try {
+      const { treeId } = req.params;
+      const { xpToContribute } = req.body;
+      
+      const updatedTree = await storage.growTree(parseInt(treeId), xpToContribute || 10);
+      res.json({ tree: updatedTree, message: "Tree grew!" });
+    } catch (error) {
+      console.error("Error growing tree:", error);
+      res.status(500).json({ message: "Failed to grow tree" });
+    }
+  });
+
+  // Coin system routes
+  app.get('/api/coins/transactions', async (req: any, res) => {
+    try {
+      const userId = demoUserId;
+      const transactions = await storage.getUserCoinTransactions(userId);
+      res.json(transactions);
+    } catch (error) {
+      console.error("Error fetching coin transactions:", error);
+      res.status(500).json({ message: "Failed to fetch transactions" });
+    }
+  });
+
+  // Store routes
+  app.get('/api/store', async (req: any, res) => {
+    try {
+      const { category } = req.query;
+      const items = await storage.getStoreItems(category as string);
+      res.json(items);
+    } catch (error) {
+      console.error("Error fetching store items:", error);
+      res.status(500).json({ message: "Failed to fetch store items" });
+    }
+  });
+
+  app.post('/api/store/purchase', async (req: any, res) => {
+    try {
+      const userId = demoUserId;
+      const { itemId, quantity = 1 } = req.body;
+      
+      await storage.purchaseItem(userId, itemId, quantity);
+      res.json({ message: "Purchase successful!" });
+    } catch (error) {
+      console.error("Error purchasing item:", error);
+      if (error instanceof Error) {
+        res.status(400).json({ message: error.message });
+      } else {
+        res.status(500).json({ message: "Failed to purchase item" });
+      }
+    }
+  });
+
+  app.get('/api/inventory', async (req: any, res) => {
+    try {
+      const userId = demoUserId;
+      const inventory = await storage.getUserInventory(userId);
+      res.json(inventory);
+    } catch (error) {
+      console.error("Error fetching inventory:", error);
+      res.status(500).json({ message: "Failed to fetch inventory" });
     }
   });
 

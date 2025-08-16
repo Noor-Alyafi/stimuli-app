@@ -8,48 +8,80 @@ import { SpotlightGame } from "@/components/games/SpotlightGame";
 import { SynestheticRecallGame } from "@/components/games/SynestheticRecallGame";
 import { MemoryMatrixGame } from "@/components/games/MemoryMatrixGame";
 import { QuickResponseGame } from "@/components/games/QuickResponseGame";
+// import StroopTestGame from "@/components/games/StroopTestGame";
+// import DualNBackGame from "@/components/games/DualNBackGame";
+// import VisualAttentionGame from "@/components/games/VisualAttentionGame";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { apiRequest } from "@/lib/queryClient";
 
 const games = [
+  // Original Synesthesia Games
   {
     gameType: "color-echo",
     name: "Color Echo",
     description: "Match colors to sounds and strengthen cross-sensory connections.",
     skillType: "Synesthetic Memory",
+    badge: "Synesthesia",
   },
   {
     gameType: "shape-sequence",
     name: "Shape Sequence",
     description: "Remember and reproduce complex visual patterns.",
     skillType: "Pattern Recognition",
+    badge: "Memory",
   },
   {
     gameType: "spotlight",
     name: "Spotlight",
     description: "Find the odd one out and improve focused attention.",
     skillType: "Attention Training",
+    badge: "Focus",
   },
   {
     gameType: "synesthetic-recall",
     name: "Synesthetic Recall",
     description: "Connect words with colors to enhance semantic memory.",
     skillType: "Word-Color Memory",
+    badge: "Synesthesia",
   },
   {
     gameType: "memory-matrix",
     name: "Memory Matrix",
     description: "Remember and manipulate information in your mind.",
     skillType: "Working Memory",
+    badge: "Memory",
   },
   {
     gameType: "quick-response",
     name: "Quick Response",
     description: "React quickly to visual stimuli and improve mental speed.",
     skillType: "Processing Speed",
+    badge: "Speed",
   },
+  // New Scientifically-Backed Games (coming soon)
+  // {
+  //   gameType: "stroop-test",
+  //   name: "Stroop Test",
+  //   description: "Scientific attention control training based on the classic Stroop effect.",
+  //   skillType: "Cognitive Flexibility",
+  //   badge: "Science-Backed",
+  // },
+  // {
+  //   gameType: "dual-n-back",
+  //   name: "Dual N-Back",
+  //   description: "Proven working memory training that can increase fluid intelligence.",
+  //   skillType: "Working Memory",
+  //   badge: "IQ Training",
+  // },
+  // {
+  //   gameType: "visual-attention",
+  //   name: "Visual Attention",
+  //   description: "Train your attention networks with this research-based paradigm.",
+  //   skillType: "Attention Networks",
+  //   badge: "Science-Backed",
+  // },
 ];
 
 export default function Training() {
@@ -118,6 +150,9 @@ export default function Training() {
       'synesthetic-recall': SynestheticRecallGame,
       'memory-matrix': MemoryMatrixGame,
       'quick-response': QuickResponseGame,
+      // 'stroop-test': StroopTestGame,
+      // 'dual-n-back': DualNBackGame,
+      // 'visual-attention': VisualAttentionGame,
     };
 
     const GameComponent = gameComponents[gameType as keyof typeof gameComponents];

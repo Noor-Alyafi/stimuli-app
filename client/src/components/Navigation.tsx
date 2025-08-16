@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Home, Gamepad2, TrendingUp, Trophy, BookOpen, User, LogOut, Save } from "lucide-react";
+import { Home, Gamepad2, TrendingUp, Trophy, BookOpen, User as UserIcon, LogOut, Save, ShoppingCart, TreePine, Coins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useQuery } from "@tanstack/react-query";
+import { User } from "@shared/schema";
 
 interface NavigationProps {
   activeTab: string;
@@ -15,10 +16,12 @@ const tabs = [
   { id: "progress", label: "Progress", icon: TrendingUp },
   { id: "achievements", label: "Achievements", icon: Trophy },
   { id: "journal", label: "Journal", icon: BookOpen },
+  { id: "store", label: "Store", icon: ShoppingCart },
+  { id: "garden", label: "Garden", icon: TreePine },
 ];
 
 export function Navigation({ activeTab, onTabChange }: NavigationProps) {
-  const { data: user } = useQuery({
+  const { data: user } = useQuery<User>({
     queryKey: ["/api/auth/user"],
     retry: false,
   });
@@ -38,6 +41,12 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
             
             {/* User Profile */}
             <div className="flex items-center space-x-4">
+              <div className="hidden md:flex items-center space-x-2 bg-yellow-50 border border-yellow-200 px-3 py-2 rounded-full">
+                <Coins className="h-4 w-4 text-yellow-600" />
+                <span className="text-sm font-medium text-yellow-800">
+                  {user?.coins || 0}
+                </span>
+              </div>
               <div className="hidden sm:flex items-center space-x-2 bg-gray-100 px-4 py-2 rounded-full">
                 <i className="fas fa-fire text-orange-500"></i>
                 <span className="text-sm font-medium text-gray-700">

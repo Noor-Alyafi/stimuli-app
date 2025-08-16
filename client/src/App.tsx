@@ -9,6 +9,8 @@ import Training from "@/pages/Training";
 import ProgressPage from "@/pages/Progress";
 import Achievements from "@/pages/Achievements";
 import Journal from "@/pages/Journal";
+import Store from "@/pages/Store";
+import Garden from "@/pages/Garden";
 import { SaveProgressNotification } from "@/components/SaveProgressNotification";
 
 function AppContent() {
@@ -49,6 +51,10 @@ function AppContent() {
         return <Achievements />;
       case "journal":
         return <Journal />;
+      case "store":
+        return <Store />;
+      case "garden":
+        return <Garden />;
       default:
         return <Home />;
     }
