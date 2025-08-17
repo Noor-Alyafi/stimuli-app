@@ -410,8 +410,8 @@ export class DatabaseStorage implements IStorage {
       throw new Error('Tree not found');
     }
 
-    const currentXpContributed = tree.xpContributed || 0;
-    const currentGrowthStage = tree.growthStage || 1;
+    const currentXpContributed = tree.xpContributed ?? 0;
+    const currentGrowthStage = tree.growthStage ?? 1;
     const newXpContributed = currentXpContributed + xpToContribute;
     let newGrowthStage = currentGrowthStage;
 
@@ -443,6 +443,28 @@ export class DatabaseStorage implements IStorage {
       tree: updatedTree, 
       previousStage: currentGrowthStage 
     };
+  }
+
+  async decorateTree(treeId: number, decorationType: string): Promise<void> {
+    const currentDecorations = await db
+      .select()
+      .from(userTrees)
+      .where(eq(userTrees.id, treeId));
+
+    if (currentDecorations.length > 0) {
+      const tree = currentDecorations[0];
+      const existingDecorations = tree.decorations || [];
+      
+      // Add new decoration if not already present
+      if (!existingDecorations.includes(decorationType)) {
+        await db
+          .update(userTrees)
+          .set({
+            decorations: [...existingDecorations, decorationType],
+          })
+          .where(eq(userTrees.id, treeId));
+      }
+    }
   }
 
   // Store operations

@@ -77,7 +77,7 @@ export const SimpleCartoonTree = ({
             width: `${50 + (stage * 12)}px`,
             height: `${50 + (stage * 12)}px`,
             backgroundColor: colors.crown,
-            borderRadius: '60% 40% 60% 40%', // Much more organic, cute shape
+            borderRadius: '50%', // Perfect circle for cute, non-egg look
             filter: 'drop-shadow(3px 6px 12px rgba(0,0,0,0.25))',
             position: 'relative',
             marginBottom: `-${8 + (stage * 3)}px`, // Better overlap with trunk

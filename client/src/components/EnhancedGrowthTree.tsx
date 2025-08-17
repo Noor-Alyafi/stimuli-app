@@ -17,9 +17,10 @@ interface TreeVisualProps {
   tree: UserTree;
   onWater: (treeId: number) => void;
   onGrow: (treeId: number) => void;
+  onDecorate?: (treeId: number, decorationType: string) => void;
 }
 
-const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow }) => {
+const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow, onDecorate }) => {
   const getGrowthLabel = (stage: number) => {
     const labels = ['Seed', 'Sprout', 'Sapling', 'Tree', 'Mature'];
     return labels[stage - 1] || 'Seed';
@@ -82,6 +83,28 @@ const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow }) => {
           >
             <Sparkles className="h-4 w-4 mr-1" />
             Grow (10 XP)
+          </Button>
+        </div>
+        
+        {/* Decoration Buttons */}
+        <div className="flex gap-2">
+          <Button
+            onClick={() => onDecorate?.(tree.id, 'fairy_lights')}
+            variant="secondary"
+            size="sm"
+            className="flex-1"
+            data-testid={`button-lights-${tree.id}`}
+          >
+            ✨ Lights
+          </Button>
+          <Button
+            onClick={() => onDecorate?.(tree.id, 'gnome')}
+            variant="secondary"
+            size="sm"
+            className="flex-1"
+            data-testid={`button-gnome-${tree.id}`}
+          >
+            🧙‍♂️ Gnome
           </Button>
         </div>
 
@@ -181,6 +204,23 @@ export default function EnhancedGrowthTree() {
     },
   });
 
+  const decorateTreeMutation = useMutation({
+    mutationFn: async ({ treeId, decorationType, storeItemId }: { treeId: number; decorationType: string; storeItemId: number }) =>
+      apiRequest('POST', `/api/trees/${treeId}/decorate`, { decorationType, storeItemId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/trees'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/inventory'] });
+      toast({ title: 'Decoration added!', description: 'Your tree looks even more beautiful!' });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Failed to decorate tree',
+        description: error.message,
+        variant: 'destructive'
+      });
+    },
+  });
+
   const treeTypes = [
     { type: 'oak', name: 'Oak', description: 'Strong and steady growth', emoji: '🌳' },
     { type: 'cherry', name: 'Cherry Blossom', description: 'Beautiful pink blooms', emoji: '🌸' },
@@ -245,6 +285,28 @@ export default function EnhancedGrowthTree() {
                   tree={tree}
                   onWater={(treeId) => waterTreeMutation.mutate(treeId)}
                   onGrow={(treeId) => growTreeMutation.mutate(treeId)}
+                  onDecorate={(treeId, decorationType) => {
+                    // Find the decoration item in inventory
+                    const decorationName = decorationType === 'fairy_lights' ? 'Fairy Lights' : 'Garden Gnome';
+                    const decorationItem = inventory.find(item => {
+                      const storeItem = storeItems.find(si => si.id === item.storeItemId);
+                      return storeItem?.name === decorationName;
+                    });
+                    
+                    if (decorationItem) {
+                      decorateTreeMutation.mutate({
+                        treeId,
+                        decorationType,
+                        storeItemId: decorationItem.storeItemId
+                      });
+                    } else {
+                      toast({ 
+                        title: `No ${decorationName.toLowerCase()}`, 
+                        description: `Buy ${decorationName.toLowerCase()} from the store first!`,
+                        variant: 'destructive'
+                      });
+                    }
+                  }}
                 />
               ))}
             </div>
@@ -291,7 +353,10 @@ export default function EnhancedGrowthTree() {
                   You need to buy seeds from the Store before you can plant trees!
                 </p>
                 <Button 
-                  onClick={() => navigate('/store')}
+                  onClick={() => {
+                    console.log('Navigating to store...');
+                    navigate('/store');
+                  }}
                   data-testid="button-goto-store"
                 >
                   Visit Store

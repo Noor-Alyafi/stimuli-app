@@ -420,6 +420,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post('/api/trees/:treeId/decorate', async (req: any, res) => {
+    try {
+      const { treeId } = req.params;
+      const { decorationType, storeItemId } = req.body;
+      const userId = demoUserId;
+      
+      // Use inventory item
+      await storage.useInventoryItem(userId, storeItemId, 1);
+      
+      // Update tree with decoration
+      await storage.decorateTree(parseInt(treeId), decorationType);
+      
+      res.json({ message: "Tree decorated successfully!" });
+    } catch (error) {
+      console.error("Error decorating tree:", error);
+      res.status(500).json({ message: "Failed to decorate tree" });
+    }
+  });
+
   app.post('/api/trees/:treeId/grow', async (req: any, res) => {
     try {
       const { treeId } = req.params;
