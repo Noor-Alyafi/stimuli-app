@@ -33,8 +33,8 @@ export default function Home() {
     </div>
   );
 
-  const currentXP = user.xp || 0;
-  const currentLevel = user.level || 1;
+  const currentXP = (user as any)?.xp || 0;
+  const currentLevel = (user as any)?.level || 1;
   const nextLevelXP = currentLevel * 100;
   const progressPercentage = ((currentXP % 100) / 100) * 100;
   
@@ -53,7 +53,7 @@ export default function Home() {
             <Card>
               <CardContent className="p-8">
                 <h2 className="text-3xl font-inter font-bold text-navy mb-2">
-                  Welcome back{user.firstName ? `, ${user.firstName}` : ''}!
+                  Welcome back{(user as any)?.firstName ? `, ${(user as any).firstName}` : ''}!
                 </h2>
                 <p className="text-gray-600 text-lg mb-6">
                   Ready to train your mind today?
@@ -122,29 +122,31 @@ export default function Home() {
           <Card>
             <CardContent className="p-8">
               <h3 className="font-inter font-semibold text-navy mb-6 text-center">
-                Your Growth Tree
+                Your Mind Tree
               </h3>
               
               <GrowthTree 
                 xp={currentXP}
                 level={currentLevel}
-                achievements={3} // This would come from actual achievements
+                achievements={(user as any)?.achievementCount || 0}
                 className="w-full"
               />
               
               {/* Tree Stats */}
-              <div className="mt-6 space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Current Level</span>
-                  <span className="font-medium text-navy">Neural Explorer</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Branches Grown</span>
-                  <span className="font-medium text-green-600">{currentLevel + 3}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Flowers Earned</span>
-                  <span className="font-medium text-yellow-600">3</span>
+              <div className="mt-6 space-y-3 text-center">
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <div className="text-lg font-semibold text-green-600">{currentXP}</div>
+                    <div className="text-xs text-gray-600">Total XP</div>
+                  </div>
+                  <div>
+                    <div className="text-lg font-semibold text-blue-600">{currentLevel}</div>
+                    <div className="text-xs text-gray-600">Level</div>
+                  </div>
+                  <div>
+                    <div className="text-lg font-semibold text-purple-600">{(user as any)?.achievementCount || 0}</div>
+                    <div className="text-xs text-gray-600">Achievements</div>
+                  </div>
                 </div>
               </div>
             </CardContent>
