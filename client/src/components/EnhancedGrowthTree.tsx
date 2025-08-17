@@ -291,7 +291,7 @@ export default function EnhancedGrowthTree() {
                   You need to buy seeds from the Store before you can plant trees!
                 </p>
                 <Button 
-                  onClick={() => window.location.href = '/store'}
+                  onClick={() => navigate('/store')}
                   data-testid="button-goto-store"
                 >
                   Visit Store

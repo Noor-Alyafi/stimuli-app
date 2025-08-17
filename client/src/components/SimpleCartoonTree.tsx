@@ -70,46 +70,59 @@ export const SimpleCartoonTree = ({
         animate={{ scale: treeScale * sizeMultiplier, opacity: 1 }}
         transition={{ duration: 0.8, ease: "backOut" }}
       >
-        {/* Tree Crown - Cute cartoon style */}
+        {/* Tree Crown - SUPER CUTE CARTOON DESIGN */}
         <motion.div
           className="relative z-20"
           style={{
-            width: `${40 + (stage * 8)}px`,
-            height: `${40 + (stage * 8)}px`,
+            width: `${50 + (stage * 12)}px`,
+            height: `${50 + (stage * 12)}px`,
             backgroundColor: colors.crown,
-            borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
-            filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.15))',
+            borderRadius: '60% 40% 60% 40%', // Much more organic, cute shape
+            filter: 'drop-shadow(3px 6px 12px rgba(0,0,0,0.25))',
             position: 'relative',
-            marginBottom: `-${5 + (stage * 2)}px` // Overlap with trunk
+            marginBottom: `-${8 + (stage * 3)}px`, // Better overlap with trunk
+            border: `2px solid ${colors.crownLight}` // Cute outline
           }}
           animate={{
-            scale: [1, 1.02, 1],
+            scale: [1, 1.05, 1],
           }}
-          transition={{ duration: 3, repeat: Infinity }}
+          transition={{ duration: 4, repeat: Infinity }}
         >
-          {/* Cute highlight */}
+          {/* Multiple cute highlights for cartoon effect */}
           <div
             style={{
               position: 'absolute',
-              top: '25%',
-              left: '30%',
-              width: '20%',
-              height: '20%',
+              top: '20%',
+              left: '25%',
+              width: '25%',
+              height: '25%',
+              backgroundColor: 'rgba(255,255,255,0.6)',
+              borderRadius: '50%',
+              filter: 'blur(1px)'
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              top: '35%',
+              left: '15%',
+              width: '15%',
+              height: '15%',
               backgroundColor: 'rgba(255,255,255,0.4)',
               borderRadius: '50%'
             }}
           />
-          {/* Cute shadow detail */}
+          {/* Cute shadow details */}
           <div
             style={{
               position: 'absolute',
-              bottom: '10%',
-              right: '15%',
-              width: '30%',
-              height: '15%',
+              bottom: '15%',
+              right: '20%',
+              width: '35%',
+              height: '20%',
               backgroundColor: colors.crownLight,
-              borderRadius: '50%',
-              opacity: 0.3
+              borderRadius: '60%',
+              opacity: 0.5
             }}
           />
           
@@ -172,50 +185,67 @@ export const SimpleCartoonTree = ({
           )}
         </motion.div>
         
-        {/* Tree Trunk - MUCH MORE VISIBLE CUTE BROWN TRUNK */}
+        {/* Tree Trunk - SUPER VISIBLE CUTE CARTOON TRUNK */}
         <div
           className="absolute bottom-0 left-1/2 transform -translate-x-1/2 z-10"
           style={{
-            width: `${20 + (stage * 4)}px`,
-            height: `${32 + (stage * 6)}px`,
-            backgroundColor: '#8B4513', // Much darker, more visible brown
-            borderRadius: '8px 8px 2px 2px',
-            filter: 'drop-shadow(2px 4px 8px rgba(0,0,0,0.4))',
-            border: '2px solid #654321' // Dark brown border for definition
+            width: `${24 + (stage * 6)}px`,
+            height: `${40 + (stage * 8)}px`,
+            backgroundColor: '#8B4513', // Dark chocolate brown
+            borderRadius: '12px 12px 3px 3px', // More rounded, cuter
+            filter: 'drop-shadow(3px 6px 12px rgba(0,0,0,0.5))',
+            border: '3px solid #654321', // Thicker border for definition
+            background: 'linear-gradient(45deg, #8B4513 0%, #A0522D 50%, #8B4513 100%)' // Gradient for depth
           }}
         >
-          {/* Trunk texture lines for cuteness */}
+          {/* Cute trunk texture - bark lines */}
           <div 
             style={{
               position: 'absolute',
-              top: '25%',
-              left: '25%',
-              right: '25%',
-              height: '2px',
-              backgroundColor: '#654321',
-              borderRadius: '1px'
-            }}
-          />
-          <div 
-            style={{
-              position: 'absolute',
-              top: '55%',
+              top: '20%',
               left: '20%',
               right: '20%',
-              height: '2px',
+              height: '3px',
               backgroundColor: '#654321',
-              borderRadius: '1px'
+              borderRadius: '2px',
+              boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.3)'
             }}
           />
           <div 
             style={{
               position: 'absolute',
-              top: '80%',
-              left: '30%',
-              right: '30%',
-              height: '2px',
+              top: '45%',
+              left: '15%',
+              right: '15%',
+              height: '3px',
               backgroundColor: '#654321',
-              borderRadius: '1px'
+              borderRadius: '2px',
+              boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.3)'
+            }}
+          />
+          <div 
+            style={{
+              position: 'absolute',
+              top: '70%',
+              left: '25%',
+              right: '25%',
+              height: '3px',
+              backgroundColor: '#654321',
+              borderRadius: '2px',
+              boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.3)'
+            }}
+          />
+          {/* Cute knot in the trunk */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '35%',
+              left: '35%',
+              width: '30%',
+              height: '15%',
+              backgroundColor: '#654321',
+              borderRadius: '50%',
+              opacity: 0.7
             }}
           />
         </div>

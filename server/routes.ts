@@ -381,7 +381,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = demoUserId;
       const { treeType, seedItemId } = req.body;
       
-      // Check if user has the required seed in inventory
+      // Check if user has the required seed in inventory - ONLY if seedItemId is provided
       if (seedItemId) {
         const inventory = await storage.getUserInventory(userId);
         const seedItem = inventory.find(item => item.storeItemId === seedItemId && (item.quantity || 0) > 0);
@@ -393,6 +393,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Remove one seed from inventory
         await storage.useInventoryItem(userId, seedItemId, 1);
       }
+      // If no seedItemId provided, allow free planting (for demo purposes)
       
       const tree = await storage.plantTree({
         userId,
