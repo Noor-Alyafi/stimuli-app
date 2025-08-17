@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { SimpleCartoonTree } from "./SimpleCartoonTree";
+import { PerfectCartoonTree } from "./PerfectCartoonTree";
 
 interface GrowthTreeProps {
   xp: number;
@@ -30,7 +30,7 @@ export const GrowthTree = ({ xp, level, achievements = 0, className = "" }: Grow
     <div className={`flex flex-col items-center ${className}`}>
       {/* Large Growth Tree using the cute cartoon style */}
       <div className="flex justify-center mb-4">
-        <SimpleCartoonTree
+        <PerfectCartoonTree
           type={treeType}
           stage={growthStage}
           xpContributed={xp}

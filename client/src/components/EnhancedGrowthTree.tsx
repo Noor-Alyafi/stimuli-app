@@ -11,7 +11,7 @@ import { UserTree, User, UserInventory, StoreItem } from '@shared/schema';
 import { Coins, Sparkles, Droplet, TreePine, Plus, Package } from 'lucide-react';
 import { TreeVisual3D } from './TreeVisual3D';
 import { useLocation } from 'wouter';
-import { SimpleCartoonTree } from './SimpleCartoonTree';
+import { PerfectCartoonTree } from './PerfectCartoonTree';
 
 interface TreeVisualProps {
   tree: UserTree;
@@ -43,10 +43,11 @@ const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow, onDecora
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex justify-center">
-          <SimpleCartoonTree 
+          <PerfectCartoonTree 
             type={tree.treeType} 
             stage={tree.growthStage || 1}
             xpContributed={tree.xpContributed || 0}
+            decorations={tree.decorations as string[] || []}
             className="hover:scale-105 transition-transform duration-300"
           />
         </div>
@@ -402,7 +403,7 @@ export default function EnhancedGrowthTree() {
                       className={`hover:shadow-lg transition-shadow ${canPlant ? 'border-green-200 dark:border-green-800' : 'opacity-60'}`}
                     >
                       <CardHeader className="text-center">
-                        <SimpleCartoonTree type={treeType.type} stage={1} size="small" className="mx-auto mb-2" />
+                        <PerfectCartoonTree type={treeType.type} stage={1} size="small" className="mx-auto mb-2" />
                         <CardTitle>{treeType.name}</CardTitle>
                         <CardDescription>{treeType.description}</CardDescription>
                       </CardHeader>
