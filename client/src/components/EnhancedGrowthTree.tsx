@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { UserTree, User, UserInventory, StoreItem } from '@shared/schema';
 import { Coins, Sparkles, Droplet, TreePine, Plus, Package } from 'lucide-react';
 import { TreeVisual3D } from './TreeVisual3D';
+import { useLocation } from 'wouter';
 import { SimpleCartoonTree } from './SimpleCartoonTree';
 
 interface TreeVisualProps {
@@ -98,6 +99,7 @@ const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow }) => {
 export default function EnhancedGrowthTree() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [, navigate] = useLocation();
 
   // Fetch user data for coins
   const { data: user } = useQuery<User>({ queryKey: ['/api/auth/user'] });
@@ -335,7 +337,7 @@ export default function EnhancedGrowthTree() {
                       className={`hover:shadow-lg transition-shadow ${canPlant ? 'border-green-200 dark:border-green-800' : 'opacity-60'}`}
                     >
                       <CardHeader className="text-center">
-                        <TreeVisual3D type={treeType.type} stage={1} className="mx-auto mb-2" />
+                        <SimpleCartoonTree type={treeType.type} stage={1} size="small" className="mx-auto mb-2" />
                         <CardTitle>{treeType.name}</CardTitle>
                         <CardDescription>{treeType.description}</CardDescription>
                       </CardHeader>
@@ -364,7 +366,7 @@ export default function EnhancedGrowthTree() {
                               No seeds
                             </Badge>
                             <Button
-                              onClick={() => window.location.href = '/store'}
+                              onClick={() => navigate('/store')}
                               variant="outline"
                               className="w-full"
                               data-testid={`button-buy-seed-${treeType.type}`}

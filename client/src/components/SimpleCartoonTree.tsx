@@ -172,17 +172,53 @@ export const SimpleCartoonTree = ({
           )}
         </motion.div>
         
-        {/* Tree Trunk - Cute style */}
+        {/* Tree Trunk - MUCH MORE VISIBLE CUTE BROWN TRUNK */}
         <div
           className="absolute bottom-0 left-1/2 transform -translate-x-1/2 z-10"
           style={{
-            width: `${8 + (stage * 2)}px`,
-            height: `${14 + (stage * 2)}px`,
-            backgroundColor: colors.trunk,
-            borderRadius: '4px',
-            filter: 'drop-shadow(1px 2px 3px rgba(0,0,0,0.2))'
+            width: `${20 + (stage * 4)}px`,
+            height: `${32 + (stage * 6)}px`,
+            backgroundColor: '#8B4513', // Much darker, more visible brown
+            borderRadius: '8px 8px 2px 2px',
+            filter: 'drop-shadow(2px 4px 8px rgba(0,0,0,0.4))',
+            border: '2px solid #654321' // Dark brown border for definition
           }}
-        />
+        >
+          {/* Trunk texture lines for cuteness */}
+          <div 
+            style={{
+              position: 'absolute',
+              top: '25%',
+              left: '25%',
+              right: '25%',
+              height: '2px',
+              backgroundColor: '#654321',
+              borderRadius: '1px'
+            }}
+          />
+          <div 
+            style={{
+              position: 'absolute',
+              top: '55%',
+              left: '20%',
+              right: '20%',
+              height: '2px',
+              backgroundColor: '#654321',
+              borderRadius: '1px'
+            }}
+          />
+          <div 
+            style={{
+              position: 'absolute',
+              top: '80%',
+              left: '30%',
+              right: '30%',
+              height: '2px',
+              backgroundColor: '#654321',
+              borderRadius: '1px'
+            }}
+          />
+        </div>
         
         {/* Decorations */}
         {decorations.map((decoration, index) => (

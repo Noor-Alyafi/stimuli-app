@@ -261,7 +261,7 @@ export default function CoinStore() {
                         <div>
                           <p className="font-medium text-sm">{transaction.description}</p>
                           <p className="text-xs text-gray-500">
-                            {new Date(transaction.createdAt).toLocaleDateString()}
+                            {transaction.createdAt ? new Date(transaction.createdAt).toLocaleDateString() : 'Unknown'}
                           </p>
                         </div>
                       </div>
