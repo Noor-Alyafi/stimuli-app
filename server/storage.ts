@@ -65,7 +65,7 @@ export interface IStorage {
   plantTree(tree: InsertUserTree): Promise<UserTree>;
   getUserTrees(userId: string): Promise<UserTree[]>;
   waterTree(treeId: number): Promise<void>;
-  growTree(treeId: number, xpToContribute: number): Promise<UserTree>;
+  growTree(treeId: number, xpToContribute: number): Promise<{ tree: UserTree, previousStage: number }>;
   
   // Coin transaction operations
   addCoinTransaction(transaction: InsertCoinTransaction): Promise<CoinTransaction>;
@@ -76,6 +76,10 @@ export interface IStorage {
   createStoreItem(item: InsertStoreItem): Promise<StoreItem>;
   purchaseItem(userId: string, itemId: number, quantity?: number): Promise<void>;
   getUserInventory(userId: string): Promise<UserInventory[]>;
+  useInventoryItem(userId: string, storeItemId: number, quantity: number): Promise<void>;
+  
+  // Decoration operations  
+  addDecorationToTree(treeId: number, decorationType: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -396,16 +400,20 @@ export class DatabaseStorage implements IStorage {
       .where(eq(userTrees.id, treeId));
   }
 
-  async growTree(treeId: number, xpToContribute: number): Promise<UserTree> {
+  async growTree(treeId: number, xpToContribute: number): Promise<{ tree: UserTree, previousStage: number }> {
     const [tree] = await db
       .select()
       .from(userTrees)
       .where(eq(userTrees.id, treeId));
 
-    if (!tree) throw new Error('Tree not found');
+    if (!tree) {
+      throw new Error('Tree not found');
+    }
 
-    const newXpContributed = (tree.xpContributed || 0) + xpToContribute;
-    let newGrowthStage = tree.growthStage || 1;
+    const currentXpContributed = tree.xpContributed || 0;
+    const currentGrowthStage = tree.growthStage || 1;
+    const newXpContributed = currentXpContributed + xpToContribute;
+    let newGrowthStage = currentGrowthStage;
 
     // Growth stages based on XP contributed
     if (newXpContributed >= 500 && newGrowthStage < 5) {
@@ -427,7 +435,14 @@ export class DatabaseStorage implements IStorage {
       .where(eq(userTrees.id, treeId))
       .returning();
 
-    return updatedTree;
+    if (!updatedTree) {
+      throw new Error('Failed to update tree');
+    }
+
+    return { 
+      tree: updatedTree, 
+      previousStage: currentGrowthStage 
+    };
   }
 
   // Store operations
@@ -544,6 +559,28 @@ export class DatabaseStorage implements IStorage {
         })
         .where(and(eq(userInventory.userId, userId), eq(userInventory.storeItemId, itemId)));
     }
+  }
+
+  async addDecorationToTree(treeId: number, decorationType: string): Promise<void> {
+    const [tree] = await db
+      .select()
+      .from(userTrees)
+      .where(eq(userTrees.id, treeId));
+
+    if (!tree) {
+      throw new Error('Tree not found');
+    }
+
+    const currentDecorations = (tree.decorations as any[]) || [];
+    const updatedDecorations = [...currentDecorations, { 
+      type: decorationType, 
+      addedAt: new Date().toISOString() 
+    }];
+
+    await db
+      .update(userTrees)
+      .set({ decorations: updatedDecorations })
+      .where(eq(userTrees.id, treeId));
   }
 }
 

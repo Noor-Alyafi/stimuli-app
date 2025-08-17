@@ -100,6 +100,7 @@ export const userTrees = pgTable("user_trees", {
   plantedAt: timestamp("planted_at").defaultNow(),
   lastWatered: timestamp("last_watered"),
   isSpecial: boolean("is_special").default(false),
+  decorations: jsonb("decorations").default([]), // Array of applied decorations
 });
 
 // Coin transaction history

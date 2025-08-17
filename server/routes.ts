@@ -422,13 +422,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/trees/:treeId/grow', async (req: any, res) => {
     try {
       const { treeId } = req.params;
-      const { xpToContribute } = req.body;
+      const { xpToContribute = 10 } = req.body;
       
-      const updatedTree = await storage.growTree(parseInt(treeId), xpToContribute || 10);
-      res.json({ tree: updatedTree, message: "Tree grew!" });
+      const parsedTreeId = parseInt(treeId);
+      if (isNaN(parsedTreeId)) {
+        return res.status(400).json({ message: "Invalid tree ID" });
+      }
+      
+      const result = await storage.growTree(parsedTreeId, xpToContribute);
+      res.json({ 
+        tree: result.tree, 
+        previousStage: result.previousStage,
+        message: "Tree grew!" 
+      });
     } catch (error) {
       console.error("Error growing tree:", error);
-      res.status(500).json({ message: "Failed to grow tree" });
+      if (error instanceof Error) {
+        res.status(400).json({ message: error.message });
+      } else {
+        res.status(500).json({ message: "Failed to grow tree" });
+      }
     }
   });
 
@@ -481,6 +494,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching inventory:", error);
       res.status(500).json({ message: "Failed to fetch inventory" });
+    }
+  });
+
+  // Decoration route
+  app.post('/api/trees/:treeId/decorate', async (req: any, res) => {
+    try {
+      const { treeId } = req.params;
+      const { decorationType, storeItemId } = req.body;
+      const userId = demoUserId;
+
+      // Check if user has the decoration item in inventory
+      const inventory = await storage.getUserInventory(userId);
+      const decorationItem = inventory.find(item => item.storeItemId === storeItemId && (item.quantity || 0) > 0);
+      
+      if (!decorationItem) {
+        return res.status(400).json({ message: "You don't have this decoration item!" });
+      }
+
+      // Use one decoration item
+      await storage.useInventoryItem(userId, storeItemId, 1);
+      
+      // Add decoration to tree
+      await storage.addDecorationToTree(parseInt(treeId), decorationType);
+
+      res.json({ message: "Decoration applied to tree!" });
+    } catch (error) {
+      console.error("Error decorating tree:", error);
+      res.status(500).json({ message: "Failed to decorate tree" });
     }
   });
 

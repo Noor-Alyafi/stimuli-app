@@ -6,6 +6,7 @@ interface SimpleCartoonTreeProps {
   xpContributed?: number;
   className?: string;
   size?: 'small' | 'medium' | 'large';
+  decorations?: { type: string; addedAt: string }[];
 }
 
 export const SimpleCartoonTree = ({ 
@@ -13,7 +14,8 @@ export const SimpleCartoonTree = ({
   stage, 
   xpContributed = 0, 
   className = "",
-  size = 'medium'
+  size = 'medium',
+  decorations = []
 }: SimpleCartoonTreeProps) => {
   
   // Get tree colors based on type
@@ -63,7 +65,7 @@ export const SimpleCartoonTree = ({
   return (
     <div className={`relative flex items-end justify-center ${containerHeight} ${containerWidth} ${className}`}>
       <motion.div
-        className="relative flex items-end justify-center"
+        className="relative flex flex-col items-center justify-end"
         initial={{ scale: 0.3, opacity: 0 }}
         animate={{ scale: treeScale * sizeMultiplier, opacity: 1 }}
         transition={{ duration: 0.8, ease: "backOut" }}
@@ -77,7 +79,8 @@ export const SimpleCartoonTree = ({
             backgroundColor: colors.crown,
             borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
             filter: 'drop-shadow(2px 4px 6px rgba(0,0,0,0.15))',
-            position: 'relative'
+            position: 'relative',
+            marginBottom: `-${5 + (stage * 2)}px` // Overlap with trunk
           }}
           animate={{
             scale: [1, 1.02, 1],
@@ -181,6 +184,36 @@ export const SimpleCartoonTree = ({
           }}
         />
         
+        {/* Decorations */}
+        {decorations.map((decoration, index) => (
+          <motion.div
+            key={`${decoration.type}-${index}`}
+            className="absolute z-25"
+            style={{
+              top: `${20 + (index * 15)}%`,
+              left: `${15 + (index * 20)}%`
+            }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 2 + (index * 0.3), duration: 0.6 }}
+          >
+            {decoration.type === 'fairy_lights' && (
+              <motion.div
+                className="text-sm"
+                animate={{
+                  opacity: [0.6, 1, 0.6]
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                ✨
+              </motion.div>
+            )}
+            {decoration.type === 'gnome' && (
+              <div className="text-sm">🧙‍♂️</div>
+            )}
+          </motion.div>
+        ))}
+
         {/* Maturity indicator */}
         {stage >= 5 && (
           <motion.div
