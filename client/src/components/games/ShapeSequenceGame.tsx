@@ -114,7 +114,12 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
     setPlayerSequence(newPlayerSequence);
     
     // Check if the current selection is correct
-    const isCorrect = shape.id === sequence[newPlayerSequence.length - 1].id;
+    const expectedShape = sequence[newPlayerSequence.length - 1];
+    if (!expectedShape) {
+      console.error('No expected shape found', { newPlayerSequence, sequence });
+      return;
+    }
+    const isCorrect = shape.id === expectedShape.id;
     
     if (!isCorrect) {
       setFeedback('incorrect');
