@@ -443,17 +443,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { treeId } = req.params;
       const { xpToContribute = 10 } = req.body;
+      const userId = demoUserId;
       
       const parsedTreeId = parseInt(treeId);
       if (isNaN(parsedTreeId)) {
         return res.status(400).json({ message: "Invalid tree ID" });
       }
       
+      // Check if user has enough coins (2 coins to grow)
+      const user = await storage.getUser(userId);
+      if (!user || (user.coins || 0) < 2) {
+        return res.status(400).json({ message: "You need at least 2 coins to grow a tree!" });
+      }
+      
+      // Deduct 2 coins for growing
+      await storage.addCoinTransaction({
+        userId,
+        amount: -2,
+        transactionType: 'tree_growth',
+        description: 'Grew tree'
+      });
+      
+      // Add 10 XP for growing
+      await storage.updateUserXP(userId, 10);
+      
       const result = await storage.growTree(parsedTreeId, xpToContribute);
       res.json({ 
         tree: result.tree, 
         previousStage: result.previousStage,
-        message: "Tree grew!" 
+        message: "Tree grew! -2 coins, +10 XP" 
       });
     } catch (error) {
       console.error("Error growing tree:", error);

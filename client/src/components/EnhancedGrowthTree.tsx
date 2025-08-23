@@ -196,13 +196,6 @@ export default function EnhancedGrowthTree() {
           : 'XP contributed to growth.' 
       });
     },
-    onError: (error) => {
-      toast({ 
-        title: 'Failed to grow tree', 
-        description: error.message,
-        variant: 'destructive' 
-      });
-    },
   });
 
   const decorateTreeMutation = useMutation({
