@@ -82,67 +82,45 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
           </div>
         );
       
-      case 2: // Sprout - cartoon style matching the trees
+      case 2: // Sprout - simple like original image
         return (
-          <div className="relative flex items-end justify-center">
-            {/* Cartoon soil mound like trees */}
+          <div className="relative flex items-center justify-center">
+            {/* Simple vertical stem */}
             <div 
-              className="rounded-full"
+              className="relative"
               style={{
-                width: `${24 * sizeMultiplier}px`,
-                height: `${8 * sizeMultiplier}px`,
-                backgroundColor: colors.soil,
-                position: 'relative',
-                filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))',
-                border: `1px solid ${colors.trunkDark}`
+                width: `${3 * sizeMultiplier}px`,
+                height: `${18 * sizeMultiplier}px`,
+                backgroundColor: colors.crown,
+                borderRadius: '50%'
               }}
             >
-              {/* Main cartoon stem */}
+              {/* Simple left leaf */}
               <div 
                 className="absolute"
                 style={{
-                  width: `${4 * sizeMultiplier}px`,
-                  height: `${16 * sizeMultiplier}px`,
-                  background: `linear-gradient(45deg, ${colors.crownDark} 0%, ${colors.crown} 30%, ${colors.crownLight} 100%)`,
-                  top: `${-14 * sizeMultiplier}px`,
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  borderRadius: '40% 40% 20% 20%',
-                  filter: 'drop-shadow(1px 2px 3px rgba(0,0,0,0.2))',
-                  border: `1px solid ${colors.crownDark}`
+                  width: `${12 * sizeMultiplier}px`,
+                  height: `${6 * sizeMultiplier}px`,
+                  backgroundColor: colors.crownLight,
+                  top: `${4 * sizeMultiplier}px`,
+                  left: `${-9 * sizeMultiplier}px`,
+                  borderRadius: '100% 0% 100% 0%',
+                  transform: 'rotate(-10deg)'
                 }}
-              >
-                {/* Left cartoon leaf - matching tree style */}
-                <div 
-                  className="absolute"
-                  style={{
-                    width: `${8 * sizeMultiplier}px`,
-                    height: `${4 * sizeMultiplier}px`,
-                    background: `radial-gradient(circle at 30% 30%, ${colors.crownLight} 0%, ${colors.crown} 60%, ${colors.crownDark} 100%)`,
-                    top: `${3 * sizeMultiplier}px`,
-                    left: `${-6 * sizeMultiplier}px`,
-                    borderRadius: '50% 45% 55% 50%', // Same organic shape as tree crown
-                    transform: 'rotate(-20deg)',
-                    filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.2))',
-                    border: `1px solid ${colors.crownDark}`
-                  }}
-                />
-                {/* Right cartoon leaf - matching tree style */}
-                <div 
-                  className="absolute"
-                  style={{
-                    width: `${8 * sizeMultiplier}px`,
-                    height: `${4 * sizeMultiplier}px`,
-                    background: `radial-gradient(circle at 30% 30%, ${colors.crownLight} 0%, ${colors.crown} 60%, ${colors.crownDark} 100%)`,
-                    top: `${3 * sizeMultiplier}px`,
-                    right: `${-6 * sizeMultiplier}px`,
-                    borderRadius: '45% 50% 50% 55%', // Same organic shape as tree crown
-                    transform: 'rotate(20deg)',
-                    filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.2))',
-                    border: `1px solid ${colors.crownDark}`
-                  }}
-                />
-              </div>
+              />
+              {/* Simple right leaf */}
+              <div 
+                className="absolute"
+                style={{
+                  width: `${12 * sizeMultiplier}px`,
+                  height: `${6 * sizeMultiplier}px`,
+                  backgroundColor: colors.crownLight,
+                  top: `${4 * sizeMultiplier}px`,
+                  right: `${-9 * sizeMultiplier}px`,
+                  borderRadius: '0% 100% 0% 100%',
+                  transform: 'rotate(10deg)'
+                }}
+              />
             </div>
           </div>
         );

@@ -257,6 +257,54 @@ export class DatabaseStorage implements IStorage {
           const uniqueGames = new Set(allGames.map(g => g.gameType));
           shouldUnlock = uniqueGames.size >= requirement.value;
           break;
+        case 'trees_planted':
+          const userTrees = await this.getUserTrees(userId);
+          shouldUnlock = userTrees.length >= requirement.count;
+          break;
+        case 'trees_watered':
+          // Count watering events from coin transactions
+          const waterTransactions = await db
+            .select()
+            .from(coinTransactions)
+            .where(and(
+              eq(coinTransactions.userId, userId),
+              eq(coinTransactions.transactionType, 'tree_watered')
+            ));
+          shouldUnlock = waterTransactions.length >= requirement.count;
+          break;
+        case 'trees_grown':
+          // Count growth events from coin transactions
+          const growthTransactions = await db
+            .select()
+            .from(coinTransactions)
+            .where(and(
+              eq(coinTransactions.userId, userId),
+              eq(coinTransactions.transactionType, 'tree_growth')
+            ));
+          shouldUnlock = growthTransactions.length >= requirement.count;
+          break;
+        case 'coins_earned':
+          const earnedTransactions = await db
+            .select()
+            .from(coinTransactions)
+            .where(and(
+              eq(coinTransactions.userId, userId),
+              sql`amount > 0`
+            ));
+          const totalEarned = earnedTransactions.reduce((sum, t) => sum + t.amount, 0);
+          shouldUnlock = totalEarned >= requirement.count;
+          break;
+        case 'coins_spent':
+          const spentTransactions = await db
+            .select()
+            .from(coinTransactions)
+            .where(and(
+              eq(coinTransactions.userId, userId),
+              sql`amount < 0`
+            ));
+          const totalSpent = Math.abs(spentTransactions.reduce((sum, t) => sum + t.amount, 0));
+          shouldUnlock = totalSpent >= requirement.count;
+          break;
       }
 
       if (shouldUnlock) {
@@ -453,7 +501,7 @@ export class DatabaseStorage implements IStorage {
 
     if (currentDecorations.length > 0) {
       const tree = currentDecorations[0];
-      const existingDecorations = tree.decorations || [];
+      const existingDecorations = Array.isArray(tree.decorations) ? tree.decorations : [];
       
       // Add new decoration if not already present
       if (!existingDecorations.includes(decorationType)) {

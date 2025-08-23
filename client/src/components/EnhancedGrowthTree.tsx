@@ -191,9 +191,16 @@ export default function EnhancedGrowthTree() {
       queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
       toast({ 
         title: 'Tree grew!', 
-        description: data.tree.growthStage > (data.previousStage || 1) 
-          ? 'Your tree advanced to the next stage!' 
-          : 'XP contributed to growth.' 
+        description: '+10 XP, -2 coins' + (data.tree.growthStage > (data.previousStage || 1) 
+          ? ' - Advanced to next stage!' 
+          : '') 
+      });
+    },
+    onError: (error) => {
+      toast({ 
+        title: 'Cannot grow tree', 
+        description: error.message,
+        variant: 'destructive' 
       });
     },
   });

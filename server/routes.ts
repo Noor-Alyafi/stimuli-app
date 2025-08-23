@@ -401,6 +401,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         growthStage: 1,
         xpContributed: 0,
       });
+
+      // Track tree planting for achievements
+      await storage.addCoinTransaction({
+        userId,
+        amount: 0, // No coin cost/reward for planting
+        transactionType: 'tree_planted',
+        description: 'Planted tree'
+      });
+      
+      // Check for new achievements
+      await storage.checkAndUnlockAchievements(userId);
       
       res.json({ tree, message: "Tree planted successfully!" });
     } catch (error) {
@@ -412,7 +423,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/trees/:treeId/water', async (req: any, res) => {
     try {
       const { treeId } = req.params;
+      const userId = demoUserId;
+      
       await storage.waterTree(parseInt(treeId));
+      
+      // Track watering for achievements
+      await storage.addCoinTransaction({
+        userId,
+        amount: 0, // No coin reward for watering
+        transactionType: 'tree_watered',
+        description: 'Watered tree'
+      });
+      
+      // Check for new achievements
+      await storage.checkAndUnlockAchievements(userId);
+      
       res.json({ message: "Tree watered!" });
     } catch (error) {
       console.error("Error watering tree:", error);
@@ -468,6 +493,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.updateUserXP(userId, 10);
       
       const result = await storage.growTree(parsedTreeId, xpToContribute);
+      
+      // Check for new achievements after tree actions
+      await storage.checkAndUnlockAchievements(userId);
+      
       res.json({ 
         tree: result.tree, 
         previousStage: result.previousStage,
