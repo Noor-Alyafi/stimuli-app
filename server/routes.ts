@@ -139,14 +139,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             category: 'seeds',
             isAvailable: true,
           });
-          await storage.createStoreItem({
-            itemType: 'tree_seed',
-            name: 'Willow Seed',
-            description: 'Graceful weeping willow for peaceful meditation',
-            price: 15,
-            category: 'seeds',
-            isAvailable: true,
-          });
+          // Willow seed removed - duplicate with seed.ts
           
           // Tree fertilizers/boosters
           await storage.createStoreItem({

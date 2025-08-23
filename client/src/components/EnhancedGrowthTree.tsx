@@ -49,7 +49,7 @@ const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow, onDecora
             type={tree.treeType} 
             stage={tree.growthStage || 1}
             xpContributed={tree.xpContributed || 0}
-            decorations={tree.decorations as string[] || []}
+            decorations={Array.isArray(tree.decorations) ? (tree.decorations || []).map((d: any) => typeof d === 'string' ? d : d.type) : []}
             className="hover:scale-105 transition-transform duration-300"
           />
         </div>

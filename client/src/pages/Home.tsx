@@ -51,11 +51,18 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Card>
+            <Card className="bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-blue-900/20 border-2 border-blue-200 dark:border-blue-700 shadow-xl">
               <CardContent className="p-8">
-                <h2 className="text-3xl font-inter font-bold text-navy mb-2">
-                  Welcome back{(user as any)?.firstName ? `, ${(user as any).firstName}` : ''}!
-                </h2>
+                <div className="flex items-center gap-4 mb-2">
+                  <img 
+                    src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzRGNDZFNSIvPgo8cGF0aCBkPSJNMjAgMTBDMjMuMzEzNyAxMCAyNiAxMi42ODYzIDI2IDE2QzI2IDE5LjMxMzcgMjMuMzEzNyAyMiAyMCAyMkMxNi42ODYzIDIyIDE0IDE5LjMxMzcgMTQgMTZDMTQgMTIuNjg2MyAxNi42ODYzIDEwIDIwIDEwWiIgZmlsbD0id2hpdGUiLz4KPHN2ZyB4PSIxNiIgeT0iMjAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8Y2lyY2xlIGN4PSI0IiBjeT0iNCIgcj0iMiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo="
+                    alt="Stimuli Logo"
+                    className="w-10 h-10"
+                  />
+                  <h2 className="text-3xl font-inter font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                    Welcome back{(user as any)?.firstName ? `, ${(user as any).firstName}` : ''}!
+                  </h2>
+                </div>
                 <p className="text-gray-600 text-lg mb-6">
                   Ready to train your mind today?
                 </p>
@@ -70,24 +77,30 @@ export default function Home() {
                 </div>
 
                 {/* Daily Challenge */}
-                <div className="bg-gradient-to-r from-cyan/10 to-blue-500/10 rounded-xl p-6 border-l-4 border-cyan">
+                <motion.div 
+                  className="bg-gradient-to-r from-cyan/10 to-blue-500/10 rounded-xl p-6 border-l-4 border-cyan"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
                   <h3 className="font-inter font-semibold text-navy mb-2">
-                    Today's Challenge
+                    🎯 Today's Challenge
                   </h3>
                   <p className="text-gray-600 mb-4">
                     Complete 2 training sessions to maintain your streak
                   </p>
-                  <Button 
-                    className="bg-navy text-white hover:bg-navy/90"
-                    onClick={() => {
-                      // Navigate to training tab
-                      const event = new CustomEvent('navigate', { detail: 'training' });
-                      window.dispatchEvent(event);
-                    }}
-                  >
-                    Start Training
-                  </Button>
-                </div>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button 
+                      className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-lg"
+                      onClick={() => {
+                        // Navigate to training tab
+                        const event = new CustomEvent('navigate', { detail: 'training' });
+                        window.dispatchEvent(event);
+                      }}
+                    >
+                      ⚡ Start Training
+                    </Button>
+                  </motion.div>
+                </motion.div>
               </CardContent>
             </Card>
           </motion.div>
@@ -98,17 +111,27 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <Card>
+            <Card className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-2 border-purple-200 dark:border-purple-700 shadow-xl">
               <CardContent className="p-6">
                 <div className="flex items-center space-x-3 mb-4">
-                  <Quote className="text-cyan" size={24} />
-                  <h3 className="font-inter font-semibold text-navy">
-                    Daily Motivation
+                  <motion.div
+                    whileHover={{ rotate: 360 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <Quote className="text-purple-600" size={24} />
+                  </motion.div>
+                  <h3 className="font-inter font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    ✨ Daily Motivation
                   </h3>
                 </div>
-                <p className="text-gray-700 text-lg italic">
+                <motion.p 
+                  className="text-gray-700 dark:text-gray-300 text-lg italic"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                >
                   "{todayQuote}"
-                </p>
+                </motion.p>
               </CardContent>
             </Card>
           </motion.div>
@@ -116,42 +139,26 @@ export default function Home() {
 
         {/* Growth Tree Visualization */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
+          className="bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 dark:from-green-900/20 dark:via-blue-900/20 dark:to-purple-900/20 rounded-xl p-6 border-2 border-green-200 dark:border-green-700"
         >
-          <Card>
-            <CardContent className="p-8">
-              <h3 className="font-inter font-semibold text-navy mb-6 text-center">
-                Your Mind Tree
-              </h3>
-              
-              <GrowthTree 
-                xp={currentXP}
-                level={currentLevel}
-                achievements={(user as any)?.achievementCount || 0}
-                className="w-full"
-              />
-              
-              {/* Tree Stats */}
-              <div className="mt-6 space-y-3 text-center">
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <div className="text-lg font-semibold text-green-600">{currentXP}</div>
-                    <div className="text-xs text-gray-600">Total XP</div>
-                  </div>
-                  <div>
-                    <div className="text-lg font-semibold text-blue-600">{currentLevel}</div>
-                    <div className="text-xs text-gray-600">Level</div>
-                  </div>
-                  <div>
-                    <div className="text-lg font-semibold text-purple-600">{(user as any)?.achievementCount || 0}</div>
-                    <div className="text-xs text-gray-600">Achievements</div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="text-center mb-4">
+            <h3 className="text-xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+              🌳 Your Mind Tree
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Watch your growth flourish
+            </p>
+          </div>
+          
+          <GrowthTree 
+            xp={currentXP}
+            level={currentLevel}
+            achievements={(user as any)?.achievementCount || 0}
+            className="w-full"
+          />
         </motion.div>
       </div>
     </div>
