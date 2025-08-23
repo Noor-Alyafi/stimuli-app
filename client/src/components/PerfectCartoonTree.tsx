@@ -37,7 +37,7 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
       case 'pine':
         return { ...colors, crown: '#4CAF50', crownDark: '#2E7D32', crownLight: '#81C784' };
       case 'rainbow':
-        return { ...colors, crown: '#9C27B0', crownDark: '#6A1B9A', crownLight: '#CE93D8' };
+        return { ...colors, crown: '#b36ae2', crownDark: '#9854c7', crownLight: '#c985eb' };
       default:
         return colors;
     }
@@ -82,43 +82,45 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
           </div>
         );
       
-      case 2: // Sprout - simple like original image
+      case 2: // Sprout - leaves attached to top of stem
         return (
           <div className="relative flex items-center justify-center">
-            {/* Simple vertical stem reaching bottom of leaves */}
+            {/* Vertical stem - shorter and thinner */}
             <div 
               className="relative"
               style={{
-                width: `${3 * sizeMultiplier}px`,
-                height: `${15 * sizeMultiplier}px`,
-                backgroundColor: colors.crown,
-                borderRadius: '50%'
+                width: `${2.5 * sizeMultiplier}px`,
+                height: `${9 * sizeMultiplier}px`,
+                backgroundColor: '#93c47d',
+                borderRadius: '50% 50% 0% 0%'
               }}
             >
-              {/* Simple left leaf - curving upward, positioned near tip */}
+              {/* Left leaf - attached at top center of stem */}
               <div 
                 className="absolute"
                 style={{
-                  width: `${12 * sizeMultiplier}px`,
-                  height: `${6 * sizeMultiplier}px`,
+                  width: `${11 * sizeMultiplier}px`,
+                  height: `${5 * sizeMultiplier}px`,
                   backgroundColor: colors.crownLight,
-                  top: `${3 * sizeMultiplier}px`,
-                  left: `${-9 * sizeMultiplier}px`,
+                  top: `${0 * sizeMultiplier}px`,
+                  left: `${-8.5 * sizeMultiplier}px`,
                   borderRadius: '100% 0% 100% 0%',
-                  transform: 'rotate(35deg)'
+                  transform: 'rotate(35deg)',
+                  transformOrigin: 'right center'
                 }}
               />
-              {/* Simple right leaf - curving upward, positioned near tip */}
+              {/* Right leaf - attached at top center of stem */}
               <div 
                 className="absolute"
                 style={{
-                  width: `${12 * sizeMultiplier}px`,
-                  height: `${6 * sizeMultiplier}px`,
+                  width: `${11 * sizeMultiplier}px`,
+                  height: `${5 * sizeMultiplier}px`,
                   backgroundColor: colors.crownLight,
-                  top: `${3 * sizeMultiplier}px`,
-                  right: `${-9 * sizeMultiplier}px`,
+                  top: `${0 * sizeMultiplier}px`,
+                  right: `${-8.5 * sizeMultiplier}px`,
                   borderRadius: '0% 100% 0% 100%',
-                  transform: 'rotate(-35deg)'
+                  transform: 'rotate(-35deg)',
+                  transformOrigin: 'left center'
                 }}
               />
             </div>
@@ -221,9 +223,13 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
               style={{
                 width: `${fullCrownSize}px`,
                 height: `${fullCrownSize * 0.9}px`,
-                background: `radial-gradient(circle at 30% 30%, ${colors.crownLight} 0%, ${colors.crown} 40%, ${colors.crownDark} 100%)`,
+                background: type === 'rainbow' 
+                  ? colors.crown  // Flat color for rainbow tree
+                  : `radial-gradient(circle at 30% 30%, ${colors.crownLight} 0%, ${colors.crown} 40%, ${colors.crownDark} 100%)`,
                 borderRadius: '50% 45% 55% 50%',
-                filter: 'drop-shadow(4px 8px 16px rgba(0,0,0,0.3))',
+                filter: type === 'rainbow' 
+                  ? 'none'  // No drop shadow for rainbow tree
+                  : 'drop-shadow(4px 8px 16px rgba(0,0,0,0.3))',
                 position: 'relative',
                 marginBottom: `${-fullTrunkHeight * 0.3}px`,
                 border: `1px solid ${colors.crownDark}`,
@@ -300,9 +306,13 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
               style={{
                 width: `${fullTrunkWidth}px`,
                 height: `${fullTrunkHeight}px`,
-                background: `linear-gradient(45deg, ${colors.trunkDark} 0%, ${colors.trunk} 30%, ${colors.trunkDark} 100%)`,
+                background: type === 'rainbow'
+                  ? colors.trunk  // Flat color for rainbow tree
+                  : `linear-gradient(45deg, ${colors.trunkDark} 0%, ${colors.trunk} 30%, ${colors.trunkDark} 100%)`,
                 borderRadius: '3px 3px 1px 1px',
-                filter: 'drop-shadow(2px 4px 8px rgba(0,0,0,0.4))',
+                filter: type === 'rainbow' 
+                  ? 'none'  // No drop shadow for rainbow tree
+                  : 'drop-shadow(2px 4px 8px rgba(0,0,0,0.4))',
                 border: `1px solid ${colors.trunkDark}`,
               }}
             >
