@@ -45,10 +45,10 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
 
   const colors = getTreeColors();
   
-  // Size multipliers - made bigger overall
-  const sizeMultiplier = size === 'small' ? 1.0 : size === 'large' ? 2.0 : 1.5;
-  const containerHeight = size === 'small' ? 'h-20' : size === 'large' ? 'h-48' : 'h-36';
-  const containerWidth = size === 'small' ? 'w-20' : size === 'large' ? 'w-48' : 'w-36';
+  // Size multipliers - made even bigger
+  const sizeMultiplier = size === 'small' ? 1.5 : size === 'large' ? 3.0 : 2.5;
+  const containerHeight = size === 'small' ? 'h-24' : size === 'large' ? 'h-60' : 'h-48';
+  const containerWidth = size === 'small' ? 'w-24' : size === 'large' ? 'w-60' : 'w-48';
   
   // Render different visuals based on growth stage
   const renderTreeByStage = () => {
@@ -82,85 +82,48 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
           </div>
         );
       
-      case 2: // Sprout - improved design
+      case 2: // Sprout - clean design like your image
         return (
           <div className="relative flex items-end justify-center">
-            {/* Soil mound */}
+            {/* Simple stem */}
             <div 
-              className="rounded-full"
+              className="relative"
               style={{
-                width: `${24 * sizeMultiplier}px`,
-                height: `${10 * sizeMultiplier}px`,
-                backgroundColor: colors.soil,
-                position: 'relative',
-                filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))'
+                width: `${3 * sizeMultiplier}px`,
+                height: `${18 * sizeMultiplier}px`,
+                backgroundColor: colors.crown,
+                borderRadius: '50% 50% 30% 30%',
+                background: `linear-gradient(180deg, ${colors.crownLight} 0%, ${colors.crown} 100%)`
               }}
             >
-              {/* Main green stem */}
+              {/* Left curved leaf - simple and clean */}
               <div 
                 className="absolute"
                 style={{
-                  width: `${4 * sizeMultiplier}px`,
-                  height: `${16 * sizeMultiplier}px`,
-                  backgroundColor: colors.crown,
-                  top: `${-14 * sizeMultiplier}px`,
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  borderRadius: '40% 40% 20% 20%',
-                  background: `linear-gradient(180deg, ${colors.crownLight} 0%, ${colors.crown} 100%)`
+                  width: `${8 * sizeMultiplier}px`,
+                  height: `${4 * sizeMultiplier}px`,
+                  backgroundColor: colors.crownLight,
+                  top: `${2 * sizeMultiplier}px`,
+                  left: `${-6 * sizeMultiplier}px`,
+                  borderRadius: '0% 80% 80% 20%',
+                  transform: 'rotate(-25deg)',
+                  border: `1px solid ${colors.crown}`
                 }}
-              >
-                {/* First pair of leaves */}
-                <div 
-                  className="absolute"
-                  style={{
-                    width: `${6 * sizeMultiplier}px`,
-                    height: `${3 * sizeMultiplier}px`,
-                    backgroundColor: colors.crownLight,
-                    top: `${3 * sizeMultiplier}px`,
-                    left: `${-3 * sizeMultiplier}px`,
-                    borderRadius: '0% 100% 100% 0%',
-                    transform: 'rotate(-20deg)'
-                  }}
-                />
-                <div 
-                  className="absolute"
-                  style={{
-                    width: `${6 * sizeMultiplier}px`,
-                    height: `${3 * sizeMultiplier}px`,
-                    backgroundColor: colors.crownLight,
-                    top: `${3 * sizeMultiplier}px`,
-                    right: `${-3 * sizeMultiplier}px`,
-                    borderRadius: '100% 0% 0% 100%',
-                    transform: 'rotate(20deg)'
-                  }}
-                />
-                {/* Second pair of leaves */}
-                <div 
-                  className="absolute"
-                  style={{
-                    width: `${5 * sizeMultiplier}px`,
-                    height: `${2.5 * sizeMultiplier}px`,
-                    backgroundColor: colors.crown,
-                    top: `${6 * sizeMultiplier}px`,
-                    left: `${-2.5 * sizeMultiplier}px`,
-                    borderRadius: '0% 100% 100% 0%',
-                    transform: 'rotate(-30deg)'
-                  }}
-                />
-                <div 
-                  className="absolute"
-                  style={{
-                    width: `${5 * sizeMultiplier}px`,
-                    height: `${2.5 * sizeMultiplier}px`,
-                    backgroundColor: colors.crown,
-                    top: `${6 * sizeMultiplier}px`,
-                    right: `${-2.5 * sizeMultiplier}px`,
-                    borderRadius: '100% 0% 0% 100%',
-                    transform: 'rotate(30deg)'
-                  }}
-                />
-              </div>
+              />
+              {/* Right curved leaf - simple and clean */}
+              <div 
+                className="absolute"
+                style={{
+                  width: `${8 * sizeMultiplier}px`,
+                  height: `${4 * sizeMultiplier}px`,
+                  backgroundColor: colors.crownLight,
+                  top: `${2 * sizeMultiplier}px`,
+                  right: `${-6 * sizeMultiplier}px`,
+                  borderRadius: '80% 0% 20% 80%',
+                  transform: 'rotate(25deg)',
+                  border: `1px solid ${colors.crown}`
+                }}
+              />
             </div>
           </div>
         );
