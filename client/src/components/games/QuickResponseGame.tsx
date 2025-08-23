@@ -54,7 +54,8 @@ export function QuickResponseGame({ onComplete }: QuickResponseGameProps) {
       timerRef.current = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 1) {
-            endGame();
+            setGameState('feedback');
+            setTimeout(() => endGame(), 100);
             return 0;
           }
           return prev - 1;
@@ -69,7 +70,7 @@ export function QuickResponseGame({ onComplete }: QuickResponseGameProps) {
         clearInterval(timerRef.current);
       }
     };
-  }, [gameState, timeLeft]);
+  }, [gameState]);
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {

@@ -87,6 +87,7 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
 
   const showSequence = () => {
     const newSequence = generateSequence();
+    setSequence(newSequence); // Set sequence before showing
     setGameState('showing');
     setCurrentShowingIndex(0);
     setIsShowing(true);
@@ -157,6 +158,8 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
 
   const nextRound = () => {
     setPlayerSequence([]);
+    // Reset sequence to ensure clean state
+    setSequence([]);
     if (timeLeft > 0) {
       setTimeout(() => {
         showSequence();

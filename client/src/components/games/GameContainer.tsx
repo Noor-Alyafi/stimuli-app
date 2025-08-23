@@ -8,6 +8,7 @@ import { ArrowLeft, Trophy, Zap, Timer, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { NotificationSystem, useNotifications } from "@/components/NotificationSystem";
 
 interface GameContainerProps {
   gameType: string;
@@ -41,30 +42,46 @@ export function GameContainer({
   const [showCelebration, setShowCelebration] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const {
+    notifications,
+    removeNotification,
+    showXPGain,
+    showCoinsGained,
+    showCongratulations,
+    showAchievement,
+  } = useNotifications();
 
   const gameProgressMutation = useMutation({
     mutationFn: async (gameData: { gameType: string; score: number; timeTaken: number }) => {
       const response = await apiRequest("POST", "/api/game-progress", gameData);
       return response;
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["/api/best-scores"] });
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
       queryClient.invalidateQueries({ queryKey: ["/api/user-achievements"] });
       
+      // Calculate rewards
+      const xpEarned = 10; // Standard XP for completing a game
+      const coinsEarned = Math.floor(finalScore / 10); // Coins based on score
+      
+      // Show animated reward notifications
+      showCongratulations(
+        "Game Complete!", 
+        xpEarned, 
+        coinsEarned
+      );
+      
+      // Show individual reward notifications
+      setTimeout(() => showXPGain(xpEarned), 1000);
+      setTimeout(() => showCoinsGained(coinsEarned), 1500);
+      
       // Show celebration if new achievements unlocked
       if (data.newAchievements?.length > 0) {
         setShowCelebration(true);
-        toast({
-          title: "🎉 Achievement Unlocked!",
-          description: `${data.newAchievements[0].achievement?.name || "New achievement"} earned!`,
-          duration: 5000,
-        });
-      } else {
-        toast({
-          title: "Great job!",
-          description: data.message || "Your progress has been saved. +10 XP earned!",
-        });
+        setTimeout(() => {
+          showAchievement(`🏆 ${data.newAchievements[0].achievement?.name || "New Achievement"} Unlocked!`);
+        }, 2000);
       }
     },
     onError: (error) => {
@@ -143,15 +160,19 @@ export function GameContainer({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.6 }}
-                  className="grid grid-cols-2 gap-4"
+                  className="grid grid-cols-3 gap-4"
                 >
                   <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
                     <div className="text-sm text-gray-600 dark:text-gray-400">Time</div>
                     <div className="text-2xl font-bold">{Math.round(finalTime)}s</div>
                   </div>
-                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-                    <div className="text-sm text-gray-600 dark:text-gray-400">XP Earned</div>
+                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-lg p-4 border border-purple-200 dark:border-purple-700">
+                    <div className="text-sm text-purple-600 dark:text-purple-400">XP Earned</div>
                     <div className="text-2xl font-bold text-purple-600">+10</div>
+                  </div>
+                  <div className="bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30 rounded-lg p-4 border border-yellow-200 dark:border-yellow-700">
+                    <div className="text-sm text-yellow-600 dark:text-yellow-400">Coins Earned</div>
+                    <div className="text-2xl font-bold text-yellow-600">+{Math.floor(finalScore / 10)}</div>
                   </div>
                 </motion.div>
 
@@ -267,6 +288,12 @@ export function GameContainer({
           }} />
         </div>
       </div>
+      
+      {/* Notification System */}
+      <NotificationSystem 
+        notifications={notifications}
+        onRemove={removeNotification}
+      />
     </div>
   );
 }

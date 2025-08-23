@@ -7,6 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
+import { NotificationSystem, useNotifications } from '@/components/NotificationSystem';
 import { UserTree, User, UserInventory, StoreItem } from '@shared/schema';
 import { Coins, Sparkles, Droplet, TreePine, Plus, Package } from 'lucide-react';
 import { TreeVisual3D } from './TreeVisual3D';
@@ -124,6 +125,12 @@ export default function EnhancedGrowthTree() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [, navigate] = useLocation();
+  const {
+    notifications,
+    removeNotification,
+    showCoinsSpent,
+    showXPGain,
+  } = useNotifications();
 
   // Fetch user data for coins
   const { data: user } = useQuery<User>({ queryKey: ['/api/auth/user'] });
@@ -189,12 +196,17 @@ export default function EnhancedGrowthTree() {
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ['/api/trees'] });
       queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
-      toast({ 
-        title: 'Tree grew!', 
-        description: '+10 XP, -2 coins' + (data.tree.growthStage > (data.previousStage || 1) 
-          ? ' - Advanced to next stage!' 
-          : '') 
-      });
+      
+      // Show animated notifications
+      showCoinsSpent(2, "Tree Growth");
+      setTimeout(() => showXPGain(10, "Tree Contribution"), 500);
+      
+      if (data.tree.growthStage > (data.previousStage || 1)) {
+        toast({ 
+          title: '🎉 Tree advanced to next stage!', 
+          description: `Your tree is now a ${data.tree.growthStage === 5 ? 'mature tree' : 'bigger tree'}!`
+        });
+      }
     },
     onError: (error) => {
       toast({ 
@@ -208,10 +220,15 @@ export default function EnhancedGrowthTree() {
   const decorateTreeMutation = useMutation({
     mutationFn: async ({ treeId, decorationType, storeItemId }: { treeId: number; decorationType: string; storeItemId: number }) =>
       apiRequest('POST', `/api/trees/${treeId}/decorate`, { decorationType, storeItemId }),
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ['/api/trees'] });
       queryClient.invalidateQueries({ queryKey: ['/api/inventory'] });
-      toast({ title: 'Decoration added!', description: 'Your tree looks even more beautiful!' });
+      
+      const decorationName = data.decorationType === 'fairy_lights' ? 'Fairy Lights' : 'Garden Gnome';
+      toast({ 
+        title: `✨ ${decorationName} Added!`, 
+        description: 'Your tree looks even more magical!' 
+      });
     },
     onError: (error) => {
       toast({
@@ -247,14 +264,14 @@ export default function EnhancedGrowthTree() {
   return (
     <div className="space-y-6">
       {/* Header with coin balance */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-xl p-6 border border-green-200 dark:border-green-800">
         <div>
-          <h2 className="text-3xl font-bold">Growth Garden</h2>
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">Growth Garden</h2>
           <p className="text-gray-600 dark:text-gray-400">Nurture your trees with XP and watch them grow!</p>
         </div>
-        <div className="flex items-center gap-2 text-lg font-semibold">
+        <div className="flex items-center gap-2 text-lg font-semibold bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30 px-4 py-2 rounded-lg border border-yellow-200 dark:border-yellow-700">
           <Coins className="h-5 w-5 text-yellow-500" />
-          <span data-testid="text-coin-balance">{user?.coins || 0}</span>
+          <span data-testid="text-coin-balance" className="text-yellow-600 dark:text-yellow-400">{user?.coins || 0}</span>
         </div>
       </div>
 
@@ -317,17 +334,17 @@ export default function EnhancedGrowthTree() {
             <div className="text-center">
               <h3 className="text-lg font-semibold mb-4">Garden Stats</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
                   <div className="text-2xl font-bold text-green-600">{trees.length}</div>
                   <div className="text-sm text-green-600">Trees Planted</div>
                 </div>
-                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
                   <div className="text-2xl font-bold text-blue-600">
                     {trees.filter(t => (t.growthStage || 1) >= 5).length}
                   </div>
                   <div className="text-sm text-blue-600">Mature Trees</div>
                 </div>
-                <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
+                <div className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 p-4 rounded-lg border border-purple-200 dark:border-purple-800">
                   <div className="text-2xl font-bold text-purple-600">
                     {trees.reduce((sum, tree) => sum + (tree.xpContributed || 0), 0)}
                   </div>
@@ -450,6 +467,12 @@ export default function EnhancedGrowthTree() {
           )}
         </TabsContent>
       </Tabs>
+      
+      {/* Notification System */}
+      <NotificationSystem 
+        notifications={notifications}
+        onRemove={removeNotification}
+      />
     </div>
   );
 }
