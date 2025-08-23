@@ -124,6 +124,7 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
         if (currentLevel > 1) {
           setCurrentLevel(prev => prev - 1);
         }
+        setPlayerSequence([]);
         nextRound();
       }, 1500);
       return;
@@ -143,6 +144,7 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
       
       setTimeout(() => {
         setFeedback('');
+        setPlayerSequence([]);
         nextRound();
       }, 1500);
     }
@@ -151,13 +153,19 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
   const nextRound = () => {
     setPlayerSequence([]);
     if (timeLeft > 0) {
-      showSequence();
+      setTimeout(() => {
+        showSequence();
+      }, 500);
     } else {
       endGame();
     }
   };
 
   const endGame = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+    setGameState('intro');
     const timeTaken = (Date.now() - gameStartTime) / 1000;
     onComplete(score, timeTaken);
   };

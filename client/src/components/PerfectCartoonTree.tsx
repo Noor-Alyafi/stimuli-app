@@ -85,37 +85,37 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
       case 2: // Sprout - simple like original image
         return (
           <div className="relative flex items-center justify-center">
-            {/* Simple vertical stem */}
+            {/* Simple vertical stem extending beyond leaves */}
             <div 
               className="relative"
               style={{
                 width: `${3 * sizeMultiplier}px`,
-                height: `${18 * sizeMultiplier}px`,
+                height: `${20 * sizeMultiplier}px`,
                 backgroundColor: colors.crown,
                 borderRadius: '50%'
               }}
             >
-              {/* Simple left leaf - curving upward */}
+              {/* Simple left leaf - curving upward, positioned lower on stem */}
               <div 
                 className="absolute"
                 style={{
                   width: `${12 * sizeMultiplier}px`,
                   height: `${6 * sizeMultiplier}px`,
                   backgroundColor: colors.crownLight,
-                  top: `${1 * sizeMultiplier}px`,
+                  top: `${8 * sizeMultiplier}px`,
                   left: `${-9 * sizeMultiplier}px`,
                   borderRadius: '100% 0% 100% 0%',
                   transform: 'rotate(35deg)'
                 }}
               />
-              {/* Simple right leaf - curving upward */}
+              {/* Simple right leaf - curving upward, positioned lower on stem */}
               <div 
                 className="absolute"
                 style={{
                   width: `${12 * sizeMultiplier}px`,
                   height: `${6 * sizeMultiplier}px`,
                   backgroundColor: colors.crownLight,
-                  top: `${1 * sizeMultiplier}px`,
+                  top: `${8 * sizeMultiplier}px`,
                   right: `${-9 * sizeMultiplier}px`,
                   borderRadius: '0% 100% 0% 100%',
                   transform: 'rotate(-35deg)'
