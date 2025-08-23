@@ -21,9 +21,9 @@ const seedStoreItems = [
     isAvailable: true
   },
   {
-    name: "Willow Tree Seed",
+    name: "Willow Seed",
     description: "Graceful willow tree seed for calm gardens.",
-    price: 60,
+    price: 25,
     category: "seeds",
     itemType: "tree_seed", 
     isAvailable: true
@@ -32,6 +32,38 @@ const seedStoreItems = [
     name: "Rainbow Tree Seed",
     description: "Rare magical rainbow tree seed - very special!",
     price: 200,
+    category: "seeds",
+    itemType: "tree_seed",
+    isAvailable: true
+  },
+  {
+    name: "Pine Tree Seed",
+    description: "Evergreen pine tree that stays green all year.",
+    price: 30,
+    category: "seeds",
+    itemType: "tree_seed",
+    isAvailable: true
+  },
+  {
+    name: "Maple Tree Seed",
+    description: "Beautiful maple tree with stunning autumn colors.",
+    price: 35,
+    category: "seeds",
+    itemType: "tree_seed",
+    isAvailable: true
+  },
+  {
+    name: "Birch Tree Seed",
+    description: "Elegant white birch tree with distinctive bark.",
+    price: 28,
+    category: "seeds",
+    itemType: "tree_seed",
+    isAvailable: true
+  },
+  {
+    name: "Sakura Tree Seed",
+    description: "Traditional Japanese cherry blossom tree.",
+    price: 45,
     category: "seeds",
     itemType: "tree_seed",
     isAvailable: true

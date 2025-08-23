@@ -38,6 +38,14 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
         return { ...colors, crown: '#4CAF50', crownDark: '#2E7D32', crownLight: '#81C784' };
       case 'rainbow':
         return { ...colors, crown: '#b36ae2', crownDark: '#9854c7', crownLight: '#c985eb' };
+      case 'willow':
+        return { ...colors, crown: '#9CCC65', crownDark: '#689F38', crownLight: '#DCEDC8' };
+      case 'maple':
+        return { ...colors, crown: '#FF7043', crownDark: '#D84315', crownLight: '#FFAB91' };
+      case 'birch':
+        return { ...colors, crown: '#66BB6A', crownDark: '#388E3C', crownLight: '#A5D6A7' };
+      case 'sakura':
+        return { ...colors, crown: '#F8BBD9', crownDark: '#E91E63', crownLight: '#FCE4EC' };
       default:
         return colors;
     }

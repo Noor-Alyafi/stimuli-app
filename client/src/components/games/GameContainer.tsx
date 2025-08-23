@@ -21,6 +21,7 @@ interface GameContainerProps {
   onGameComplete?: (score: number, timeTaken: number) => void;
   showTimer?: boolean;
   showScore?: boolean;
+  showGeneral?: (message: string, type?: "success" | "error" | "info") => void;
 }
 
 export function GameContainer({
@@ -34,6 +35,7 @@ export function GameContainer({
   onGameComplete,
   showTimer = true,
   showScore = true,
+  showGeneral,
 }: GameContainerProps) {
   const [gameStarted, setGameStarted] = useState(false);
   const [gameCompleted, setGameCompleted] = useState(false);

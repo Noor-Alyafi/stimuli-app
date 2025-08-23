@@ -55,7 +55,12 @@ export default function Home() {
               <CardContent className="p-8">
                 <div className="flex items-center gap-4 mb-2">
                   <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
-                    <span className="text-white font-bold text-lg">S</span>
+                    <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="50" cy="30" r="15" fill="white"/>
+                      <circle cx="35" cy="60" r="8" fill="white"/>
+                      <circle cx="65" cy="60" r="8" fill="white"/>
+                      <circle cx="50" cy="80" r="6" fill="white"/>
+                    </svg>
                   </div>
                   <h2 className="text-3xl font-inter font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                     Welcome back{(user as any)?.firstName ? `, ${(user as any).firstName}` : ''}!

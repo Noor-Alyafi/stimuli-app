@@ -49,7 +49,7 @@ const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow, onDecora
             type={tree.treeType} 
             stage={tree.growthStage || 1}
             xpContributed={tree.xpContributed || 0}
-            decorations={Array.isArray(tree.decorations) ? (tree.decorations || []).map((d: any) => typeof d === 'string' ? d : d.type) : []}
+            decorations={Array.isArray(tree.decorations) ? tree.decorations.map((d: any) => typeof d === 'string' ? d : d?.type || d) : []}
             className="hover:scale-105 transition-transform duration-300"
           />
         </div>
@@ -238,6 +238,10 @@ export default function EnhancedGrowthTree() {
     { type: 'cherry', name: 'Cherry Blossom', description: 'Beautiful pink blooms', emoji: '🌸' },
     { type: 'willow', name: 'Willow', description: 'Graceful and calming', emoji: '🌾' },
     { type: 'rainbow', name: 'Rainbow Tree', description: 'Magical and rare!', emoji: '🌈' },
+    { type: 'pine', name: 'Pine', description: 'Evergreen and resilient', emoji: '🌲' },
+    { type: 'maple', name: 'Maple', description: 'Autumn colors', emoji: '🍁' },
+    { type: 'birch', name: 'Birch', description: 'Elegant white bark', emoji: '🌳' },
+    { type: 'sakura', name: 'Sakura', description: 'Traditional cherry blossom', emoji: '🌸' },
   ];
 
   if (isLoading) {
