@@ -46,7 +46,7 @@ export const gameProgress = pgTable("game_progress", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").references(() => users.id).notNull(),
   gameType: varchar("game_type").notNull(), // 'color-echo', 'shape-sequence', etc.
-  score: integer("score").notNull(),
+  score: real("score").notNull(),
   completedAt: timestamp("completed_at").defaultNow(),
   difficulty: varchar("difficulty").default("normal"),
   timeTaken: real("time_taken").notNull(), // in seconds
