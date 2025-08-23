@@ -457,7 +457,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Update tree with decoration
       await storage.decorateTree(parseInt(treeId), decorationType);
       
-      res.json({ message: "Tree decorated successfully!" });
+      // Return decoration type in response so frontend knows what was added
+      res.json({ 
+        message: "Tree decorated successfully!", 
+        decorationType: decorationType 
+      });
     } catch (error) {
       console.error("Error decorating tree:", error);
       res.status(500).json({ message: "Failed to decorate tree" });
@@ -564,33 +568,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Decoration route
-  app.post('/api/trees/:treeId/decorate', async (req: any, res) => {
-    try {
-      const { treeId } = req.params;
-      const { decorationType, storeItemId } = req.body;
-      const userId = demoUserId;
-
-      // Check if user has the decoration item in inventory
-      const inventory = await storage.getUserInventory(userId);
-      const decorationItem = inventory.find(item => item.storeItemId === storeItemId && (item.quantity || 0) > 0);
-      
-      if (!decorationItem) {
-        return res.status(400).json({ message: "You don't have this decoration item!" });
-      }
-
-      // Use one decoration item
-      await storage.useInventoryItem(userId, storeItemId, 1);
-      
-      // Add decoration to tree
-      await storage.addDecorationToTree(parseInt(treeId), decorationType);
-
-      res.json({ message: "Decoration applied to tree!" });
-    } catch (error) {
-      console.error("Error decorating tree:", error);
-      res.status(500).json({ message: "Failed to decorate tree" });
-    }
-  });
+  // Note: decoration route moved above - removed duplicate
 
   // Initialize store items route (dev only)
   app.post('/api/admin/seed-store', async (req, res) => {

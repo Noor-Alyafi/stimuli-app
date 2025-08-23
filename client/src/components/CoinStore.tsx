@@ -9,11 +9,19 @@ import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { StoreItem, User, CoinTransaction, UserInventory } from '@shared/schema';
 import { Coins, ShoppingCart, Package, TrendingUp, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { NotificationSystem, useNotifications } from '@/components/NotificationSystem';
 
 export default function CoinStore() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const {
+    notifications,
+    removeNotification,
+    showCoinsSpent,
+    showGeneral,
+  } = useNotifications();
 
   // Fetch user data for coins
   const { data: user } = useQuery<User>({ queryKey: ['/api/auth/user'] });
@@ -37,11 +45,18 @@ export default function CoinStore() {
   const purchaseMutation = useMutation({
     mutationFn: async ({ itemId, quantity }: { itemId: number; quantity: number }) => 
       apiRequest('POST', '/api/store/purchase', { itemId, quantity }),
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
       queryClient.invalidateQueries({ queryKey: ['/api/inventory'] });
       queryClient.invalidateQueries({ queryKey: ['/api/coins/transactions'] });
-      toast({ title: 'Purchase successful!', description: 'Item added to your inventory.' });
+      
+      // Show animated coin spending notification
+      const item = storeItems.find(item => item.id === data.itemId);
+      if (item) {
+        showCoinsSpent(item.price, `${item.name} Purchased!`);
+      }
+      
+      showGeneral('🎉 Purchase successful! Item added to your inventory.', 'success');
     },
     onError: (error) => {
       toast({ 
@@ -93,24 +108,62 @@ export default function CoinStore() {
   }
 
   return (
-    <div className="space-y-6">
+    <>
+      <NotificationSystem notifications={notifications} onRemove={removeNotification} />
+      <div className="space-y-6">
       {/* Header with coin balance */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between bg-gradient-to-r from-yellow-50 via-orange-50 to-red-50 dark:from-yellow-900/20 dark:via-orange-900/20 dark:to-red-900/20 rounded-xl p-6 border border-yellow-200 dark:border-yellow-800">
         <div>
-          <h2 className="text-3xl font-bold">Coin Store</h2>
-          <p className="text-gray-600 dark:text-gray-400">Spend your hard-earned coins on tree seeds and growth boosters!</p>
+          <motion.h2 
+            className="text-3xl font-bold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            🏪 Coin Store
+          </motion.h2>
+          <motion.p 
+            className="text-gray-600 dark:text-gray-400"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            Spend your hard-earned coins on tree seeds and growth boosters!
+          </motion.p>
         </div>
-        <div className="flex items-center gap-2 text-xl font-bold">
+        <motion.div 
+          className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30 px-4 py-2 rounded-lg border border-yellow-300 dark:border-yellow-700"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.3, type: "spring" }}
+        >
           <Coins className="h-6 w-6 text-yellow-500" />
-          <span className="text-yellow-600" data-testid="text-store-coins">{user?.coins || 0}</span>
-        </div>
+          <span className="text-yellow-600 dark:text-yellow-400" data-testid="text-store-coins">{user?.coins || 0}</span>
+        </motion.div>
       </div>
 
       <Tabs defaultValue="store" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="store" data-testid="tab-store">Store</TabsTrigger>
-          <TabsTrigger value="inventory" data-testid="tab-inventory">My Items</TabsTrigger>
-          <TabsTrigger value="transactions" data-testid="tab-transactions">Transaction History</TabsTrigger>
+        <TabsList className="grid grid-cols-3 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/40 dark:to-purple-900/40 p-1 rounded-xl">
+          <TabsTrigger 
+            value="store" 
+            data-testid="tab-store"
+            className="rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-md transition-all duration-200"
+          >
+            🏪 Store
+          </TabsTrigger>
+          <TabsTrigger 
+            value="inventory" 
+            data-testid="tab-inventory"
+            className="rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-md transition-all duration-200"
+          >
+            📦 My Items
+          </TabsTrigger>
+          <TabsTrigger 
+            value="transactions" 
+            data-testid="tab-transactions"
+            className="rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-md transition-all duration-200"
+          >
+            📊 History
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="store" className="space-y-4">
@@ -134,33 +187,63 @@ export default function CoinStore() {
           </div>
 
           {/* Store items grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredItems.map((item) => (
-              <Card key={item.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader className="text-center pb-3">
-                  <div className="text-4xl mb-2">{getItemIcon(item.itemType)}</div>
-                  <CardTitle className="text-lg">{item.name}</CardTitle>
-                  <CardDescription className="text-sm">{item.description}</CardDescription>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredItems.map((item, index) => (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                key={item.id}
+              >
+                <Card className="hover:shadow-xl hover:scale-105 transition-all duration-300 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border-2 hover:border-blue-200 dark:hover:border-blue-700">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <motion.span 
+                          className="text-3xl"
+                          whileHover={{ scale: 1.2, rotate: 5 }}
+                          transition={{ type: "spring", stiffness: 400 }}
+                        >
+                          {getItemIcon(item.itemType)}
+                        </motion.span>
+                        <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-bold">
+                          {item.name}
+                        </span>
+                      </CardTitle>
+                      <motion.div whileHover={{ scale: 1.1 }}>
+                        <Badge 
+                          variant="secondary" 
+                          className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700"
+                        >
+                          {item.category}
+                        </Badge>
+                      </motion.div>
+                    </div>
+                    <CardDescription className="text-gray-600 dark:text-gray-400 mt-2">
+                      {item.description}
+                    </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
+                    <motion.div 
+                      className="flex items-center gap-1 bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30 px-3 py-1 rounded-lg"
+                      whileHover={{ scale: 1.05 }}
+                    >
                       <Coins className="h-4 w-4 text-yellow-500" />
-                      <span className="font-bold text-yellow-600">{item.price}</span>
-                    </div>
-                    <Badge variant="secondary" className="text-xs">
-                      {item.category}
-                    </Badge>
+                      <span className="font-bold text-yellow-600 dark:text-yellow-400">{item.price}</span>
+                    </motion.div>
                   </div>
 
-                  <Button
-                    onClick={() => purchaseMutation.mutate({ itemId: item.id, quantity: 1 })}
-                    disabled={purchaseMutation.isPending || (user?.coins || 0) < item.price}
-                    className="w-full"
-                    data-testid={`button-buy-${item.id}`}
-                  >
-                    {purchaseMutation.isPending ? 'Purchasing...' : 'Buy Now'}
-                  </Button>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Button
+                      onClick={() => purchaseMutation.mutate({ itemId: item.id, quantity: 1 })}
+                      disabled={purchaseMutation.isPending || (user?.coins || 0) < item.price}
+                      className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                      data-testid={`button-buy-${item.id}`}
+                    >
+                      {purchaseMutation.isPending ? '⏳ Purchasing...' : '🛒 Buy Now'}
+                    </Button>
+                  </motion.div>
 
                   {getUserItemQuantity(item.id) > 0 && (
                     <p className="text-xs text-center text-green-600">
@@ -168,7 +251,8 @@ export default function CoinStore() {
                     </p>
                   )}
                 </CardContent>
-              </Card>
+                </Card>
+              </motion.div>
             ))}
           </div>
 
@@ -279,6 +363,7 @@ export default function CoinStore() {
           )}
         </TabsContent>
       </Tabs>
-    </div>
+      </div>
+    </>
   );
 }

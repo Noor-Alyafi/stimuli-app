@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight } from "lucide-react";
+import { NotificationSystem, useNotifications } from "@/components/NotificationSystem";
 
 interface QuickResponseGameProps {
   onComplete: (score: number, timeTaken: number) => void;
@@ -48,6 +49,7 @@ export function QuickResponseGame({ onComplete }: QuickResponseGameProps) {
   const [totalChallenges, setTotalChallenges] = useState(0);
   
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const { notifications, removeNotification, showCongratulations, showGeneral } = useNotifications();
 
   useEffect(() => {
     if (gameState === 'playing' && timeLeft > 0) {
@@ -181,6 +183,8 @@ export function QuickResponseGame({ onComplete }: QuickResponseGameProps) {
       setScore(prev => prev + totalPoints);
       setStreak(prev => prev + 1);
       
+      showCongratulations(`⚡ Fast! +${totalPoints} points! (${currentReactionTime}ms)`);
+      
       setTimeout(() => {
         setFeedback('');
         if (timeLeft > 0) {
@@ -192,6 +196,8 @@ export function QuickResponseGame({ onComplete }: QuickResponseGameProps) {
     } else {
       setFeedback('incorrect');
       setStreak(0);
+      
+      showGeneral("❌ Wrong! Read carefully!", "error");
       
       setTimeout(() => {
         setFeedback('');
@@ -351,6 +357,12 @@ export function QuickResponseGame({ onComplete }: QuickResponseGameProps) {
           </motion.div>
         )}
       </AnimatePresence>
+      
+      {/* Notification System */}
+      <NotificationSystem 
+        notifications={notifications}
+        onRemove={removeNotification}
+      />
     </div>
   );
 }

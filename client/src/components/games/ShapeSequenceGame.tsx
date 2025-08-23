@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Circle, Square, Triangle, Diamond, Heart, Star } from "lucide-react";
+import { NotificationSystem, useNotifications } from "@/components/NotificationSystem";
 
 interface ShapeSequenceGameProps {
   onComplete: (score: number, timeTaken: number) => void;
@@ -39,6 +40,7 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
   const [isShowing, setIsShowing] = useState(false);
   
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const { notifications, removeNotification, showCongratulations, showGeneral } = useNotifications();
 
   useEffect(() => {
     if (gameState === 'playing' && timeLeft > 0) {
@@ -125,6 +127,7 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
     if (!isCorrect) {
       setFeedback('incorrect');
       setStreak(0);
+      showGeneral("❌ Wrong shape! Try again.", "error");
       setTimeout(() => {
         setFeedback('');
         if (currentLevel > 1) {
@@ -148,18 +151,22 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
       setStreak(prev => prev + 1);
       setCurrentLevel(prev => prev + 1);
       
+      showCongratulations(`🎉 Perfect sequence! +${totalPoints} points!`);
+      
       setTimeout(() => {
         setFeedback('');
         setPlayerSequence([]);
         nextRound();
       }, 1500);
+    } else {
+      // Show positive feedback for correct individual clicks
+      showGeneral("✅ Correct shape!", "success");
     }
   };
 
   const nextRound = () => {
     setPlayerSequence([]);
-    // Reset sequence to ensure clean state
-    setSequence([]);
+    // Don't reset sequence here - let showSequence() handle it
     if (timeLeft > 0) {
       setTimeout(() => {
         showSequence();
@@ -378,6 +385,12 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
           </motion.div>
         )}
       </AnimatePresence>
+      
+      {/* Notification System */}
+      <NotificationSystem 
+        notifications={notifications}
+        onRemove={removeNotification}
+      />
     </div>
   );
 }

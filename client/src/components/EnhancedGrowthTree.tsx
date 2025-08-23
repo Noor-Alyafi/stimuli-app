@@ -13,6 +13,7 @@ import { Coins, Sparkles, Droplet, TreePine, Plus, Package } from 'lucide-react'
 import { TreeVisual3D } from './TreeVisual3D';
 import { useLocation } from 'wouter';
 import { PerfectCartoonTree } from './PerfectCartoonTree';
+import { motion } from 'framer-motion';
 
 interface TreeVisualProps {
   tree: UserTree;
@@ -224,7 +225,9 @@ export default function EnhancedGrowthTree() {
       queryClient.invalidateQueries({ queryKey: ['/api/trees'] });
       queryClient.invalidateQueries({ queryKey: ['/api/inventory'] });
       
-      const decorationName = data.decorationType === 'fairy_lights' ? 'Fairy Lights' : 'Garden Gnome';
+      // Get the correct decoration name from the response
+      const decorationName = data?.decorationType === 'fairy_lights' ? 'Fairy Lights' : 
+                             data?.decorationType === 'gnome' ? 'Garden Gnome' : 'Decoration';
       toast({ 
         title: `✨ ${decorationName} Added!`, 
         description: 'Your tree looks even more magical!' 
@@ -276,23 +279,62 @@ export default function EnhancedGrowthTree() {
       </div>
 
       <Tabs defaultValue="garden" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="garden" data-testid="tab-garden">My Garden</TabsTrigger>
-          <TabsTrigger value="plant" data-testid="tab-plant">Plant New Tree</TabsTrigger>
+        <TabsList className="grid grid-cols-2 bg-gradient-to-r from-green-100 to-blue-100 dark:from-green-900/40 dark:to-blue-900/40 p-1 rounded-xl">
+          <TabsTrigger 
+            value="garden" 
+            data-testid="tab-garden"
+            className="rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-md transition-all duration-200"
+          >
+            🌳 My Garden
+          </TabsTrigger>
+          <TabsTrigger 
+            value="plant" 
+            data-testid="tab-plant"
+            className="rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-md transition-all duration-200"
+          >
+            🌱 Plant New Tree
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="garden" className="space-y-4">
           {trees.length === 0 ? (
-            <Card className="text-center py-12">
+            <Card className="text-center py-12 bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 dark:from-green-900/20 dark:via-blue-900/20 dark:to-purple-900/20 border-2 border-dashed border-green-300 dark:border-green-700">
               <CardContent>
-                <TreePine className="h-16 w-16 mx-auto text-gray-400 mb-4" />
-                <h3 className="text-xl font-semibold mb-2">No Trees Yet</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.5, type: "spring" }}
+                >
+                  <TreePine className="h-16 w-16 mx-auto text-green-400 mb-4" />
+                </motion.div>
+                <motion.h3 
+                  className="text-xl font-semibold mb-2 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  No Trees Yet
+                </motion.h3>
+                <motion.p 
+                  className="text-gray-600 dark:text-gray-400 mb-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                >
                   Plant your first tree to start your growth journey!
-                </p>
-                <Button onClick={() => window.location.hash = '#plant'}>
-                  Plant Your First Tree
-                </Button>
+                </motion.p>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  <Button 
+                    onClick={() => window.location.hash = '#plant'}
+                    className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200"
+                  >
+                    🌱 Plant Your First Tree
+                  </Button>
+                </motion.div>
               </CardContent>
             </Card>
           ) : (
@@ -350,7 +392,7 @@ export default function EnhancedGrowthTree() {
                   </div>
                   <div className="text-sm text-purple-600">Total XP</div>
                 </div>
-                <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
+                <div className="bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
                   <div className="text-2xl font-bold text-yellow-600">
                     {trees.filter(t => t.isSpecial).length}
                   </div>

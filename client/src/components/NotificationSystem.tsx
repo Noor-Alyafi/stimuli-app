@@ -4,7 +4,7 @@ import { Coins, Zap, Sparkles, CheckCircle, Gift } from 'lucide-react';
 
 interface Notification {
   id: string;
-  type: 'xp' | 'coins' | 'spending' | 'achievement' | 'congratulations';
+  type: 'xp' | 'coins' | 'spending' | 'achievement' | 'congratulations' | 'success' | 'error';
   message: string;
   amount?: number;
   duration?: number;
@@ -39,6 +39,10 @@ export function NotificationSystem({ notifications, onRemove }: NotificationSyst
         return <Sparkles className="w-5 h-5 text-purple-400" />;
       case 'congratulations':
         return <Gift className="w-5 h-5 text-pink-400" />;
+      case 'success':
+        return <CheckCircle className="w-5 h-5 text-green-400" />;
+      case 'error':
+        return <CheckCircle className="w-5 h-5 text-red-400" />;
       default:
         return <CheckCircle className="w-5 h-5 text-green-400" />;
     }
@@ -56,6 +60,10 @@ export function NotificationSystem({ notifications, onRemove }: NotificationSyst
         return 'from-purple-400 to-indigo-500';
       case 'congratulations':
         return 'from-pink-400 to-rose-500';
+      case 'success':
+        return 'from-green-400 to-emerald-500';
+      case 'error':
+        return 'from-red-400 to-rose-500';
       default:
         return 'from-green-400 to-emerald-500';
     }
@@ -179,6 +187,10 @@ export function useNotifications() {
     addNotification({ type: 'achievement', message, duration: 6000 });
   };
 
+  const showGeneral = (message: string, type: 'success' | 'error' = 'success') => {
+    addNotification({ type, message, duration: 3000 });
+  };
+
   return {
     notifications,
     removeNotification,
@@ -187,5 +199,6 @@ export function useNotifications() {
     showCoinsSpent,
     showCongratulations,
     showAchievement,
+    showGeneral,
   };
 }
