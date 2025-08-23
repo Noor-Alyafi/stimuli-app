@@ -95,27 +95,27 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                 borderRadius: '50%'
               }}
             >
-              {/* Simple left leaf - curving upward, positioned lower on stem */}
+              {/* Simple left leaf - curving upward, positioned near tip */}
               <div 
                 className="absolute"
                 style={{
                   width: `${12 * sizeMultiplier}px`,
                   height: `${6 * sizeMultiplier}px`,
                   backgroundColor: colors.crownLight,
-                  top: `${8 * sizeMultiplier}px`,
+                  top: `${3 * sizeMultiplier}px`,
                   left: `${-9 * sizeMultiplier}px`,
                   borderRadius: '100% 0% 100% 0%',
                   transform: 'rotate(35deg)'
                 }}
               />
-              {/* Simple right leaf - curving upward, positioned lower on stem */}
+              {/* Simple right leaf - curving upward, positioned near tip */}
               <div 
                 className="absolute"
                 style={{
                   width: `${12 * sizeMultiplier}px`,
                   height: `${6 * sizeMultiplier}px`,
                   backgroundColor: colors.crownLight,
-                  top: `${8 * sizeMultiplier}px`,
+                  top: `${3 * sizeMultiplier}px`,
                   right: `${-9 * sizeMultiplier}px`,
                   borderRadius: '0% 100% 0% 100%',
                   transform: 'rotate(-35deg)'
