@@ -54,11 +54,9 @@ export default function Home() {
             <Card className="bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-blue-900/20 border-2 border-blue-200 dark:border-blue-700 shadow-xl">
               <CardContent className="p-8">
                 <div className="flex items-center gap-4 mb-2">
-                  <img 
-                    src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzRGNDZFNSIvPgo8cGF0aCBkPSJNMjAgMTBDMjMuMzEzNyAxMCAyNiAxMi42ODYzIDI2IDE2QzI2IDE5LjMxMzcgMjMuMzEzNyAyMiAyMCAyMkMxNi42ODYzIDIyIDE0IDE5LjMxMzcgMTQgMTZDMTQgMTIuNjg2MyAxNi42ODYzIDEwIDIwIDEwWiIgZmlsbD0id2hpdGUiLz4KPHN2ZyB4PSIxNiIgeT0iMjAiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8Y2lyY2xlIGN4PSI0IiBjeT0iNCIgcj0iMiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo="
-                    alt="Stimuli Logo"
-                    className="w-10 h-10"
-                  />
+                  <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
+                    <span className="text-white font-bold text-lg">S</span>
+                  </div>
                   <h2 className="text-3xl font-inter font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                     Welcome back{(user as any)?.firstName ? `, ${(user as any).firstName}` : ''}!
                   </h2>

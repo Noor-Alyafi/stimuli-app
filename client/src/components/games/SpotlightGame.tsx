@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 
 interface SpotlightGameProps {
   onComplete: (score: number, timeTaken: number) => void;
+  showGeneral?: (message: string, type: 'success' | 'error') => void;
 }
 
 interface Target {
@@ -19,7 +20,7 @@ interface Target {
 
 const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD'];
 
-export function SpotlightGame({ onComplete }: SpotlightGameProps) {
+export function SpotlightGame({ onComplete, showGeneral }: SpotlightGameProps) {
   const [gameState, setGameState] = useState<'intro' | 'playing' | 'feedback'>('intro');
   const [currentLevel, setCurrentLevel] = useState(1);
   const [targets, setTargets] = useState<Target[]>([]);
@@ -137,6 +138,11 @@ export function SpotlightGame({ onComplete }: SpotlightGameProps) {
     setStreak(prev => prev + 1);
     setCurrentLevel(prev => prev + 1);
     
+    // Show check mark notification for correct answer
+    if (typeof showGeneral === 'function') {
+      showGeneral(`✅ Correct! +${totalPoints} points`, 'success');
+    }
+    
     setTimeout(() => {
       setFeedback('');
       if (timeLeft > 0) {
@@ -151,6 +157,11 @@ export function SpotlightGame({ onComplete }: SpotlightGameProps) {
   const handleIncorrect = () => {
     setFeedback('incorrect');
     setStreak(0);
+    
+    // Show X mark notification for incorrect answer
+    if (typeof showGeneral === 'function') {
+      showGeneral('❌ Wrong! Try again', 'error');
+    }
     
     setTimeout(() => {
       setFeedback('');

@@ -197,7 +197,7 @@ export function QuickResponseGame({ onComplete }: QuickResponseGameProps) {
       setFeedback('incorrect');
       setStreak(0);
       
-      showGeneral("❌ Wrong! Read carefully!", "error");
+      // Show error feedback in-game only
       
       setTimeout(() => {
         setFeedback('');

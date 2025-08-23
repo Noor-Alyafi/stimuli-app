@@ -80,22 +80,76 @@ export default function Achievements() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h2 className="text-3xl font-inter font-bold text-navy mb-2">
-          Achievements
-        </h2>
-        <p className="text-gray-600">
-          Celebrate your cognitive milestones
-        </p>
-      </div>
+      {/* Modern Header */}
+      <motion.div 
+        className="text-center mb-12 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-8 border-2 border-purple-200 dark:border-purple-700"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+        >
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
+            🏆 Achievement Gallery
+          </h1>
+        </motion.div>
+        <motion.p 
+          className="text-gray-600 dark:text-gray-400 text-lg"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          Track your progress and unlock amazing rewards!
+        </motion.p>
+        
+        {/* Achievement Stats */}
+        <motion.div 
+          className="flex justify-center gap-8 mt-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+          <div className="text-center">
+            <div className="text-2xl font-bold text-purple-600">
+              {unlockedAchievements.length}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Unlocked</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-blue-600">
+              {allAchievements.length}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Total</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-green-600">
+              {allAchievements.length > 0 ? Math.round((unlockedAchievements.length / allAchievements.length) * 100) : 0}%
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Progress</div>
+          </div>
+        </motion.div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Achievement Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {allAchievements.map((achievement: any, index: number) => (
           <motion.div
             key={achievement.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
+            initial={{ opacity: 0, y: 30, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ 
+              delay: index * 0.1, 
+              duration: 0.5,
+              type: "spring",
+              stiffness: 100
+            }}
+            whileHover={{ 
+              y: -8,
+              transition: { duration: 0.2 }
+            }}
           >
             <AchievementBadge
               achievement={achievement}

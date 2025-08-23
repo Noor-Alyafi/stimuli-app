@@ -183,11 +183,8 @@ export default function EnhancedGrowthTree() {
       toast({ title: 'Tree watered!', description: 'Your tree feels refreshed.' });
     },
     onError: (error) => {
-      toast({ 
-        title: 'Failed to water tree', 
-        description: error.message,
-        variant: 'destructive' 
-      });
+      console.error('Error watering tree:', error);
+      // Silently handle watering errors to avoid spam notifications
     },
   });
 
@@ -210,11 +207,8 @@ export default function EnhancedGrowthTree() {
       }
     },
     onError: (error) => {
-      toast({ 
-        title: 'Cannot grow tree', 
-        description: error.message,
-        variant: 'destructive' 
-      });
+      console.error('Error growing tree:', error);
+      // Silently handle grow tree errors to avoid spam notifications
     },
   });
 
@@ -234,11 +228,8 @@ export default function EnhancedGrowthTree() {
       });
     },
     onError: (error) => {
-      toast({
-        title: 'Failed to decorate tree',
-        description: error.message,
-        variant: 'destructive'
-      });
+      console.error('Error decorating tree:', error);
+      // Silently handle decoration errors to avoid spam notifications
     },
   });
 
