@@ -82,46 +82,48 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
           </div>
         );
       
-      case 2: // Sprout - clean design like your image
+      case 2: // Sprout - curved stem with oval leaves like your image
         return (
           <div className="relative flex items-end justify-center">
-            {/* Simple stem */}
+            {/* Curved stem */}
             <div 
               className="relative"
               style={{
-                width: `${3 * sizeMultiplier}px`,
-                height: `${18 * sizeMultiplier}px`,
+                width: `${2.5 * sizeMultiplier}px`,
+                height: `${20 * sizeMultiplier}px`,
                 backgroundColor: colors.crown,
-                borderRadius: '50% 50% 30% 30%',
-                background: `linear-gradient(180deg, ${colors.crownLight} 0%, ${colors.crown} 100%)`
+                borderRadius: '50%',
+                background: `linear-gradient(180deg, ${colors.crownLight} 0%, ${colors.crown} 100%)`,
+                transform: 'rotate(5deg)', // Slight curve like in your image
+                transformOrigin: 'bottom center'
               }}
             >
-              {/* Left curved leaf - simple and clean */}
+              {/* First oval leaf - positioned like your image */}
               <div 
                 className="absolute"
                 style={{
-                  width: `${8 * sizeMultiplier}px`,
-                  height: `${4 * sizeMultiplier}px`,
+                  width: `${10 * sizeMultiplier}px`,
+                  height: `${5 * sizeMultiplier}px`,
                   backgroundColor: colors.crownLight,
-                  top: `${2 * sizeMultiplier}px`,
-                  left: `${-6 * sizeMultiplier}px`,
-                  borderRadius: '0% 80% 80% 20%',
-                  transform: 'rotate(-25deg)',
-                  border: `1px solid ${colors.crown}`
+                  top: `${4 * sizeMultiplier}px`,
+                  left: `${-8 * sizeMultiplier}px`,
+                  borderRadius: '50%',
+                  transform: 'rotate(-15deg)',
+                  border: `0.5px solid ${colors.crown}`
                 }}
               />
-              {/* Right curved leaf - simple and clean */}
+              {/* Second oval leaf - positioned like your image */}
               <div 
                 className="absolute"
                 style={{
-                  width: `${8 * sizeMultiplier}px`,
-                  height: `${4 * sizeMultiplier}px`,
+                  width: `${9 * sizeMultiplier}px`,
+                  height: `${4.5 * sizeMultiplier}px`,
                   backgroundColor: colors.crownLight,
-                  top: `${2 * sizeMultiplier}px`,
-                  right: `${-6 * sizeMultiplier}px`,
-                  borderRadius: '80% 0% 20% 80%',
-                  transform: 'rotate(25deg)',
-                  border: `1px solid ${colors.crown}`
+                  top: `${8 * sizeMultiplier}px`,
+                  right: `${-7 * sizeMultiplier}px`,
+                  borderRadius: '50%',
+                  transform: 'rotate(10deg)',
+                  border: `0.5px solid ${colors.crown}`
                 }}
               />
             </div>
