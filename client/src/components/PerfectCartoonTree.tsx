@@ -82,50 +82,67 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
           </div>
         );
       
-      case 2: // Sprout - curved stem with oval leaves like your image
+      case 2: // Sprout - cartoon style matching the trees
         return (
           <div className="relative flex items-end justify-center">
-            {/* Curved stem */}
+            {/* Cartoon soil mound like trees */}
             <div 
-              className="relative"
+              className="rounded-full"
               style={{
-                width: `${2.5 * sizeMultiplier}px`,
-                height: `${20 * sizeMultiplier}px`,
-                backgroundColor: colors.crown,
-                borderRadius: '50%',
-                background: `linear-gradient(180deg, ${colors.crownLight} 0%, ${colors.crown} 100%)`,
-                transform: 'rotate(5deg)', // Slight curve like in your image
-                transformOrigin: 'bottom center'
+                width: `${24 * sizeMultiplier}px`,
+                height: `${8 * sizeMultiplier}px`,
+                backgroundColor: colors.soil,
+                position: 'relative',
+                filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))',
+                border: `1px solid ${colors.trunkDark}`
               }}
             >
-              {/* First oval leaf - positioned like your image */}
+              {/* Main cartoon stem */}
               <div 
                 className="absolute"
                 style={{
-                  width: `${10 * sizeMultiplier}px`,
-                  height: `${5 * sizeMultiplier}px`,
-                  backgroundColor: colors.crownLight,
-                  top: `${4 * sizeMultiplier}px`,
-                  left: `${-8 * sizeMultiplier}px`,
-                  borderRadius: '50%',
-                  transform: 'rotate(-15deg)',
-                  border: `0.5px solid ${colors.crown}`
+                  width: `${4 * sizeMultiplier}px`,
+                  height: `${16 * sizeMultiplier}px`,
+                  background: `linear-gradient(45deg, ${colors.crownDark} 0%, ${colors.crown} 30%, ${colors.crownLight} 100%)`,
+                  top: `${-14 * sizeMultiplier}px`,
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  borderRadius: '40% 40% 20% 20%',
+                  filter: 'drop-shadow(1px 2px 3px rgba(0,0,0,0.2))',
+                  border: `1px solid ${colors.crownDark}`
                 }}
-              />
-              {/* Second oval leaf - positioned like your image */}
-              <div 
-                className="absolute"
-                style={{
-                  width: `${9 * sizeMultiplier}px`,
-                  height: `${4.5 * sizeMultiplier}px`,
-                  backgroundColor: colors.crownLight,
-                  top: `${8 * sizeMultiplier}px`,
-                  right: `${-7 * sizeMultiplier}px`,
-                  borderRadius: '50%',
-                  transform: 'rotate(10deg)',
-                  border: `0.5px solid ${colors.crown}`
-                }}
-              />
+              >
+                {/* Left cartoon leaf - matching tree style */}
+                <div 
+                  className="absolute"
+                  style={{
+                    width: `${8 * sizeMultiplier}px`,
+                    height: `${4 * sizeMultiplier}px`,
+                    background: `radial-gradient(circle at 30% 30%, ${colors.crownLight} 0%, ${colors.crown} 60%, ${colors.crownDark} 100%)`,
+                    top: `${3 * sizeMultiplier}px`,
+                    left: `${-6 * sizeMultiplier}px`,
+                    borderRadius: '50% 45% 55% 50%', // Same organic shape as tree crown
+                    transform: 'rotate(-20deg)',
+                    filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.2))',
+                    border: `1px solid ${colors.crownDark}`
+                  }}
+                />
+                {/* Right cartoon leaf - matching tree style */}
+                <div 
+                  className="absolute"
+                  style={{
+                    width: `${8 * sizeMultiplier}px`,
+                    height: `${4 * sizeMultiplier}px`,
+                    background: `radial-gradient(circle at 30% 30%, ${colors.crownLight} 0%, ${colors.crown} 60%, ${colors.crownDark} 100%)`,
+                    top: `${3 * sizeMultiplier}px`,
+                    right: `${-6 * sizeMultiplier}px`,
+                    borderRadius: '45% 50% 50% 55%', // Same organic shape as tree crown
+                    transform: 'rotate(20deg)',
+                    filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.2))',
+                    border: `1px solid ${colors.crownDark}`
+                  }}
+                />
+              </div>
             </div>
           </div>
         );
