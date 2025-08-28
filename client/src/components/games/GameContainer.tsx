@@ -63,20 +63,20 @@ export function GameContainer({
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
       queryClient.invalidateQueries({ queryKey: ["/api/user-achievements"] });
       
-      // Calculate rewards
-      const xpEarned = 10; // Standard XP for completing a game
+      // Calculate rewards based on score and performance
+      const baseXP = 15; // Base XP for completing a game
+      const bonusXP = Math.floor(finalScore / 50); // Bonus XP based on score
+      const xpEarned = baseXP + bonusXP;
       const coinsEarned = Math.floor(finalScore / 10); // Coins based on score
       
-      // Show animated reward notifications
+      // Show advanced animated reward notifications with enhanced styling
       showCongratulations(
-        "Game Complete!", 
+        `🎉 Congratulations! You earned ${xpEarned} XP!`, 
         xpEarned, 
         coinsEarned
       );
       
-      // Show individual reward notifications
-      setTimeout(() => showXPGain(xpEarned), 1000);
-      setTimeout(() => showCoinsGained(coinsEarned), 1500);
+      // Individual notifications are now handled within showCongratulations
       
       // Show celebration if new achievements unlocked
       if (data.newAchievements?.length > 0) {

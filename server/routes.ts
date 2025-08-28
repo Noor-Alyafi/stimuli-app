@@ -117,6 +117,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
             iconType: "🎨",
             requirement: { type: "game_count", game: "color-echo", value: 5 },
           });
+          await storage.createAchievement({
+            key: "tree-master",
+            name: "Tree Master",
+            description: "Congratulations! You grew your first tree to full maturity!",
+            xpReward: 200,
+            iconType: "🌳",
+            requirement: { type: "xp", value: 2000 },
+          });
         }
 
         // Seed store items if empty
@@ -218,8 +226,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const progress = await storage.addGameProgress(progressData);
       
-      // Update user XP
-      await storage.updateUserXP(userId, 10); // 10 XP per game
+      // Update user XP with variable amount based on score
+      const baseXP = 15;
+      const bonusXP = Math.floor(progressData.score / 50);
+      const totalXP = baseXP + bonusXP;
+      
+      const user = await storage.updateUserXP(userId, totalXP);
       
       // Update streak
       await storage.updateUserStreak(userId);

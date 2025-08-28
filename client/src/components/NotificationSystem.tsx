@@ -178,9 +178,21 @@ export function useNotifications() {
   const showCongratulations = (message: string, xp?: number, coins?: number) => {
     addNotification({ 
       type: 'congratulations', 
-      message: `🎉 ${message}${xp ? ` +${xp} XP` : ''}${coins ? ` +${coins} coins` : ''}`,
-      duration: 5000 
+      message,
+      amount: xp,
+      duration: 6000 
     });
+    // Also show individual XP notification with special styling for game completion
+    if (xp) {
+      setTimeout(() => {
+        addNotification({ 
+          type: 'xp', 
+          message: "🎯 Experience Earned!", 
+          amount: xp,
+          duration: 4000 
+        });
+      }, 1500);
+    }
   };
 
   const showAchievement = (message: string) => {

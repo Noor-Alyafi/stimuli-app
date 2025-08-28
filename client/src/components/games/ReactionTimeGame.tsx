@@ -84,12 +84,12 @@ export function ReactionTimeGame({ onComplete }: ReactionTimeGameProps) {
         <div className="text-6xl mb-4">⚡</div>
         <h2 className="text-2xl font-bold mb-4">Reaction Time Challenge</h2>
         <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
-          Test your reflexes! Click as fast as you can when the circle turns green. 
+          Test your reflexes! Click as fast as you can when the circle changes color. 
           Complete {maxRounds} rounds to measure your average reaction time.
         </p>
         <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg mb-6">
           <p className="text-sm text-yellow-800 dark:text-yellow-200">
-            <strong>Warning:</strong> Don't click too early! Wait for the green signal.
+            <strong>Warning:</strong> Don't click too early! Wait for the color to change.
           </p>
         </div>
         <Button onClick={handleClick} size="lg" data-testid="button-start">
@@ -179,7 +179,7 @@ export function ReactionTimeGame({ onComplete }: ReactionTimeGameProps) {
             >
               <div className="text-white font-bold">WAIT</div>
             </motion.div>
-            <p className="text-sm text-gray-500">Wait for green...</p>
+            <p className="text-sm text-gray-500">Wait for the color to change...</p>
           </motion.div>
         )}
 

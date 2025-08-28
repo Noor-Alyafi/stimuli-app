@@ -18,8 +18,14 @@ export const GrowthTree = ({ xp, level, achievements = 0, className = "" }: Grow
     return 'oak';
   };
 
-  // Calculate growth stage based on level
+  // Calculate growth stage based on level with special rules for levels 7+ 
   const getGrowthStage = () => {
+    if (level <= 2) return 1; // Seed stage
+    if (level <= 4) return 2; // Sprout stage
+    if (level <= 6) return 3; // Sapling stage
+    if (level <= 7) return 4; // Tree stage
+    if (level <= 9) return 4; // Level 8-9 looks like level 7 (Tree stage)
+    if (level >= 10) return 5; // Level 10+ is Mature stage
     return Math.min(Math.max(Math.floor(level / 2) + 1, 1), 5);
   };
 

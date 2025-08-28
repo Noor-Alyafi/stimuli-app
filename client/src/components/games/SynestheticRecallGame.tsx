@@ -29,7 +29,8 @@ const wordColorPairs: WordColor[] = [
   { word: "Night", color: "#191970", colorName: "Dark Blue" },
 ];
 
-const colors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEAA7", "#DDA0DD", "#FFB347", "#FFB6C1"];
+// Use the exact colors from wordColorPairs to ensure consistency
+const colors = ["#4ECDC4", "#FF6B6B", "#45B7D1", "#96CEB4", "#FFEAA7", "#DDA0DD", "#FFB347", "#FFB6C1", "#708090", "#228B22", "#F8F8FF", "#191970"];
 
 export function SynestheticRecallGame({ onComplete }: SynestheticRecallGameProps) {
   const [gameState, setGameState] = useState<'intro' | 'study' | 'playing' | 'feedback'>('intro');

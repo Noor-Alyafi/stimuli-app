@@ -37,7 +37,7 @@ export interface IStorage {
   // User operations (mandatory for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
-  updateUserXP(userId: string, xpGain: number): Promise<void>;
+  updateUserXP(userId: string, xpGain: number): Promise<User>;
   updateUserStreak(userId: string): Promise<void>;
   updateUserCoins(userId: string, coinChange: number): Promise<void>;
   
@@ -104,21 +104,39 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async updateUserXP(userId: string, xpGain: number): Promise<void> {
+  async updateUserXP(userId: string, xpGain: number): Promise<User> {
     const user = await this.getUser(userId);
-    if (!user) return;
+    if (!user) throw new Error('User not found');
 
-    const newXP = (user.xp || 0) + xpGain;
-    const newLevel = Math.floor(newXP / 100) + 1; // Level up every 100 XP
+    let newXP = (user.xp || 0) + xpGain;
+    let newLevel: number;
+    
+    if (newXP < 2000) {
+      // Levels 1-9: Every 200 XP
+      newLevel = Math.floor(newXP / 200) + 1;
+      newLevel = Math.min(newLevel, 10); // Cap at level 10 until 2000 XP
+    } else if (newXP >= 2000 && (user.level || 1) < 10) {
+      // Player reaches level 10 for the first time at exactly 2000 XP
+      newLevel = 10;
+    } else if (newXP >= 2000) {
+      // After level 10, continue leveling with 300 XP per level
+      const excessXP = newXP - 2000;
+      newLevel = 11 + Math.floor(excessXP / 300);
+    } else {
+      newLevel = user.level || 1;
+    }
 
-    await db
+    const [updatedUser] = await db
       .update(users)
       .set({
         xp: newXP,
         level: newLevel,
         updatedAt: new Date(),
       })
-      .where(eq(users.id, userId));
+      .where(eq(users.id, userId))
+      .returning();
+      
+    return updatedUser;
   }
 
   async updateUserStreak(userId: string): Promise<void> {

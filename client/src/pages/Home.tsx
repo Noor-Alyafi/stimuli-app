@@ -36,8 +36,26 @@ export default function Home() {
 
   const currentXP = (user as any)?.xp || 0;
   const currentLevel = (user as any)?.level || 1;
-  const nextLevelXP = currentLevel * 100;
-  const progressPercentage = ((currentXP % 100) / 100) * 100;
+  
+  // Calculate next level XP based on new system
+  let nextLevelXP: number;
+  let progressPercentage: number;
+  
+  if (currentLevel < 10) {
+    // Levels 1-9: Every 200 XP
+    nextLevelXP = currentLevel * 200;
+    progressPercentage = ((currentXP % 200) / 200) * 100;
+  } else if (currentLevel === 10) {
+    // Level 10 special case: 2000 XP for tree completion
+    nextLevelXP = 2000;
+    progressPercentage = (currentXP / 2000) * 100;
+  } else {
+    // Level 11+: Every 300 XP after 2000
+    const excessLevels = currentLevel - 10;
+    nextLevelXP = 2000 + (excessLevels * 300);
+    const currentProgress = currentXP - 2000 - ((currentLevel - 11) * 300);
+    progressPercentage = (currentProgress / 300) * 100;
+  }
   
   const todayQuote = dailyQuotes[new Date().getDay()];
 
