@@ -330,6 +330,15 @@ export class DatabaseStorage implements IStorage {
         if (achievement.xpReward > 0) {
           await this.updateUserXP(userId, achievement.xpReward);
         }
+        // Award 20 coins for each achievement
+        await this.updateUserCoins(userId, 20);
+        await this.addCoinTransaction({
+          userId,
+          amount: 20,
+          transactionType: 'achievement_reward',
+          description: `Achievement unlocked: ${achievement.name}`
+        });
+        
         const [newAchievement] = await db
           .select()
           .from(userAchievements)
@@ -635,13 +644,15 @@ export class DatabaseStorage implements IStorage {
         });
     }
 
-    // Create coin transaction
-    await this.addCoinTransaction({
-      userId,
-      amount: -totalCost,
-      transactionType: 'purchase',
-      description: `Purchased ${quantity}x ${storeItem.name}`,
-    });
+    // Create coin transaction record only (don't double-deduct coins)
+    await db
+      .insert(coinTransactions)
+      .values({
+        userId,
+        amount: -totalCost,
+        transactionType: 'purchase',
+        description: `Purchased ${quantity}x ${storeItem.name}`,
+      });
   }
 
   async getUserInventory(userId: string): Promise<UserInventory[]> {

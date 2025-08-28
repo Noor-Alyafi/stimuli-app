@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Volume2, Play, Pause } from "lucide-react";
+import { NotificationSystem, useNotifications } from "@/components/NotificationSystem";
 
 interface ColorEchoGameProps {
   onComplete: (score: number, timeTaken: number) => void;
@@ -41,6 +42,7 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
   
   const audioContextRef = useRef<AudioContext | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const { notifications, removeNotification, showGeneral } = useNotifications();
 
   useEffect(() => {
     // Initialize audio context
@@ -160,6 +162,7 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
 
   const showSequence = () => {
     const newSequence = generateSequence();
+    setSequence(newSequence); // Set sequence BEFORE showing
     setGameState('showing');
     setCurrentShowingIndex(0);
     setIsPlaying(true);
@@ -196,11 +199,15 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
     if (isCorrect) {
       // Play correct sound effect
       playCorrectSound();
+      // Visual feedback for correct answer
+      setFeedback('correct');
+      showGeneral("✅ Correct!", "success");
     } else {
       // Play incorrect sound effect
       playIncorrectSound();
       setFeedback('incorrect');
       setStreak(0);
+      showGeneral("❌ Wrong color! Try again.", "error");
       setTimeout(() => {
         setFeedback('');
         if (currentLevel > 1) {
@@ -218,6 +225,8 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
       setScore(prev => prev + points);
       setStreak(prev => prev + 1);
       setCurrentLevel(prev => prev + 1);
+      
+      showGeneral(`🎉 Perfect sequence! +${points} points!`, "success");
       
       setTimeout(() => {
         setFeedback('');
@@ -417,6 +426,11 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <NotificationSystem
+        notifications={notifications}
+        onRemove={removeNotification}
+      />
     </div>
   );
 }

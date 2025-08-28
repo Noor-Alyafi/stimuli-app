@@ -114,25 +114,36 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
     }
   };
   
-  // Generate gnome positioning for multiple gnomes
+  // Generate gnome positioning for multiple gnomes with equal distance around tree center
   const getGnomePositions = (count: number, treeWidth: number) => {
     if (count === 0) return [];
-    if (count === 1) return [{ x: treeWidth * 0.8, side: 'right' as const }];
-    if (count === 2) return [
-      { x: -treeWidth * 0.3, side: 'left' as const },
-      { x: treeWidth * 0.8, side: 'right' as const }
-    ];
-    if (count === 3) return [
-      { x: -treeWidth * 0.4, side: 'left' as const },
-      { x: 0, side: 'center' as const },
-      { x: treeWidth * 0.8, side: 'right' as const }
-    ];
-    // Maximum 4 gnomes with good spacing
+    
+    const centerX = 0; // Tree center
+    const baseDistance = treeWidth * 0.6; // Equal distance from center
+    
+    if (count === 1) {
+      return [{ x: centerX + baseDistance, side: 'right' as const }];
+    }
+    if (count === 2) {
+      return [
+        { x: centerX - baseDistance, side: 'left' as const },
+        { x: centerX + baseDistance, side: 'right' as const }
+      ];
+    }
+    if (count === 3) {
+      return [
+        { x: centerX - baseDistance, side: 'left' as const },
+        { x: centerX, side: 'center' as const },
+        { x: centerX + baseDistance, side: 'right' as const }
+      ];
+    }
+    // 4 gnomes with equal spacing
+    const spacing = baseDistance * 0.7;
     return [
-      { x: -treeWidth * 0.5, side: 'left' as const },
-      { x: -treeWidth * 0.2, side: 'left' as const },
-      { x: treeWidth * 0.5, side: 'right' as const },
-      { x: treeWidth * 0.8, side: 'right' as const }
+      { x: centerX - baseDistance, side: 'left' as const },
+      { x: centerX - spacing, side: 'left' as const },
+      { x: centerX + spacing, side: 'right' as const },
+      { x: centerX + baseDistance, side: 'right' as const }
     ];
   };
   

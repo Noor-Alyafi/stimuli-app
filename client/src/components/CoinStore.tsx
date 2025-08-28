@@ -195,7 +195,7 @@ export default function CoinStore() {
                 transition={{ delay: index * 0.1 }}
                 key={item.id}
               >
-                <Card className="hover:shadow-xl hover:scale-105 transition-all duration-300 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border-2 hover:border-blue-200 dark:hover:border-blue-700">
+                <Card className="hover:shadow-xl hover:scale-105 transition-all duration-300 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border-2 hover:border-blue-200 dark:hover:border-blue-700 h-full">
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-lg flex items-center gap-2">
@@ -290,7 +290,7 @@ export default function CoinStore() {
                 if (!storeItem) return null;
 
                 return (
-                  <Card key={item.id}>
+                  <Card key={item.id} className="h-full">
                     <CardHeader className="text-center pb-3">
                       <div className="text-4xl mb-2">{getItemIcon(storeItem.itemType)}</div>
                       <CardTitle className="text-lg">{storeItem.name}</CardTitle>
