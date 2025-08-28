@@ -139,7 +139,8 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
 
   const generateSequence = () => {
     const newSequence: ColorSound[] = [];
-    const sequenceLength = Math.min(3 + Math.floor(currentLevel / 2), 8);
+    // Start with 2 colors, increase gradually but cap at 6 for better gameplay
+    const sequenceLength = Math.min(2 + Math.floor(currentLevel / 3), 6);
     
     for (let i = 0; i < sequenceLength; i++) {
       const randomColor = colorSounds[Math.floor(Math.random() * colorSounds.length)];
@@ -178,21 +179,26 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
             setGameState('guessing');
             setIsPlaying(false);
             setCurrentShowingIndex(-1);
-          }, 1000);
+          }, 1500); // Longer pause after sequence
         }
-      }, index * 1200);
+      }, index * 1500); // Slower timing for better processing
     });
   };
 
   const handleColorClick = (colorSound: ColorSound) => {
     if (gameState !== 'guessing') return;
     
+    // Don't allow clicks beyond sequence length
+    if (playerSequence.length >= sequence.length) {
+      return;
+    }
+    
     const newPlayerSequence = [...playerSequence, colorSound];
     setPlayerSequence(newPlayerSequence);
     playSound(colorSound);
     
-    // Check if the current selection is correct - fix the bug by comparing the exact color objects
-    const expectedColor = sequence[newPlayerSequence.length - 1];
+    // Check if the current selection is correct using the current position
+    const expectedColor = sequence[playerSequence.length]; // Use current position, not new length
     const isCorrect = colorSound.color === expectedColor.color && colorSound.frequency === expectedColor.frequency;
     
     // Play correct/incorrect sound effects

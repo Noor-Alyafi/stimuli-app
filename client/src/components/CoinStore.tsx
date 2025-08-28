@@ -195,21 +195,16 @@ export default function CoinStore() {
                 transition={{ delay: index * 0.1 }}
                 key={item.id}
               >
-                <Card className="hover:shadow-xl hover:scale-105 transition-all duration-300 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border-2 hover:border-blue-200 dark:hover:border-blue-700 h-full">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <motion.span 
-                          className="text-3xl"
-                          whileHover={{ scale: 1.2, rotate: 5 }}
-                          transition={{ type: "spring", stiffness: 400 }}
-                        >
-                          {getItemIcon(item.itemType)}
-                        </motion.span>
-                        <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-bold">
-                          {item.name}
-                        </span>
-                      </CardTitle>
+                <Card className="hover:shadow-xl hover:scale-105 transition-all duration-300 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border-2 hover:border-blue-200 dark:hover:border-blue-700 h-full flex flex-col">
+                  <CardHeader className="pb-3 flex-grow">
+                    <div className="flex items-center justify-between mb-2">
+                      <motion.span 
+                        className="text-3xl"
+                        whileHover={{ scale: 1.2, rotate: 5 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
+                        {getItemIcon(item.itemType)}
+                      </motion.span>
                       <motion.div whileHover={{ scale: 1.1 }}>
                         <Badge 
                           variant="secondary" 
@@ -219,12 +214,15 @@ export default function CoinStore() {
                         </Badge>
                       </motion.div>
                     </div>
-                    <CardDescription className="text-gray-600 dark:text-gray-400 mt-2">
+                    <CardTitle className="text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-bold mb-2">
+                      {item.name}
+                    </CardTitle>
+                    <CardDescription className="text-gray-600 dark:text-gray-400 text-sm flex-grow">
                       {item.description}
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
+                <CardContent className="space-y-3 pt-0">
+                  <div className="flex items-center justify-center">
                     <motion.div 
                       className="flex items-center gap-1 bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30 px-3 py-1 rounded-lg"
                       whileHover={{ scale: 1.05 }}
@@ -246,9 +244,12 @@ export default function CoinStore() {
                   </motion.div>
 
                   {getUserItemQuantity(item.id) > 0 && (
-                    <p className="text-xs text-center text-green-600">
+                    <p className="text-xs text-center text-green-600 min-h-[16px]">
                       You own {getUserItemQuantity(item.id)}
                     </p>
+                  )}
+                  {getUserItemQuantity(item.id) === 0 && (
+                    <div className="min-h-[16px]"></div>
                   )}
                 </CardContent>
                 </Card>

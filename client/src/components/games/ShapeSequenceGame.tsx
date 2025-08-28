@@ -113,7 +113,8 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
 
   const generateSequence = () => {
     const newSequence: Shape[] = [];
-    const sequenceLength = Math.min(3 + Math.floor(currentLevel / 2), 8);
+    // Start with 2 shapes, increase gradually but cap at 5 for better gameplay
+    const sequenceLength = Math.min(2 + Math.floor(currentLevel / 3), 5);
     
     for (let i = 0; i < sequenceLength; i++) {
       const randomShape = shapes[Math.floor(Math.random() * shapes.length)];
@@ -151,23 +152,28 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
             setGameState('guessing');
             setIsShowing(false);
             setCurrentShowingIndex(-1);
-          }, 1000);
+          }, 1500); // Longer pause after sequence
         }
-      }, index * 1000);
+      }, index * 1500); // Slower timing for better visibility
     });
   };
 
   const handleShapeClick = (shape: Shape) => {
     if (gameState !== 'guessing') return;
     
+    // Don't allow clicks beyond sequence length
+    if (playerSequence.length >= sequence.length) {
+      return;
+    }
+    
     const newPlayerSequence = [...playerSequence, shape];
     setPlayerSequence(newPlayerSequence);
     
-    // Check if the current selection is correct - fix the bug by ensuring sequence is properly set
-    const expectedShape = sequence[newPlayerSequence.length - 1];
+    // Check if the current selection is correct using the current position
+    const expectedShape = sequence[playerSequence.length]; // Use current position, not new length
     if (!expectedShape) {
       console.error('No expected shape found', { 
-        newPlayerSequenceLength: newPlayerSequence.length, 
+        currentPosition: playerSequence.length,
         sequenceLength: sequence.length, 
         sequence: sequence.map(s => s.id)
       });

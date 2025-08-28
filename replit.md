@@ -113,9 +113,19 @@ The application is designed to be a comprehensive brain training platform with p
 - **Multi-Stage Support**: Decorations now available on growth stages 3, 4, and 5 with appropriate sizing
 - **Visual Consistency**: Gnome hat colors vary by tree stage (green, blue, pink) for visual variety
 - **Proper Positioning**: Gnomes positioned on ground near tree base, lights strung horizontally across branches
+- **Equal Distance Positioning**: Fixed gnome placement to use equal distance around tree center for uniform spacing
 
 ### Game System Improvements
 - **Enhanced XP Rewards**: Base 15 XP + bonus XP based on performance scores
 - **Synesthetic Recall Fix**: Color consistency now uses exact colors from display phase
 - **Store Cleanup**: Removed duplicate "Willow Tree Seed" items, kept unified "Willow Seed"
 - **Notification Polish**: Removed duplicate XP notifications, streamlined reward display system
+
+### Critical Bug Fixes (Latest Update)
+- **Money Reset Bug**: Fixed purchase system where user coins reset to zero after buying items by removing double coin deduction
+- **Game Matching Logic**: Fixed Color Echo and Shape Sequence games where correct answers registered as incorrect
+- **Game Timing**: Improved sequence display timing in both games (1500ms intervals instead of 1000-1200ms)
+- **Sequence Length**: Reduced maximum sequence length for better accessibility (ColorEcho: 6, ShapeSequence: 5)
+- **Achievement Rewards**: Added 20-coin rewards for each achievement unlock with proper notifications and sound effects
+- **Store Card Consistency**: Standardized all store item cards with uniform heights and aligned content layout
+- **Sound Feedback**: Added proper audio feedback for correct/incorrect answers in all games with visual notifications
