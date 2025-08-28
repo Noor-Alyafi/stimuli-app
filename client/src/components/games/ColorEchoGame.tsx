@@ -77,6 +77,45 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
     };
   }, [gameState, timeLeft]);
 
+  const playCorrectSound = () => {
+    if (!audioContextRef.current) return;
+    
+    const oscillator = audioContextRef.current.createOscillator();
+    const gainNode = audioContextRef.current.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContextRef.current.destination);
+    
+    oscillator.frequency.setValueAtTime(523.25, audioContextRef.current.currentTime); // C5 - cheerful sound
+    oscillator.frequency.setValueAtTime(659.25, audioContextRef.current.currentTime + 0.1); // E5
+    oscillator.type = 'sine';
+    
+    gainNode.gain.setValueAtTime(0.3, audioContextRef.current.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContextRef.current.currentTime + 0.3);
+    
+    oscillator.start();
+    oscillator.stop(audioContextRef.current.currentTime + 0.3);
+  };
+
+  const playIncorrectSound = () => {
+    if (!audioContextRef.current) return;
+    
+    const oscillator = audioContextRef.current.createOscillator();
+    const gainNode = audioContextRef.current.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContextRef.current.destination);
+    
+    oscillator.frequency.setValueAtTime(196.00, audioContextRef.current.currentTime); // G3 - lower, somber sound
+    oscillator.type = 'sawtooth';
+    
+    gainNode.gain.setValueAtTime(0.2, audioContextRef.current.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContextRef.current.currentTime + 0.5);
+    
+    oscillator.start();
+    oscillator.stop(audioContextRef.current.currentTime + 0.5);
+  };
+
   const playSound = async (colorSound: ColorSound) => {
     if (!audioContextRef.current) return;
     
@@ -149,10 +188,17 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
     setPlayerSequence(newPlayerSequence);
     playSound(colorSound);
     
-    // Check if the current selection is correct
-    const isCorrect = colorSound.name === sequence[newPlayerSequence.length - 1].name;
+    // Check if the current selection is correct - fix the bug by comparing the exact color objects
+    const expectedColor = sequence[newPlayerSequence.length - 1];
+    const isCorrect = colorSound.color === expectedColor.color && colorSound.frequency === expectedColor.frequency;
     
-    if (!isCorrect) {
+    // Play correct/incorrect sound effects
+    if (isCorrect) {
+      // Play correct sound effect
+      playCorrectSound();
+    } else {
+      // Play incorrect sound effect
+      playIncorrectSound();
       setFeedback('incorrect');
       setStreak(0);
       setTimeout(() => {

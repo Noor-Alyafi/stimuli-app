@@ -69,14 +69,18 @@ export function GameContainer({
       const xpEarned = baseXP + bonusXP;
       const coinsEarned = Math.floor(finalScore / 10); // Coins based on score
       
-      // Show advanced animated reward notifications with enhanced styling
-      showCongratulations(
-        `🎉 Congratulations! You earned ${xpEarned} XP!`, 
-        xpEarned, 
-        coinsEarned
-      );
+      // Show advanced animated reward notifications similar to tree growth
+      setTimeout(() => {
+        showXPGain(xpEarned);
+      }, 500);
       
-      // Individual notifications are now handled within showCongratulations
+      setTimeout(() => {
+        showCoinsGained(coinsEarned);
+      }, 1000);
+      
+      setTimeout(() => {
+        showCongratulations(`Game completed! Well done!`);
+      }, 1500);
       
       // Show celebration if new achievements unlocked
       if (data.newAchievements?.length > 0) {
@@ -170,7 +174,7 @@ export function GameContainer({
                   </div>
                   <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-lg p-4 border border-purple-200 dark:border-purple-700">
                     <div className="text-sm text-purple-600 dark:text-purple-400">XP Earned</div>
-                    <div className="text-2xl font-bold text-purple-600">+10</div>
+                    <div className="text-2xl font-bold text-purple-600">+{15 + Math.floor(finalScore / 50)}</div>
                   </div>
                   <div className="bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/30 dark:to-amber-900/30 rounded-lg p-4 border border-yellow-200 dark:border-yellow-700">
                     <div className="text-sm text-yellow-600 dark:text-yellow-400">Coins Earned</div>

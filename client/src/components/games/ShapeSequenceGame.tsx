@@ -40,7 +40,54 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
   const [isShowing, setIsShowing] = useState(false);
   
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
   const { notifications, removeNotification, showCongratulations, showGeneral } = useNotifications();
+
+  useEffect(() => {
+    // Initialize audio context
+    if (typeof window !== 'undefined') {
+      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+    }
+  }, []);
+
+  const playCorrectSound = () => {
+    if (!audioContextRef.current) return;
+    
+    const oscillator = audioContextRef.current.createOscillator();
+    const gainNode = audioContextRef.current.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContextRef.current.destination);
+    
+    oscillator.frequency.setValueAtTime(523.25, audioContextRef.current.currentTime); // C5 - cheerful sound
+    oscillator.frequency.setValueAtTime(659.25, audioContextRef.current.currentTime + 0.1); // E5
+    oscillator.type = 'sine';
+    
+    gainNode.gain.setValueAtTime(0.3, audioContextRef.current.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContextRef.current.currentTime + 0.3);
+    
+    oscillator.start();
+    oscillator.stop(audioContextRef.current.currentTime + 0.3);
+  };
+
+  const playIncorrectSound = () => {
+    if (!audioContextRef.current) return;
+    
+    const oscillator = audioContextRef.current.createOscillator();
+    const gainNode = audioContextRef.current.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContextRef.current.destination);
+    
+    oscillator.frequency.setValueAtTime(196.00, audioContextRef.current.currentTime); // G3 - lower, somber sound
+    oscillator.type = 'sawtooth';
+    
+    gainNode.gain.setValueAtTime(0.2, audioContextRef.current.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContextRef.current.currentTime + 0.5);
+    
+    oscillator.start();
+    oscillator.stop(audioContextRef.current.currentTime + 0.5);
+  };
 
   useEffect(() => {
     if (gameState === 'playing' && timeLeft > 0) {
@@ -116,15 +163,23 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
     const newPlayerSequence = [...playerSequence, shape];
     setPlayerSequence(newPlayerSequence);
     
-    // Check if the current selection is correct
+    // Check if the current selection is correct - fix the bug by ensuring sequence is properly set
     const expectedShape = sequence[newPlayerSequence.length - 1];
     if (!expectedShape) {
-      console.error('No expected shape found', { newPlayerSequence, sequence });
+      console.error('No expected shape found', { 
+        newPlayerSequenceLength: newPlayerSequence.length, 
+        sequenceLength: sequence.length, 
+        sequence: sequence.map(s => s.id)
+      });
       return;
     }
     const isCorrect = shape.id === expectedShape.id;
     
-    if (!isCorrect) {
+    // Play correct/incorrect sound effects
+    if (isCorrect) {
+      playCorrectSound();
+    } else {
+      playIncorrectSound();
       setFeedback('incorrect');
       setStreak(0);
       showGeneral("❌ Wrong shape! Try again.", "error");

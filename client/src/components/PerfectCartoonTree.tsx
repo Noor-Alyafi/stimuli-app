@@ -18,6 +18,37 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
   className = '',
   decorations = []
 }) => {
+  // Parse gnome decorations to support multiple gnomes
+  const parseDecorations = () => {
+    const gnomes: Array<{ id: number, color: string, position: 'left' | 'right' }> = [];
+    const otherDecorations = [];
+    
+    for (const decoration of decorations) {
+      if (typeof decoration === 'string') {
+        if (decoration === 'gnome') {
+          // Legacy single gnome support
+          gnomes.push({ id: 1, color: 'green', position: 'right' });
+        } else if (decoration.startsWith('gnome_')) {
+          // New multiple gnome support: gnome_1_green_left, gnome_2_blue_right, etc.
+          const parts = decoration.split('_');
+          if (parts.length >= 4) {
+            const id = parseInt(parts[1]);
+            const color = parts[2];
+            const position = parts[3] as 'left' | 'right';
+            gnomes.push({ id, color, position });
+          }
+        } else {
+          otherDecorations.push(decoration);
+        }
+      } else {
+        otherDecorations.push(decoration);
+      }
+    }
+    
+    return { gnomes, hasLights: otherDecorations.includes('fairy_lights') };
+  };
+  
+  const { gnomes, hasLights } = parseDecorations();
   // Tree colors based on your exact image
   const getTreeColors = () => {
     const colors = {
@@ -57,6 +88,108 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
   const sizeMultiplier = size === 'small' ? 1.5 : size === 'large' ? 3.0 : 2.5;
   const containerHeight = size === 'small' ? 'h-24' : size === 'large' ? 'h-60' : 'h-48';
   const containerWidth = size === 'small' ? 'w-24' : size === 'large' ? 'w-60' : 'w-48';
+  
+  // Gnome color mapping
+  const getGnomeHatColor = (color: string) => {
+    switch (color) {
+      case 'green': return '#32CD32';
+      case 'blue': return '#00BFFF';
+      case 'pink': return '#FF69B4';
+      case 'red': return '#FF6347';
+      case 'purple': return '#9370DB';
+      case 'orange': return '#FF8C00';
+      default: return '#32CD32';
+    }
+  };
+  
+  const getGnomeHatTipColor = (color: string) => {
+    switch (color) {
+      case 'green': return '#90EE90';
+      case 'blue': return '#87CEEB';
+      case 'pink': return '#FFB6C1';
+      case 'red': return '#FFA07A';
+      case 'purple': return '#DDA0DD';
+      case 'orange': return '#FFD700';
+      default: return '#90EE90';
+    }
+  };
+  
+  // Generate gnome positioning for multiple gnomes
+  const getGnomePositions = (count: number, treeWidth: number) => {
+    if (count === 0) return [];
+    if (count === 1) return [{ x: treeWidth * 0.8, side: 'right' as const }];
+    if (count === 2) return [
+      { x: -treeWidth * 0.3, side: 'left' as const },
+      { x: treeWidth * 0.8, side: 'right' as const }
+    ];
+    if (count === 3) return [
+      { x: -treeWidth * 0.4, side: 'left' as const },
+      { x: 0, side: 'center' as const },
+      { x: treeWidth * 0.8, side: 'right' as const }
+    ];
+    // Maximum 4 gnomes with good spacing
+    return [
+      { x: -treeWidth * 0.5, side: 'left' as const },
+      { x: -treeWidth * 0.2, side: 'left' as const },
+      { x: treeWidth * 0.5, side: 'right' as const },
+      { x: treeWidth * 0.8, side: 'right' as const }
+    ];
+  };
+  
+  // Render multiple gnomes with different colors and positions
+  const renderGnomes = (gnomeCount: number, gnomeWidth: number, gnomeHeight: number, treeWidth: number) => {
+    if (gnomes.length === 0) return null;
+    
+    const positions = getGnomePositions(Math.min(gnomes.length, 4), treeWidth);
+    
+    return gnomes.slice(0, 4).map((gnome, index) => {
+      const position = positions[index];
+      if (!position) return null;
+      
+      return (
+        <div 
+          key={gnome.id}
+          className="absolute bottom-0 transform"
+          style={{ 
+            zIndex: 5,
+            left: `${position.x}px`,
+            transform: 'translateY(0)'
+          }}
+        >
+          <svg 
+            width={`${gnomeWidth}px`} 
+            height={`${gnomeHeight}px`} 
+            viewBox="0 0 16 20"
+            className="drop-shadow-md"
+          >
+            {/* Gnome body */}
+            <ellipse cx="8" cy="16" rx="4" ry="3" fill="#8FBC8F" />
+            {/* Gnome face */}
+            <circle cx="8" cy="12" r="2.5" fill="#FDBCB4" />
+            {/* Pointed cone hat with gnome's specific color */}
+            <path 
+              d="M 8 3 L 12 11 L 4 11 Z" 
+              fill={getGnomeHatColor(gnome.color)} 
+            />
+            <circle cx="8" cy="3" r="1" fill={getGnomeHatTipColor(gnome.color)} />
+            {/* White beard */}
+            <ellipse cx="8" cy="14" rx="2" ry="1.5" fill="#FFFFFF" />
+            {/* Eyes */}
+            <circle cx="7" cy="11.5" r="0.3" fill="#000000" />
+            <circle cx="9" cy="11.5" r="0.3" fill="#000000" />
+            {/* Pink nose */}
+            <circle cx="8" cy="12.5" r="0.2" fill="#FFB6C1" />
+            {/* Hands */}
+            <circle cx="4.5" cy="15" r="0.8" fill="#FDBCB4" />
+            <circle cx="11.5" cy="15" r="0.8" fill="#FDBCB4" />
+            {/* Black shoes */}
+            <ellipse cx="6" cy="19" rx="1.2" ry="0.8" fill="#2C2C2C" />
+            <ellipse cx="10" cy="19" rx="1.2" ry="0.8" fill="#2C2C2C" />
+          </svg>
+        </div>
+      );
+    });
+  };
   
   // Render different visuals based on growth stage
   const renderTreeByStage = () => {
@@ -162,44 +295,8 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
               }}
             />
             
-            {/* Garden gnome decoration for small trees */}
-            {decorations.includes('gnome') && (
-              <div 
-                className="absolute bottom-0 right-0 transform translate-x-1/2"
-                style={{ zIndex: 5 }}
-              >
-                <svg 
-                  width={`${12 * sizeMultiplier}px`} 
-                  height={`${15 * sizeMultiplier}px`} 
-                  viewBox="0 0 16 20"
-                  className="drop-shadow-md"
-                >
-                  {/* Gnome body */}
-                  <ellipse cx="8" cy="16" rx="4" ry="3" fill="#8FBC8F" />
-                  {/* Gnome face */}
-                  <circle cx="8" cy="12" r="2.5" fill="#FDBCB4" />
-                  {/* Pointed cone hat like reference image */}
-                  <path 
-                    d="M 8 3 L 12 11 L 4 11 Z" 
-                    fill="#32CD32" 
-                  />
-                  <circle cx="8" cy="3" r="1" fill="#90EE90" />
-                  {/* White beard */}
-                  <ellipse cx="8" cy="14" rx="2" ry="1.5" fill="#FFFFFF" />
-                  {/* Eyes */}
-                  <circle cx="7" cy="11.5" r="0.3" fill="#000000" />
-                  <circle cx="9" cy="11.5" r="0.3" fill="#000000" />
-                  {/* Pink nose */}
-                  <circle cx="8" cy="12.5" r="0.2" fill="#FFB6C1" />
-                  {/* Hands */}
-                  <circle cx="4.5" cy="15" r="0.8" fill="#FDBCB4" />
-                  <circle cx="11.5" cy="15" r="0.8" fill="#FDBCB4" />
-                  {/* Black shoes */}
-                  <ellipse cx="6" cy="19" rx="1.2" ry="0.8" fill="#2C2C2C" />
-                  <ellipse cx="10" cy="19" rx="1.2" ry="0.8" fill="#2C2C2C" />
-                </svg>
-              </div>
-            )}
+            {/* Multiple gnome decorations for small trees */}
+            {renderGnomes(gnomes.length, 12 * sizeMultiplier, 15 * sizeMultiplier, smallCrownSize)}
           </div>
         );
       
@@ -245,7 +342,7 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
               />
               
               {/* Fairy lights for medium tree - single horizontal line */}
-              {decorations.includes('fairy_lights') && (
+              {hasLights && (
                 <>
                   {/* Single wire string exactly from tree sides */}
                   <div className="absolute" style={{ top: '45%', left: '0%', right: '0%', height: '1px', backgroundColor: '#2d2d2d', zIndex: 10 }} />
@@ -271,43 +368,8 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
             />
             
             {/* Garden gnome decoration for medium trees */}
-            {decorations.includes('gnome') && (
-              <div 
-                className="absolute bottom-0 right-0 transform translate-x-1/2"
-                style={{ zIndex: 5 }}
-              >
-                <svg 
-                  width={`${14 * sizeMultiplier}px`} 
-                  height={`${17 * sizeMultiplier}px`} 
-                  viewBox="0 0 16 20"
-                  className="drop-shadow-md"
-                >
-                  {/* Gnome body */}
-                  <ellipse cx="8" cy="16" rx="4" ry="3" fill="#8FBC8F" />
-                  {/* Gnome face */}
-                  <circle cx="8" cy="12" r="2.5" fill="#FDBCB4" />
-                  {/* Pointed cone hat like reference image */}
-                  <path 
-                    d="M 8 3 L 12 11 L 4 11 Z" 
-                    fill="#00BFFF" 
-                  />
-                  <circle cx="8" cy="3" r="1" fill="#87CEEB" />
-                  {/* White beard */}
-                  <ellipse cx="8" cy="14" rx="2" ry="1.5" fill="#FFFFFF" />
-                  {/* Eyes */}
-                  <circle cx="7" cy="11.5" r="0.3" fill="#000000" />
-                  <circle cx="9" cy="11.5" r="0.3" fill="#000000" />
-                  {/* Pink nose */}
-                  <circle cx="8" cy="12.5" r="0.2" fill="#FFB6C1" />
-                  {/* Hands */}
-                  <circle cx="4.5" cy="15" r="0.8" fill="#FDBCB4" />
-                  <circle cx="11.5" cy="15" r="0.8" fill="#FDBCB4" />
-                  {/* Black shoes */}
-                  <ellipse cx="6" cy="19" rx="1.2" ry="0.8" fill="#2C2C2C" />
-                  <ellipse cx="10" cy="19" rx="1.2" ry="0.8" fill="#2C2C2C" />
-                </svg>
-              </div>
-            )}
+            {/* Multiple gnome decorations for medium trees */}
+            {renderGnomes(gnomes.length, 14 * sizeMultiplier, 17 * sizeMultiplier, mediumCrownSize)}
           </div>
         );
       
@@ -391,7 +453,7 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
               />
               
               {/* Fairy lights decoration - single horizontal line from side to side */}
-              {decorations.includes('fairy_lights') && (
+              {hasLights && (
                 <>
                   {/* Single black wire string connecting exactly from tree sides */}
                   <div 
@@ -589,50 +651,8 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
             </div>
             
             {/* Garden gnome decoration - cute gnome with colorful hat at tree base */}
-            {decorations.includes('gnome') && (
-              <div 
-                className="absolute bottom-0 right-0 transform translate-x-1/2"
-                style={{ zIndex: 5 }}
-              >
-                <svg 
-                  width={`${16 * sizeMultiplier}px`} 
-                  height={`${20 * sizeMultiplier}px`} 
-                  viewBox="0 0 16 20"
-                  className="drop-shadow-md"
-                >
-                  {/* Gnome body */}
-                  <ellipse cx="8" cy="16" rx="4" ry="3" fill="#8FBC8F" />
-                  
-                  {/* Gnome face */}
-                  <circle cx="8" cy="12" r="2.5" fill="#FDBCB4" />
-                  
-                  {/* Pointed cone hat like reference image */}
-                  <path 
-                    d="M 8 3 L 12 11 L 4 11 Z" 
-                    fill="#FF69B4" 
-                  />
-                  <circle cx="8" cy="3" r="1" fill="#FFB6C1" />
-                  
-                  {/* White beard */}
-                  <ellipse cx="8" cy="14" rx="2" ry="1.5" fill="#FFFFFF" />
-                  
-                  {/* Little black eyes */}
-                  <circle cx="7" cy="11.5" r="0.3" fill="#000000" />
-                  <circle cx="9" cy="11.5" r="0.3" fill="#000000" />
-                  
-                  {/* Pink nose */}
-                  <circle cx="8" cy="12.5" r="0.2" fill="#FFB6C1" />
-                  
-                  {/* Little hands */}
-                  <circle cx="4.5" cy="15" r="0.8" fill="#FDBCB4" />
-                  <circle cx="11.5" cy="15" r="0.8" fill="#FDBCB4" />
-                  
-                  {/* Black shoes */}
-                  <ellipse cx="6" cy="19" rx="1.2" ry="0.8" fill="#2C2C2C" />
-                  <ellipse cx="10" cy="19" rx="1.2" ry="0.8" fill="#2C2C2C" />
-                </svg>
-              </div>
-            )}
+            {/* Multiple gnome decorations for large trees */}
+            {renderGnomes(gnomes.length, 16 * sizeMultiplier, 20 * sizeMultiplier, fullCrownSize)}
           </div>
         );
     }

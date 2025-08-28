@@ -107,9 +107,16 @@ const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow, onDecora
             className="flex-1"
             data-testid={`button-gnome-${tree.id}`}
           >
-            🧙‍♂️ Gnome
+            🧙‍♂️ Add Gnome
           </Button>
         </div>
+        
+        {/* Gnome Status Display */}
+        {tree.decorations && tree.decorations.filter(d => typeof d === 'string' && (d === 'gnome' || d.startsWith('gnome_'))).length > 0 && (
+          <div className="text-xs text-blue-600 bg-blue-50 rounded p-2">
+            🧙‍♂️ {tree.decorations.filter(d => typeof d === 'string' && (d === 'gnome' || d.startsWith('gnome_'))).length}/4 gnomes placed
+          </div>
+        )}
 
         <div className="text-xs text-gray-500 space-y-1">
           <p>Planted: {tree.plantedAt ? new Date(tree.plantedAt).toLocaleDateString() : 'Unknown'}</p>

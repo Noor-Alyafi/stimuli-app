@@ -521,14 +521,43 @@ export class DatabaseStorage implements IStorage {
       const tree = currentDecorations[0];
       const existingDecorations = Array.isArray(tree.decorations) ? tree.decorations : [];
       
-      // Add new decoration if not already present
-      if (!existingDecorations.includes(decorationType)) {
+      // Handle special gnome decorations with multiple colors
+      if (decorationType === 'gnome') {
+        // Get current gnome count
+        const currentGnomes = existingDecorations.filter(d => 
+          typeof d === 'string' && (d === 'gnome' || d.startsWith('gnome_'))
+        );
+        
+        // Limit to 4 gnomes maximum
+        if (currentGnomes.length >= 4) {
+          return; // Maximum gnomes reached
+        }
+        
+        // Add new gnome with random color and alternating position
+        const colors = ['green', 'blue', 'pink', 'red', 'purple', 'orange'];
+        const positions = ['left', 'right'];
+        const gnomeId = currentGnomes.length + 1;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const position = positions[gnomeId % 2]; // Alternate left/right
+        
+        const newGnome = `gnome_${gnomeId}_${color}_${position}`;
+        
         await db
           .update(userTrees)
           .set({
-            decorations: [...existingDecorations, decorationType],
+            decorations: [...existingDecorations, newGnome],
           })
           .where(eq(userTrees.id, treeId));
+      } else {
+        // Regular decoration handling
+        if (!existingDecorations.includes(decorationType)) {
+          await db
+            .update(userTrees)
+            .set({
+              decorations: [...existingDecorations, decorationType],
+            })
+            .where(eq(userTrees.id, treeId));
+        }
       }
     }
   }
