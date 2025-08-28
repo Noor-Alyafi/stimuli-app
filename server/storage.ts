@@ -10,7 +10,7 @@ import {
   storeItems,
   userInventory,
   type User,
-  type InsertUser,
+  type UpsertUser,
   type GameProgress,
   type InsertGameProgress,
   type Achievement,
@@ -34,11 +34,9 @@ import { db } from "./db";
 import { eq, desc, and, sql } from "drizzle-orm";
 
 export interface IStorage {
-  // User operations for custom authentication
+  // User operations (mandatory for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
-  getUserByEmail(email: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  updateUser(id: string, updates: Partial<User>): Promise<User>;
+  upsertUser(user: UpsertUser): Promise<User>;
   updateUserXP(userId: string, xpGain: number): Promise<User>;
   updateUserStreak(userId: string): Promise<void>;
   updateUserCoins(userId: string, coinChange: number): Promise<void>;
@@ -85,33 +83,23 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
-  // User operations for custom authentication
+  // User operations
   async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
   }
 
-  async getUserByEmail(email: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.email, email));
-    return user;
-  }
-
-  async createUser(userData: InsertUser): Promise<User> {
+  async upsertUser(userData: UpsertUser): Promise<User> {
     const [user] = await db
       .insert(users)
       .values(userData)
-      .returning();
-    return user;
-  }
-
-  async updateUser(id: string, updates: Partial<User>): Promise<User> {
-    const [user] = await db
-      .update(users)
-      .set({
-        ...updates,
-        updatedAt: new Date(),
+      .onConflictDoUpdate({
+        target: users.id,
+        set: {
+          ...userData,
+          updatedAt: new Date(),
+        },
       })
-      .where(eq(users.id, id))
       .returning();
     return user;
   }

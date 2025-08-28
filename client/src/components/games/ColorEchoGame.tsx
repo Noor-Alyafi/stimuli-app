@@ -37,7 +37,7 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
   const [gameStartTime, setGameStartTime] = useState(0);
   const [currentShowingIndex, setCurrentShowingIndex] = useState(0);
   const [feedback, setFeedback] = useState<'correct' | 'incorrect' | ''>('');
-  const [timeLeft, setTimeLeft] = useState(45); // Increased for better gameplay
+  const [timeLeft, setTimeLeft] = useState(30);
   const [isPlaying, setIsPlaying] = useState(false);
   
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -154,7 +154,7 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
   const startGame = () => {
     setGameState('playing');
     setGameStartTime(Date.now());
-    setTimeLeft(45); // Increased time for better accessibility
+    setTimeLeft(30);
     setScore(0);
     setStreak(0);
     setCurrentLevel(1);
@@ -200,12 +200,12 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
     const expectedColor = sequence[currentPosition];
     
     // Compare the clicked color with the expected color at this position
-    const isCorrect = colorSound.color === expectedColor.color && colorSound.frequency === expectedColor.frequency;
+    const isCorrect = colorSound.id === expectedColor.id;
     
     console.log('Color click debug:', {
       currentPosition,
-      clickedColor: colorSound.color,
-      expectedColor: expectedColor.color,
+      clickedColorId: colorSound.id,
+      expectedColorId: expectedColor.id,
       isCorrect
     });
     
@@ -332,58 +332,18 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-blue-900/20 dark:to-purple-900/20 p-6">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center space-y-4"
-        >
-          <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            🎵 Color Echo
-          </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400">
-            Listen to the sequence and click the colors in the same order
-          </p>
-        </motion.div>
-
-        {/* Game stats with enhanced styling */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4"
-        >
-          <Card className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border-blue-200 dark:border-blue-700 rounded-2xl shadow-lg">
-            <h3 className="text-sm font-medium text-blue-600 dark:text-blue-400">Level</h3>
-            <p className="text-3xl font-bold text-blue-700 dark:text-blue-300">{currentLevel}</p>
-          </Card>
-          <Card className="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border-green-200 dark:border-green-700 rounded-2xl shadow-lg">
-            <h3 className="text-sm font-medium text-green-600 dark:text-green-400">Score</h3>
-            <p className="text-3xl font-bold text-green-700 dark:text-green-300">{score}</p>
-          </Card>
-          <Card className="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border-purple-200 dark:border-purple-700 rounded-2xl shadow-lg">
-            <h3 className="text-sm font-medium text-purple-600 dark:text-purple-400">Streak</h3>
-            <p className="text-3xl font-bold text-purple-700 dark:text-purple-300">{streak}</p>
-          </Card>
-          <Card className="text-center p-6 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border-orange-200 dark:border-orange-700 rounded-2xl shadow-lg">
-            <h3 className="text-sm font-medium text-orange-600 dark:text-orange-400">Time</h3>
-            <p className="text-3xl font-bold text-orange-700 dark:text-orange-300">{timeLeft}s</p>
-          </Card>
-        </motion.div>
-
-        {/* Game Status */}
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <Badge className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">Level {currentLevel}</Badge>
-            <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">Streak: {streak}</Badge>
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Game Status */}
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-4">
+          <Badge variant="secondary">Level {currentLevel}</Badge>
+          <Badge variant="outline">Streak: {streak}</Badge>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="text-sm text-gray-600 dark:text-gray-300">
+            Time: {timeLeft}s
           </div>
-          <div className="flex items-center gap-4">
-            <div className="text-lg font-bold text-orange-600 dark:text-orange-400">
-              Time: {timeLeft}s
-            </div>
-            <Badge className="text-lg px-4 py-2">Score: {score}</Badge>
-          </div>
+          <Badge className="text-lg px-4 py-2">Score: {score}</Badge>
         </div>
       </div>
 

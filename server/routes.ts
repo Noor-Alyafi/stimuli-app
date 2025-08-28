@@ -1,7 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, requireAuth } from "./auth";
 import { 
   insertGameProgressSchema, 
   insertJournalEntrySchema,
@@ -12,9 +11,6 @@ import {
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Setup authentication first
-  setupAuth(app);
-  
   // Create a demo user for testing
   const demoUserId = "demo-user";
   
@@ -24,18 +20,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         console.log(`Attempting to connect to database (attempt ${i + 1}/${retries})...`);
         
-        const existingUser = await storage.getUser(demoUserId);
-        if (!existingUser) {
-          await storage.createUser({
-            id: demoUserId,
-            email: "demo@stimuli.com",
-            password: "demo-password", // For demo purposes
-            firstName: "Demo",
-            lastName: "User",
-            profileImageUrl: null,
-            coins: 50, // Start with 50 coins
-          });
-        }
+        await storage.upsertUser({
+          id: demoUserId,
+          email: "demo@stimuli.com",
+          firstName: "Demo",
+          lastName: "User",
+          profileImageUrl: null,
+          coins: 50, // Start with 50 coins
+        });
 
         // Seed initial achievements
         const existingAchievements = await storage.getAchievements();
@@ -212,20 +204,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Initialize database asynchronously
   initializeDatabase().catch(console.error);
 
-  // Auth routes using the new authentication system
-  app.get('/api/auth/user', requireAuth, async (req: any, res) => {
-    try {
-      const userId = req.user?.id || demoUserId;
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
-  });
-
-  // Fallback route for demo when not authenticated
-  app.get('/api/user', async (req: any, res) => {
+  // Auth routes (simplified for demo)
+  app.get('/api/auth/user', async (req: any, res) => {
     try {
       const user = await storage.getUser(demoUserId);
       res.json(user);

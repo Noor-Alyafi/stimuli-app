@@ -24,11 +24,10 @@ export const sessions = pgTable(
   (table) => [index("IDX_session_expire").on(table.expire)],
 );
 
-// User storage table with custom authentication
+// User storage table (mandatory for Replit Auth)
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().notNull(),
-  email: varchar("email").unique().notNull(),
-  password: varchar("password").notNull(), // Hashed password
+  email: varchar("email").unique(),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
@@ -136,27 +135,8 @@ export const userInventory = pgTable("user_inventory", {
 });
 
 // Type exports
-export type InsertUser = typeof users.$inferInsert;
+export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
-
-// Create insert schemas for forms
-export const insertUserSchema = createInsertSchema(users).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-});
-
-export const registerSchema = insertUserSchema.extend({
-  confirmPassword: z.string().min(6),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
 export type GameProgress = typeof gameProgress.$inferSelect;
 export type InsertGameProgress = typeof gameProgress.$inferInsert;
 export type Achievement = typeof achievements.$inferSelect;
