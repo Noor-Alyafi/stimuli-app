@@ -178,12 +178,12 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                   <ellipse cx="8" cy="16" rx="4" ry="3" fill="#8FBC8F" />
                   {/* Gnome face */}
                   <circle cx="8" cy="12" r="2.5" fill="#FDBCB4" />
-                  {/* Colorful hat - positioned lower */}
+                  {/* Pointed cone hat like reference image */}
                   <path 
-                    d="M 8 4 Q 12 4 12 8 Q 12 10 10 11 L 6 11 Q 4 10 4 8 Q 4 4 8 4 Z" 
+                    d="M 8 3 L 12 11 L 4 11 Z" 
                     fill="#32CD32" 
                   />
-                  <circle cx="8" cy="4" r="1" fill="#90EE90" />
+                  <circle cx="8" cy="3" r="1" fill="#90EE90" />
                   {/* White beard */}
                   <ellipse cx="8" cy="14" rx="2" ry="1.5" fill="#FFFFFF" />
                   {/* Eyes */}
@@ -247,15 +247,15 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
               {/* Fairy lights for medium tree - single horizontal line */}
               {decorations.includes('fairy_lights') && (
                 <>
-                  {/* Single wire string from side to side */}
-                  <div className="absolute" style={{ top: '45%', left: '5%', right: '5%', height: '1px', backgroundColor: '#2d2d2d', zIndex: 10 }} />
+                  {/* Single wire string exactly from tree sides */}
+                  <div className="absolute" style={{ top: '45%', left: '0%', right: '0%', height: '1px', backgroundColor: '#2d2d2d', zIndex: 10 }} />
                   
-                  {/* Medium Christmas light bulbs hanging straight down */}
-                  <div className="absolute animate-pulse" style={{ top: '45%', left: '12%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#FF6B35', borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%', filter: 'drop-shadow(0 0 3px #FF6B35)', zIndex: 11 }} />
-                  <div className="absolute animate-pulse" style={{ top: '45%', left: '28%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#4ECDC4', borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%', filter: 'drop-shadow(0 0 3px #4ECDC4)', animationDelay: '0.4s', zIndex: 11 }} />
-                  <div className="absolute animate-pulse" style={{ top: '45%', left: '44%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#FFD93D', borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%', filter: 'drop-shadow(0 0 3px #FFD93D)', animationDelay: '0.8s', zIndex: 11 }} />
-                  <div className="absolute animate-pulse" style={{ top: '45%', right: '28%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#6BCF7F', borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%', filter: 'drop-shadow(0 0 3px #6BCF7F)', animationDelay: '1.2s', zIndex: 11 }} />
-                  <div className="absolute animate-pulse" style={{ top: '45%', right: '12%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#FF6B9D', borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%', filter: 'drop-shadow(0 0 3px #FF6B9D)', animationDelay: '1.6s', zIndex: 11 }} />
+                  {/* Medium Christmas light bulbs starting from edges */}
+                  <div className="absolute animate-pulse" style={{ top: '45%', left: '0%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#FF6B35', borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%', filter: 'drop-shadow(0 0 3px #FF6B35)', zIndex: 11 }} />
+                  <div className="absolute animate-pulse" style={{ top: '45%', left: '24%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#4ECDC4', borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%', filter: 'drop-shadow(0 0 3px #4ECDC4)', animationDelay: '0.4s', zIndex: 11 }} />
+                  <div className="absolute animate-pulse" style={{ top: '45%', left: '48%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#FFD93D', borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%', filter: 'drop-shadow(0 0 3px #FFD93D)', animationDelay: '0.8s', zIndex: 11 }} />
+                  <div className="absolute animate-pulse" style={{ top: '45%', right: '24%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#6BCF7F', borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%', filter: 'drop-shadow(0 0 3px #6BCF7F)', animationDelay: '1.2s', zIndex: 11 }} />
+                  <div className="absolute animate-pulse" style={{ top: '45%', right: '0%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#FF6B9D', borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%', filter: 'drop-shadow(0 0 3px #FF6B9D)', animationDelay: '1.6s', zIndex: 11 }} />
                 </>
               )}
             </div>
@@ -286,12 +286,12 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                   <ellipse cx="8" cy="16" rx="4" ry="3" fill="#8FBC8F" />
                   {/* Gnome face */}
                   <circle cx="8" cy="12" r="2.5" fill="#FDBCB4" />
-                  {/* Colorful hat - positioned lower */}
+                  {/* Pointed cone hat like reference image */}
                   <path 
-                    d="M 8 4 Q 12 4 12 8 Q 12 10 10 11 L 6 11 Q 4 10 4 8 Q 4 4 8 4 Z" 
+                    d="M 8 3 L 12 11 L 4 11 Z" 
                     fill="#00BFFF" 
                   />
-                  <circle cx="8" cy="4" r="1" fill="#87CEEB" />
+                  <circle cx="8" cy="3" r="1" fill="#87CEEB" />
                   {/* White beard */}
                   <ellipse cx="8" cy="14" rx="2" ry="1.5" fill="#FFFFFF" />
                   {/* Eyes */}
@@ -393,25 +393,25 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
               {/* Fairy lights decoration - single horizontal line from side to side */}
               {decorations.includes('fairy_lights') && (
                 <>
-                  {/* Single black wire string connecting tree sides */}
+                  {/* Single black wire string connecting exactly from tree sides */}
                   <div 
                     className="absolute"
                     style={{
                       top: '50%',
-                      left: '2%',
-                      right: '2%',
+                      left: '0%',
+                      right: '0%',
                       height: '1px',
                       backgroundColor: '#2d2d2d',
                       zIndex: 10
                     }}
                   />
                   
-                  {/* Christmas light bulbs hanging straight down */}
+                  {/* Christmas light bulbs starting exactly from tree edges */}
                   <div 
                     className="absolute animate-pulse"
                     style={{
                       top: '50%',
-                      left: '5%',
+                      left: '0%',
                       width: `${5 * sizeMultiplier}px`,
                       height: `${7 * sizeMultiplier}px`,
                       backgroundColor: '#FF6B35',
@@ -424,7 +424,7 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                     className="absolute animate-pulse"
                     style={{
                       top: '50%',
-                      left: '18%',
+                      left: '12%',
                       width: `${5 * sizeMultiplier}px`,
                       height: `${7 * sizeMultiplier}px`,
                       backgroundColor: '#4ECDC4',
@@ -438,7 +438,7 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                     className="absolute animate-pulse"
                     style={{
                       top: '50%',
-                      left: '31%',
+                      left: '25%',
                       width: `${5 * sizeMultiplier}px`,
                       height: `${7 * sizeMultiplier}px`,
                       backgroundColor: '#FFD93D',
@@ -452,7 +452,7 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                     className="absolute animate-pulse"
                     style={{
                       top: '50%',
-                      left: '44%',
+                      left: '37%',
                       width: `${5 * sizeMultiplier}px`,
                       height: `${7 * sizeMultiplier}px`,
                       backgroundColor: '#6BCF7F',
@@ -466,7 +466,7 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                     className="absolute animate-pulse"
                     style={{
                       top: '50%',
-                      right: '44%',
+                      left: '50%',
                       width: `${5 * sizeMultiplier}px`,
                       height: `${7 * sizeMultiplier}px`,
                       backgroundColor: '#4D96FF',
@@ -480,7 +480,7 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                     className="absolute animate-pulse"
                     style={{
                       top: '50%',
-                      right: '31%',
+                      right: '37%',
                       width: `${5 * sizeMultiplier}px`,
                       height: `${7 * sizeMultiplier}px`,
                       backgroundColor: '#FF6B9D',
@@ -494,7 +494,7 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                     className="absolute animate-pulse"
                     style={{
                       top: '50%',
-                      right: '18%',
+                      right: '25%',
                       width: `${5 * sizeMultiplier}px`,
                       height: `${7 * sizeMultiplier}px`,
                       backgroundColor: '#A8E6CF',
@@ -508,13 +508,27 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                     className="absolute animate-pulse"
                     style={{
                       top: '50%',
-                      right: '5%',
+                      right: '12%',
                       width: `${5 * sizeMultiplier}px`,
                       height: `${7 * sizeMultiplier}px`,
                       backgroundColor: '#FFA726',
                       borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
                       filter: 'drop-shadow(0 0 4px #FFA726)',
                       animationDelay: '2.1s',
+                      zIndex: 11
+                    }}
+                  />
+                  <div 
+                    className="absolute animate-pulse"
+                    style={{
+                      top: '50%',
+                      right: '0%',
+                      width: `${5 * sizeMultiplier}px`,
+                      height: `${7 * sizeMultiplier}px`,
+                      backgroundColor: '#B19CD9',
+                      borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
+                      filter: 'drop-shadow(0 0 4px #B19CD9)',
+                      animationDelay: '2.4s',
                       zIndex: 11
                     }}
                   />
@@ -592,12 +606,12 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                   {/* Gnome face */}
                   <circle cx="8" cy="12" r="2.5" fill="#FDBCB4" />
                   
-                  {/* Colorful hat - positioned lower to attach to head */}
+                  {/* Pointed cone hat like reference image */}
                   <path 
-                    d="M 8 4 Q 12 4 12 8 Q 12 10 10 11 L 6 11 Q 4 10 4 8 Q 4 4 8 4 Z" 
+                    d="M 8 3 L 12 11 L 4 11 Z" 
                     fill="#FF69B4" 
                   />
-                  <circle cx="8" cy="4" r="1" fill="#FFB6C1" />
+                  <circle cx="8" cy="3" r="1" fill="#FFB6C1" />
                   
                   {/* White beard */}
                   <ellipse cx="8" cy="14" rx="2" ry="1.5" fill="#FFFFFF" />
