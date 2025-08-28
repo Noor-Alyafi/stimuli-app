@@ -161,6 +161,45 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                 borderRadius: '2px 2px 1px 1px'
               }}
             />
+            
+            {/* Garden gnome decoration for small trees */}
+            {decorations.includes('gnome') && (
+              <div 
+                className="absolute bottom-0 right-0 transform translate-x-1/2"
+                style={{ zIndex: 5 }}
+              >
+                <svg 
+                  width={`${12 * sizeMultiplier}px`} 
+                  height={`${15 * sizeMultiplier}px`} 
+                  viewBox="0 0 16 20"
+                  className="drop-shadow-md"
+                >
+                  {/* Gnome body */}
+                  <ellipse cx="8" cy="16" rx="4" ry="3" fill="#8FBC8F" />
+                  {/* Gnome face */}
+                  <circle cx="8" cy="12" r="2.5" fill="#FDBCB4" />
+                  {/* Colorful hat */}
+                  <path 
+                    d="M 8 2 Q 12 2 12 6 Q 12 8 10 9 L 6 9 Q 4 8 4 6 Q 4 2 8 2 Z" 
+                    fill="#32CD32" 
+                  />
+                  <circle cx="8" cy="2" r="1" fill="#90EE90" />
+                  {/* White beard */}
+                  <ellipse cx="8" cy="14" rx="2" ry="1.5" fill="#FFFFFF" />
+                  {/* Eyes */}
+                  <circle cx="7" cy="11.5" r="0.3" fill="#000000" />
+                  <circle cx="9" cy="11.5" r="0.3" fill="#000000" />
+                  {/* Pink nose */}
+                  <circle cx="8" cy="12.5" r="0.2" fill="#FFB6C1" />
+                  {/* Hands */}
+                  <circle cx="4.5" cy="15" r="0.8" fill="#FDBCB4" />
+                  <circle cx="11.5" cy="15" r="0.8" fill="#FDBCB4" />
+                  {/* Black shoes */}
+                  <ellipse cx="6" cy="19" rx="1.2" ry="0.8" fill="#2C2C2C" />
+                  <ellipse cx="10" cy="19" rx="1.2" ry="0.8" fill="#2C2C2C" />
+                </svg>
+              </div>
+            )}
           </div>
         );
       
@@ -204,6 +243,21 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                   opacity: 0.6
                 }}
               />
+              
+              {/* Fairy lights for medium tree - smaller scale */}
+              {decorations.includes('fairy_lights') && (
+                <>
+                  {/* Wire strings */}
+                  <div className="absolute" style={{ top: '30%', left: '15%', right: '15%', height: '1px', backgroundColor: '#2d2d2d', zIndex: 10 }} />
+                  <div className="absolute" style={{ top: '60%', left: '20%', right: '20%', height: '1px', backgroundColor: '#2d2d2d', zIndex: 10 }} />
+                  
+                  {/* Medium sized bulbs */}
+                  <div className="absolute animate-pulse" style={{ top: '28%', left: '25%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#FFD700', borderRadius: '50% 50% 50% 0%', transform: 'rotate(45deg)', filter: 'drop-shadow(0 0 3px #FFD700)', zIndex: 11 }} />
+                  <div className="absolute animate-pulse" style={{ top: '28%', right: '25%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#FF1493', borderRadius: '50% 50% 50% 0%', transform: 'rotate(45deg)', filter: 'drop-shadow(0 0 3px #FF1493)', animationDelay: '0.5s', zIndex: 11 }} />
+                  <div className="absolute animate-pulse" style={{ top: '58%', left: '30%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#00BFFF', borderRadius: '50% 50% 50% 0%', transform: 'rotate(45deg)', filter: 'drop-shadow(0 0 3px #00BFFF)', animationDelay: '1s', zIndex: 11 }} />
+                  <div className="absolute animate-pulse" style={{ top: '58%', right: '30%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#32CD32', borderRadius: '50% 50% 50% 0%', transform: 'rotate(45deg)', filter: 'drop-shadow(0 0 3px #32CD32)', animationDelay: '1.5s', zIndex: 11 }} />
+                </>
+              )}
             </div>
             {/* Medium trunk */}
             <div
@@ -215,6 +269,45 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                 borderRadius: '3px 3px 1px 1px'
               }}
             />
+            
+            {/* Garden gnome decoration for medium trees */}
+            {decorations.includes('gnome') && (
+              <div 
+                className="absolute bottom-0 right-0 transform translate-x-1/2"
+                style={{ zIndex: 5 }}
+              >
+                <svg 
+                  width={`${14 * sizeMultiplier}px`} 
+                  height={`${17 * sizeMultiplier}px`} 
+                  viewBox="0 0 16 20"
+                  className="drop-shadow-md"
+                >
+                  {/* Gnome body */}
+                  <ellipse cx="8" cy="16" rx="4" ry="3" fill="#8FBC8F" />
+                  {/* Gnome face */}
+                  <circle cx="8" cy="12" r="2.5" fill="#FDBCB4" />
+                  {/* Colorful hat - blue for medium tree */}
+                  <path 
+                    d="M 8 2 Q 12 2 12 6 Q 12 8 10 9 L 6 9 Q 4 8 4 6 Q 4 2 8 2 Z" 
+                    fill="#00BFFF" 
+                  />
+                  <circle cx="8" cy="2" r="1" fill="#87CEEB" />
+                  {/* White beard */}
+                  <ellipse cx="8" cy="14" rx="2" ry="1.5" fill="#FFFFFF" />
+                  {/* Eyes */}
+                  <circle cx="7" cy="11.5" r="0.3" fill="#000000" />
+                  <circle cx="9" cy="11.5" r="0.3" fill="#000000" />
+                  {/* Pink nose */}
+                  <circle cx="8" cy="12.5" r="0.2" fill="#FFB6C1" />
+                  {/* Hands */}
+                  <circle cx="4.5" cy="15" r="0.8" fill="#FDBCB4" />
+                  <circle cx="11.5" cy="15" r="0.8" fill="#FDBCB4" />
+                  {/* Black shoes */}
+                  <ellipse cx="6" cy="19" rx="1.2" ry="0.8" fill="#2C2C2C" />
+                  <ellipse cx="10" cy="19" rx="1.2" ry="0.8" fill="#2C2C2C" />
+                </svg>
+              </div>
+            )}
           </div>
         );
       
@@ -297,13 +390,149 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                 }}
               />
               
-              {/* Fairy lights decoration for mature tree only */}
+              {/* Fairy lights decoration - large colorful teardrop bulbs on horizontal strings */}
               {decorations.includes('fairy_lights') && (
                 <>
-                  <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-300 rounded-full animate-pulse"></div>
-                  <div className="absolute top-1/3 right-1/4 w-2 h-2 bg-red-300 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-                  <div className="absolute bottom-1/3 left-1/3 w-2 h-2 bg-blue-300 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-                  <div className="absolute bottom-1/4 right-1/3 w-2 h-2 bg-green-300 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+                  {/* Black wire strings connecting across the tree */}
+                  <div 
+                    className="absolute"
+                    style={{
+                      top: '25%',
+                      left: '15%',
+                      right: '15%',
+                      height: '1px',
+                      backgroundColor: '#2d2d2d',
+                      zIndex: 10
+                    }}
+                  />
+                  <div 
+                    className="absolute"
+                    style={{
+                      top: '45%',
+                      left: '10%',
+                      right: '10%',
+                      height: '1px',
+                      backgroundColor: '#2d2d2d',
+                      zIndex: 10
+                    }}
+                  />
+                  <div 
+                    className="absolute"
+                    style={{
+                      top: '65%',
+                      left: '20%',
+                      right: '20%',
+                      height: '1px',
+                      backgroundColor: '#2d2d2d',
+                      zIndex: 10
+                    }}
+                  />
+                  
+                  {/* Large teardrop-shaped colorful bulbs */}
+                  <div 
+                    className="absolute animate-pulse"
+                    style={{
+                      top: '23%',
+                      left: '25%',
+                      width: `${6 * sizeMultiplier}px`,
+                      height: `${8 * sizeMultiplier}px`,
+                      backgroundColor: '#FFD700',
+                      borderRadius: '50% 50% 50% 0%',
+                      transform: 'rotate(45deg)',
+                      filter: 'drop-shadow(0 0 4px #FFD700)',
+                      zIndex: 11
+                    }}
+                  />
+                  <div 
+                    className="absolute animate-pulse"
+                    style={{
+                      top: '23%',
+                      left: '50%',
+                      width: `${6 * sizeMultiplier}px`,
+                      height: `${8 * sizeMultiplier}px`,
+                      backgroundColor: '#FF1493',
+                      borderRadius: '50% 50% 50% 0%',
+                      transform: 'rotate(45deg)',
+                      filter: 'drop-shadow(0 0 4px #FF1493)',
+                      animationDelay: '0.3s',
+                      zIndex: 11
+                    }}
+                  />
+                  <div 
+                    className="absolute animate-pulse"
+                    style={{
+                      top: '23%',
+                      right: '25%',
+                      width: `${6 * sizeMultiplier}px`,
+                      height: `${8 * sizeMultiplier}px`,
+                      backgroundColor: '#00BFFF',
+                      borderRadius: '50% 50% 50% 0%',
+                      transform: 'rotate(45deg)',
+                      filter: 'drop-shadow(0 0 4px #00BFFF)',
+                      animationDelay: '0.6s',
+                      zIndex: 11
+                    }}
+                  />
+                  <div 
+                    className="absolute animate-pulse"
+                    style={{
+                      top: '43%',
+                      left: '20%',
+                      width: `${6 * sizeMultiplier}px`,
+                      height: `${8 * sizeMultiplier}px`,
+                      backgroundColor: '#32CD32',
+                      borderRadius: '50% 50% 50% 0%',
+                      transform: 'rotate(45deg)',
+                      filter: 'drop-shadow(0 0 4px #32CD32)',
+                      animationDelay: '0.9s',
+                      zIndex: 11
+                    }}
+                  />
+                  <div 
+                    className="absolute animate-pulse"
+                    style={{
+                      top: '43%',
+                      right: '20%',
+                      width: `${6 * sizeMultiplier}px`,
+                      height: `${8 * sizeMultiplier}px`,
+                      backgroundColor: '#FF4500',
+                      borderRadius: '50% 50% 50% 0%',
+                      transform: 'rotate(45deg)',
+                      filter: 'drop-shadow(0 0 4px #FF4500)',
+                      animationDelay: '1.2s',
+                      zIndex: 11
+                    }}
+                  />
+                  <div 
+                    className="absolute animate-pulse"
+                    style={{
+                      top: '63%',
+                      left: '35%',
+                      width: `${6 * sizeMultiplier}px`,
+                      height: `${8 * sizeMultiplier}px`,
+                      backgroundColor: '#9932CC',
+                      borderRadius: '50% 50% 50% 0%',
+                      transform: 'rotate(45deg)',
+                      filter: 'drop-shadow(0 0 4px #9932CC)',
+                      animationDelay: '1.5s',
+                      zIndex: 11
+                    }}
+                  />
+                  <div 
+                    className="absolute animate-pulse"
+                    style={{
+                      top: '63%',
+                      right: '35%',
+                      width: `${6 * sizeMultiplier}px`,
+                      height: `${8 * sizeMultiplier}px`,
+                      backgroundColor: '#FF69B4',
+                      borderRadius: '50% 50% 50% 0%',
+                      transform: 'rotate(45deg)',
+                      filter: 'drop-shadow(0 0 4px #FF69B4)',
+                      animationDelay: '1.8s',
+                      zIndex: 11
+                    }}
+                  />
                 </>
               )}
             </motion.div>
@@ -360,13 +589,49 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
               />
             </div>
             
-            {/* Garden gnome decoration for mature tree only */}
+            {/* Garden gnome decoration - cute gnome with colorful hat at tree base */}
             {decorations.includes('gnome') && (
               <div 
-                className="absolute bottom-0 right-0 text-xs transform translate-x-1/2"
+                className="absolute bottom-0 right-0 transform translate-x-1/2"
                 style={{ zIndex: 5 }}
               >
-                🧙‍♂️
+                <svg 
+                  width={`${16 * sizeMultiplier}px`} 
+                  height={`${20 * sizeMultiplier}px`} 
+                  viewBox="0 0 16 20"
+                  className="drop-shadow-md"
+                >
+                  {/* Gnome body */}
+                  <ellipse cx="8" cy="16" rx="4" ry="3" fill="#8FBC8F" />
+                  
+                  {/* Gnome face */}
+                  <circle cx="8" cy="12" r="2.5" fill="#FDBCB4" />
+                  
+                  {/* Colorful hat - large and whimsical like reference image */}
+                  <path 
+                    d="M 8 2 Q 12 2 12 6 Q 12 8 10 9 L 6 9 Q 4 8 4 6 Q 4 2 8 2 Z" 
+                    fill="#FF69B4" 
+                  />
+                  <circle cx="8" cy="2" r="1" fill="#FFB6C1" />
+                  
+                  {/* White beard */}
+                  <ellipse cx="8" cy="14" rx="2" ry="1.5" fill="#FFFFFF" />
+                  
+                  {/* Little black eyes */}
+                  <circle cx="7" cy="11.5" r="0.3" fill="#000000" />
+                  <circle cx="9" cy="11.5" r="0.3" fill="#000000" />
+                  
+                  {/* Pink nose */}
+                  <circle cx="8" cy="12.5" r="0.2" fill="#FFB6C1" />
+                  
+                  {/* Little hands */}
+                  <circle cx="4.5" cy="15" r="0.8" fill="#FDBCB4" />
+                  <circle cx="11.5" cy="15" r="0.8" fill="#FDBCB4" />
+                  
+                  {/* Black shoes */}
+                  <ellipse cx="6" cy="19" rx="1.2" ry="0.8" fill="#2C2C2C" />
+                  <ellipse cx="10" cy="19" rx="1.2" ry="0.8" fill="#2C2C2C" />
+                </svg>
               </div>
             )}
           </div>

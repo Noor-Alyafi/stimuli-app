@@ -98,17 +98,24 @@ Preferred communication style: Simple, everyday language.
 
 The application is designed to be a comprehensive brain training platform with professional-grade user experience, robust data tracking, and engaging gamification elements specifically tailored for neurodivergent users.
 
-## Recent Changes (January 17, 2025)
+## Recent Changes (January 28, 2025)
 
-### Tree Design Finalization
-- **Implemented "Cute" Tree Style Only**: User selected the cute cartoon tree design and requested removal of all other options
-- **Fixed Flower Positioning**: Flowers now properly positioned ON tree branches instead of floating in air
-- **Unified Tree Design**: All trees (Growth Tree, Garden trees, store buttons) now use the same cute cartoon style
-- **Removed Tree Style Options**: Deleted CartoonTreeExamples component and style comparison interface per user request
-- **Enhanced Growth Tree**: Main tree on Home page now uses cute design with proper sizing (not "green gumball" appearance)
+### Growth Tree Level System Restructure
+- **Level Progression**: Levels 1-9 progress every 200 XP, level 10 reached at exactly 2000 XP
+- **Level Reset System**: After reaching level 10 (2000 XP), users continue to level 11+ with 300 XP per level
+- **Tree Master Achievement**: Added special achievement for reaching level 10 with automatic progression
+- **Enhanced XP Notifications**: Advanced UI showing specific earned XP amounts with improved styling
+- **Level 8 Visual Fix**: Level 8 trees now appear like level 7 trees but continue growth progression
 
-### Gardening System Improvements  
-- **Watering Mechanics**: Trees require watering every 2 days or they start dying
-- **Health Indicators**: Visual status (Healthy 💚, Thirsty 💛, Dying 💔, Ready for First Watering 💧)
-- **Achievement System**: Added gardening-specific achievements (First Sprout, Green Thumb, Forest Keeper, Caring Gardener)
-- **Tree Growth Stages**: 5-stage progression with proper visual evolution and flower placement
+### Decoration System Enhancement
+- **Fairy Lights**: Large colorful teardrop-shaped bulbs on horizontal black wire strings across trees
+- **Garden Gnomes**: Cute whimsical gnomes with colorful oversized hats and beards placed at tree base
+- **Multi-Stage Support**: Decorations now available on growth stages 3, 4, and 5 with appropriate sizing
+- **Visual Consistency**: Gnome hat colors vary by tree stage (green, blue, pink) for visual variety
+- **Proper Positioning**: Gnomes positioned on ground near tree base, lights strung horizontally across branches
+
+### Game System Improvements
+- **Enhanced XP Rewards**: Base 15 XP + bonus XP based on performance scores
+- **Synesthetic Recall Fix**: Color consistency now uses exact colors from display phase
+- **Store Cleanup**: Removed duplicate "Willow Tree Seed" items, kept unified "Willow Seed"
+- **Notification Polish**: Removed duplicate XP notifications, streamlined reward display system
