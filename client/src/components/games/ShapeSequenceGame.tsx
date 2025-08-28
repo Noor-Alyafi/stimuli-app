@@ -142,16 +142,20 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
     setCurrentShowingIndex(0);
     setIsShowing(true);
     
+    console.log('Generated sequence:', newSequence.map((s, i) => `${i}: ${s.id}`));
+    
     // Show the sequence
     newSequence.forEach((shape, index) => {
       setTimeout(() => {
         setCurrentShowingIndex(index);
+        console.log(`Showing shape ${index}: ${shape.id}`);
         
         if (index === newSequence.length - 1) {
           setTimeout(() => {
             setGameState('guessing');
             setIsShowing(false);
             setCurrentShowingIndex(-1);
+            console.log('Ready for guessing. Sequence:', newSequence.map(s => s.id));
           }, 1500); // Longer pause after sequence
         }
       }, index * 1500); // Slower timing for better visibility
@@ -186,7 +190,8 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
       currentPosition,
       clickedShapeId: shape.id,
       expectedShapeId: expectedShape.id,
-      isCorrect
+      isCorrect,
+      fullSequence: sequence.map(s => s.id)
     });
     
     if (isCorrect) {
@@ -371,7 +376,7 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
                 className={`
                   aspect-square rounded-xl border-4 p-4 transition-all duration-300 flex flex-col items-center justify-center gap-2
                   ${gameState === 'guessing' ? 'hover:scale-105 cursor-pointer' : 'cursor-not-allowed'}
-                  ${currentShowingIndex === index ? 'scale-110 border-yellow-400 shadow-lg bg-yellow-50 dark:bg-yellow-900/20' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800'}
+                  ${isShowing && sequence[currentShowingIndex]?.id === shape.id ? 'scale-110 border-yellow-400 shadow-lg bg-yellow-50 dark:bg-yellow-900/20' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800'}
                   ${gameState !== 'guessing' ? 'opacity-70' : ''}
                 `}
                 whileHover={gameState === 'guessing' ? { scale: 1.05 } : {}}
