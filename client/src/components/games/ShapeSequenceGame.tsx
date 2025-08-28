@@ -166,29 +166,68 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
       return;
     }
     
-    const newPlayerSequence = [...playerSequence, shape];
-    setPlayerSequence(newPlayerSequence);
+    // Get the expected shape at the current position
+    const currentPosition = playerSequence.length;
+    const expectedShape = sequence[currentPosition];
     
-    // Check if the current selection is correct using the current position
-    const expectedShape = sequence[playerSequence.length]; // Use current position, not new length
     if (!expectedShape) {
       console.error('No expected shape found', { 
-        currentPosition: playerSequence.length,
+        currentPosition,
         sequenceLength: sequence.length, 
         sequence: sequence.map(s => s.id)
       });
       return;
     }
+    
+    // Compare the clicked shape with the expected shape at this position
     const isCorrect = shape.id === expectedShape.id;
     
-    // Play correct/incorrect sound effects
+    console.log('Shape click debug:', {
+      currentPosition,
+      clickedShapeId: shape.id,
+      expectedShapeId: expectedShape.id,
+      isCorrect
+    });
+    
     if (isCorrect) {
+      // Add to player sequence
+      const newPlayerSequence = [...playerSequence, shape];
+      setPlayerSequence(newPlayerSequence);
+      
+      // Play correct sound effect
       playCorrectSound();
+      setFeedback('correct');
+      
+      // Check if sequence is complete
+      if (newPlayerSequence.length === sequence.length) {
+        const basePoints = sequence.length * 15;
+        const streakBonus = streak * 5;
+        const speedBonus = Math.max(0, (45 - timeLeft) < 10 ? 10 : 0);
+        const totalPoints = basePoints + streakBonus + speedBonus;
+        
+        setScore(prev => prev + totalPoints);
+        setStreak(prev => prev + 1);
+        setCurrentLevel(prev => prev + 1);
+        
+        showCongratulations(`🎉 Perfect sequence! +${totalPoints} points!`);
+        
+        setTimeout(() => {
+          setFeedback('');
+          setPlayerSequence([]);
+          nextRound();
+        }, 1500);
+      } else {
+        // Show positive feedback for correct individual clicks
+        showGeneral("✅ Correct shape!", "success");
+        setTimeout(() => setFeedback(''), 500);
+      }
     } else {
+      // Wrong shape - end round
       playIncorrectSound();
       setFeedback('incorrect');
       setStreak(0);
       showGeneral("❌ Wrong shape! Try again.", "error");
+      
       setTimeout(() => {
         setFeedback('');
         if (currentLevel > 1) {
@@ -197,31 +236,6 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
         setPlayerSequence([]);
         nextRound();
       }, 1500);
-      return;
-    }
-    
-    // Check if sequence is complete
-    if (newPlayerSequence.length === sequence.length) {
-      setFeedback('correct');
-      const basePoints = sequence.length * 15;
-      const streakBonus = streak * 5;
-      const speedBonus = Math.max(0, (45 - timeLeft) < 10 ? 10 : 0);
-      const totalPoints = basePoints + streakBonus + speedBonus;
-      
-      setScore(prev => prev + totalPoints);
-      setStreak(prev => prev + 1);
-      setCurrentLevel(prev => prev + 1);
-      
-      showCongratulations(`🎉 Perfect sequence! +${totalPoints} points!`);
-      
-      setTimeout(() => {
-        setFeedback('');
-        setPlayerSequence([]);
-        nextRound();
-      }, 1500);
-    } else {
-      // Show positive feedback for correct individual clicks
-      showGeneral("✅ Correct shape!", "success");
     }
   };
 

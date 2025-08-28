@@ -193,49 +193,61 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
       return;
     }
     
-    const newPlayerSequence = [...playerSequence, colorSound];
-    setPlayerSequence(newPlayerSequence);
     playSound(colorSound);
     
-    // Check if the current selection is correct using the current position
-    const expectedColor = sequence[playerSequence.length]; // Use current position, not new length
-    const isCorrect = colorSound.color === expectedColor.color && colorSound.frequency === expectedColor.frequency;
+    // Get the expected color at the current position
+    const currentPosition = playerSequence.length;
+    const expectedColor = sequence[currentPosition];
     
-    // Play correct/incorrect sound effects
+    // Compare the clicked color with the expected color at this position
+    const isCorrect = colorSound.id === expectedColor.id;
+    
+    console.log('Color click debug:', {
+      currentPosition,
+      clickedColorId: colorSound.id,
+      expectedColorId: expectedColor.id,
+      isCorrect
+    });
+    
     if (isCorrect) {
+      // Add to player sequence
+      const newPlayerSequence = [...playerSequence, colorSound];
+      setPlayerSequence(newPlayerSequence);
+      
       // Play correct sound effect
       playCorrectSound();
-      // Visual feedback for correct answer
       setFeedback('correct');
-      showGeneral("✅ Correct!", "success");
+      
+      // Check if sequence is complete
+      if (newPlayerSequence.length === sequence.length) {
+        const points = sequence.length * 10 + (streak * 2);
+        setScore(prev => prev + points);
+        setStreak(prev => prev + 1);
+        setCurrentLevel(prev => prev + 1);
+        
+        showGeneral(`🎉 Perfect sequence! +${points} points!`, "success");
+        
+        setTimeout(() => {
+          setFeedback('');
+          nextRound();
+        }, 1500);
+      } else {
+        showGeneral("✅ Correct!", "success");
+        setTimeout(() => setFeedback(''), 500);
+      }
     } else {
-      // Play incorrect sound effect
+      // Wrong color - end round
       playIncorrectSound();
       setFeedback('incorrect');
       setStreak(0);
       showGeneral("❌ Wrong color! Try again.", "error");
+      
       setTimeout(() => {
         setFeedback('');
         if (currentLevel > 1) {
           setCurrentLevel(prev => prev - 1);
         }
-        nextRound();
-      }, 1500);
-      return;
-    }
-    
-    // Check if sequence is complete
-    if (newPlayerSequence.length === sequence.length) {
-      setFeedback('correct');
-      const points = sequence.length * 10 + (streak * 2);
-      setScore(prev => prev + points);
-      setStreak(prev => prev + 1);
-      setCurrentLevel(prev => prev + 1);
-      
-      showGeneral(`🎉 Perfect sequence! +${points} points!`, "success");
-      
-      setTimeout(() => {
-        setFeedback('');
+        setPlayerSequence([]);
         nextRound();
       }, 1500);
     }
@@ -244,7 +256,9 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
   const nextRound = () => {
     setPlayerSequence([]);
     if (timeLeft > 0) {
-      showSequence();
+      setTimeout(() => {
+        showSequence();
+      }, 500);
     } else {
       endGame();
     }
