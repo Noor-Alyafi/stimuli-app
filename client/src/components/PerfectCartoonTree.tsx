@@ -250,12 +250,12 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                   {/* Single wire string from side to side */}
                   <div className="absolute" style={{ top: '45%', left: '5%', right: '5%', height: '1px', backgroundColor: '#2d2d2d', zIndex: 10 }} />
                   
-                  {/* Medium sized bulbs along single line */}
-                  <div className="absolute animate-pulse" style={{ top: '43%', left: '8%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#FFD700', borderRadius: '50% 50% 50% 0%', transform: 'rotate(45deg)', filter: 'drop-shadow(0 0 3px #FFD700)', zIndex: 11 }} />
-                  <div className="absolute animate-pulse" style={{ top: '43%', left: '25%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#FF1493', borderRadius: '50% 50% 50% 0%', transform: 'rotate(45deg)', filter: 'drop-shadow(0 0 3px #FF1493)', animationDelay: '0.3s', zIndex: 11 }} />
-                  <div className="absolute animate-pulse" style={{ top: '43%', left: '45%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#00BFFF', borderRadius: '50% 50% 50% 0%', transform: 'rotate(45deg)', filter: 'drop-shadow(0 0 3px #00BFFF)', animationDelay: '0.6s', zIndex: 11 }} />
-                  <div className="absolute animate-pulse" style={{ top: '43%', right: '25%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#32CD32', borderRadius: '50% 50% 50% 0%', transform: 'rotate(45deg)', filter: 'drop-shadow(0 0 3px #32CD32)', animationDelay: '0.9s', zIndex: 11 }} />
-                  <div className="absolute animate-pulse" style={{ top: '43%', right: '8%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#9932CC', borderRadius: '50% 50% 50% 0%', transform: 'rotate(45deg)', filter: 'drop-shadow(0 0 3px #9932CC)', animationDelay: '1.2s', zIndex: 11 }} />
+                  {/* Medium Christmas light bulbs hanging straight down */}
+                  <div className="absolute animate-pulse" style={{ top: '45%', left: '12%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#FF6B35', borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%', filter: 'drop-shadow(0 0 3px #FF6B35)', zIndex: 11 }} />
+                  <div className="absolute animate-pulse" style={{ top: '45%', left: '28%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#4ECDC4', borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%', filter: 'drop-shadow(0 0 3px #4ECDC4)', animationDelay: '0.4s', zIndex: 11 }} />
+                  <div className="absolute animate-pulse" style={{ top: '45%', left: '44%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#FFD93D', borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%', filter: 'drop-shadow(0 0 3px #FFD93D)', animationDelay: '0.8s', zIndex: 11 }} />
+                  <div className="absolute animate-pulse" style={{ top: '45%', right: '28%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#6BCF7F', borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%', filter: 'drop-shadow(0 0 3px #6BCF7F)', animationDelay: '1.2s', zIndex: 11 }} />
+                  <div className="absolute animate-pulse" style={{ top: '45%', right: '12%', width: `${4 * sizeMultiplier}px`, height: `${6 * sizeMultiplier}px`, backgroundColor: '#FF6B9D', borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%', filter: 'drop-shadow(0 0 3px #FF6B9D)', animationDelay: '1.6s', zIndex: 11 }} />
                 </>
               )}
             </div>
@@ -406,32 +406,30 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                     }}
                   />
                   
-                  {/* Large teardrop-shaped colorful bulbs along single line */}
+                  {/* Christmas light bulbs hanging straight down */}
                   <div 
                     className="absolute animate-pulse"
                     style={{
-                      top: '48%',
+                      top: '50%',
                       left: '5%',
-                      width: `${6 * sizeMultiplier}px`,
-                      height: `${8 * sizeMultiplier}px`,
-                      backgroundColor: '#FFD700',
-                      borderRadius: '50% 50% 50% 0%',
-                      transform: 'rotate(45deg)',
-                      filter: 'drop-shadow(0 0 4px #FFD700)',
+                      width: `${5 * sizeMultiplier}px`,
+                      height: `${7 * sizeMultiplier}px`,
+                      backgroundColor: '#FF6B35',
+                      borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
+                      filter: 'drop-shadow(0 0 4px #FF6B35)',
                       zIndex: 11
                     }}
                   />
                   <div 
                     className="absolute animate-pulse"
                     style={{
-                      top: '48%',
-                      left: '20%',
-                      width: `${6 * sizeMultiplier}px`,
-                      height: `${8 * sizeMultiplier}px`,
-                      backgroundColor: '#FF1493',
-                      borderRadius: '50% 50% 50% 0%',
-                      transform: 'rotate(45deg)',
-                      filter: 'drop-shadow(0 0 4px #FF1493)',
+                      top: '50%',
+                      left: '18%',
+                      width: `${5 * sizeMultiplier}px`,
+                      height: `${7 * sizeMultiplier}px`,
+                      backgroundColor: '#4ECDC4',
+                      borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
+                      filter: 'drop-shadow(0 0 4px #4ECDC4)',
                       animationDelay: '0.3s',
                       zIndex: 11
                     }}
@@ -439,14 +437,13 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                   <div 
                     className="absolute animate-pulse"
                     style={{
-                      top: '48%',
-                      left: '35%',
-                      width: `${6 * sizeMultiplier}px`,
-                      height: `${8 * sizeMultiplier}px`,
-                      backgroundColor: '#00BFFF',
-                      borderRadius: '50% 50% 50% 0%',
-                      transform: 'rotate(45deg)',
-                      filter: 'drop-shadow(0 0 4px #00BFFF)',
+                      top: '50%',
+                      left: '31%',
+                      width: `${5 * sizeMultiplier}px`,
+                      height: `${7 * sizeMultiplier}px`,
+                      backgroundColor: '#FFD93D',
+                      borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
+                      filter: 'drop-shadow(0 0 4px #FFD93D)',
                       animationDelay: '0.6s',
                       zIndex: 11
                     }}
@@ -454,14 +451,13 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                   <div 
                     className="absolute animate-pulse"
                     style={{
-                      top: '48%',
-                      left: '50%',
-                      width: `${6 * sizeMultiplier}px`,
-                      height: `${8 * sizeMultiplier}px`,
-                      backgroundColor: '#32CD32',
-                      borderRadius: '50% 50% 50% 0%',
-                      transform: 'rotate(45deg)',
-                      filter: 'drop-shadow(0 0 4px #32CD32)',
+                      top: '50%',
+                      left: '44%',
+                      width: `${5 * sizeMultiplier}px`,
+                      height: `${7 * sizeMultiplier}px`,
+                      backgroundColor: '#6BCF7F',
+                      borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
+                      filter: 'drop-shadow(0 0 4px #6BCF7F)',
                       animationDelay: '0.9s',
                       zIndex: 11
                     }}
@@ -469,14 +465,13 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                   <div 
                     className="absolute animate-pulse"
                     style={{
-                      top: '48%',
-                      right: '35%',
-                      width: `${6 * sizeMultiplier}px`,
-                      height: `${8 * sizeMultiplier}px`,
-                      backgroundColor: '#FF4500',
-                      borderRadius: '50% 50% 50% 0%',
-                      transform: 'rotate(45deg)',
-                      filter: 'drop-shadow(0 0 4px #FF4500)',
+                      top: '50%',
+                      right: '44%',
+                      width: `${5 * sizeMultiplier}px`,
+                      height: `${7 * sizeMultiplier}px`,
+                      backgroundColor: '#4D96FF',
+                      borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
+                      filter: 'drop-shadow(0 0 4px #4D96FF)',
                       animationDelay: '1.2s',
                       zIndex: 11
                     }}
@@ -484,14 +479,13 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                   <div 
                     className="absolute animate-pulse"
                     style={{
-                      top: '48%',
-                      right: '20%',
-                      width: `${6 * sizeMultiplier}px`,
-                      height: `${8 * sizeMultiplier}px`,
-                      backgroundColor: '#9932CC',
-                      borderRadius: '50% 50% 50% 0%',
-                      transform: 'rotate(45deg)',
-                      filter: 'drop-shadow(0 0 4px #9932CC)',
+                      top: '50%',
+                      right: '31%',
+                      width: `${5 * sizeMultiplier}px`,
+                      height: `${7 * sizeMultiplier}px`,
+                      backgroundColor: '#FF6B9D',
+                      borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
+                      filter: 'drop-shadow(0 0 4px #FF6B9D)',
                       animationDelay: '1.5s',
                       zIndex: 11
                     }}
@@ -499,15 +493,28 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
                   <div 
                     className="absolute animate-pulse"
                     style={{
-                      top: '48%',
-                      right: '5%',
-                      width: `${6 * sizeMultiplier}px`,
-                      height: `${8 * sizeMultiplier}px`,
-                      backgroundColor: '#FF69B4',
-                      borderRadius: '50% 50% 50% 0%',
-                      transform: 'rotate(45deg)',
-                      filter: 'drop-shadow(0 0 4px #FF69B4)',
+                      top: '50%',
+                      right: '18%',
+                      width: `${5 * sizeMultiplier}px`,
+                      height: `${7 * sizeMultiplier}px`,
+                      backgroundColor: '#A8E6CF',
+                      borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
+                      filter: 'drop-shadow(0 0 4px #A8E6CF)',
                       animationDelay: '1.8s',
+                      zIndex: 11
+                    }}
+                  />
+                  <div 
+                    className="absolute animate-pulse"
+                    style={{
+                      top: '50%',
+                      right: '5%',
+                      width: `${5 * sizeMultiplier}px`,
+                      height: `${7 * sizeMultiplier}px`,
+                      backgroundColor: '#FFA726',
+                      borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
+                      filter: 'drop-shadow(0 0 4px #FFA726)',
+                      animationDelay: '2.1s',
                       zIndex: 11
                     }}
                   />
