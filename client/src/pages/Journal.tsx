@@ -12,60 +12,41 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function Journal() {
   const { toast } = useToast();
-  const queryClient = useQueryClient();
+  const { user } = useStaticAuth();
+  const { journalEntries, addJournalEntry } = useStaticJournal();
   
   const [focusLevel, setFocusLevel] = useState([7]);
   const [energyLevel, setEnergyLevel] = useState("medium");
   const [reflection, setReflection] = useState("");
 
-  const { data: journalEntries } = useQuery({
-    queryKey: ["/api/journal"],
-    retry: false,
-  });
-
-  const submitJournalMutation = useMutation({
-    mutationFn: async (entryData: any) => {
-      await apiRequest("POST", "/api/journal", entryData);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/journal"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
-      setReflection("");
-      setFocusLevel([7]);
-      setEnergyLevel("medium");
-      toast({
-        title: "Journal entry saved!",
-        description: "Thanks for checking in. +5 XP earned!",
-      });
-    },
-    onError: (error) => {
-      if (isUnauthorizedError(error)) {
-        toast({
-          title: "Unauthorized",
-          description: "You are logged out. Logging in again...",
-          variant: "destructive",
-        });
-        setTimeout(() => {
-          window.location.href = "/api/login";
-        }, 500);
-        return;
-      }
-      toast({
-        title: "Error",
-        description: "Failed to save journal entry. Please try again.",
-        variant: "destructive",
-      });
-    },
-  });
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    submitJournalMutation.mutate({
-      focusLevel: focusLevel[0],
-      energyLevel,
-      reflection,
-    });
+    if (!reflection.trim()) {
+      toast({
+        title: "Incomplete entry",
+        description: "Please write a reflection before submitting.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (user) {
+      addJournalEntry({
+        focusLevel: focusLevel[0],
+        energyLevel,
+        reflection: reflection.trim(),
+      });
+      
+      setReflection("");
+      setFocusLevel([7]);
+      setEnergyLevel("medium");
+      
+      toast({
+        title: "Journal entry saved!",
+        description: "Thanks for checking in. XP earned!",
+      });
+    }
   };
 
   const energyLevels = [

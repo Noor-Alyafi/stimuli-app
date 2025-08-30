@@ -111,7 +111,7 @@ const games = [
 
 export default function Training() {
   const { toast } = useToast();
-  const { user } = useStaticAuth();
+  const { user, isLoading } = useStaticAuth();
   const { addGameProgress, gameProgress } = useStaticGameProgress();
   const [activeGame, setActiveGame] = useState<string | null>(null);
 
@@ -177,9 +177,9 @@ export default function Training() {
   };
 
   const getBestScore = (gameType: string) => {
-    if (!bestScores || !Array.isArray(bestScores)) return undefined;
-    const score = bestScores.find((s: any) => s.gameType === gameType);
-    return score ? score.bestScore : undefined;
+    if (!gameProgress || !Array.isArray(gameProgress)) return undefined;
+    const gameScores = gameProgress.filter((p: any) => p.gameType === gameType);
+    return gameScores.length > 0 ? Math.max(...gameScores.map((s: any) => s.score)) : undefined;
   };
 
   if (isLoading) {

@@ -168,17 +168,10 @@ const defaultAchievements = [
 ];
 
 export default function Achievements() {
-  const { data: achievements } = useQuery({
-    queryKey: ["/api/achievements"],
-    retry: false,
-  });
-
-  const { data: userAchievements } = useQuery({
-    queryKey: ["/api/user-achievements"],
-    retry: false,
-  });
-
-  // Use default achievements if API fails
+  const { user } = useStaticAuth();
+  const { achievements, userAchievements } = useStaticAchievements();
+  
+  // Use default achievements
   const allAchievements = achievements || defaultAchievements;
   const unlockedAchievements = userAchievements || [];
 

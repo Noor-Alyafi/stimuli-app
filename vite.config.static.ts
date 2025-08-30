@@ -31,6 +31,9 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    host: true
+    host: true,
+    allowedHosts: [
+      '7d0980b3-01e3-4587-8612-a9ce5ad6d453-00-1vgxiw318d61u.spock.replit.dev'
+    ]
   }
 })
