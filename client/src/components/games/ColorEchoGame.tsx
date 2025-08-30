@@ -162,27 +162,42 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
   };
 
   const showSequence = () => {
+    // Clear any existing state
+    setIsPlaying(false);
+    setCurrentShowingIndex(-1);
+    
     const newSequence = generateSequence();
-    setSequence(newSequence); // Set sequence BEFORE showing
+    setSequence(newSequence);
     setGameState('showing');
-    setCurrentShowingIndex(0);
     setIsPlaying(true);
     
-    // Play the sequence
-    newSequence.forEach((colorSound, index) => {
-      setTimeout(() => {
-        setCurrentShowingIndex(index);
-        playSound(colorSound);
+    console.log('Generated color sequence:', newSequence.map((c, i) => `${i}: ${c.color}:${c.frequency}`));
+    
+    let currentIndex = 0;
+    
+    const showNextColor = () => {
+      if (currentIndex < newSequence.length) {
+        setCurrentShowingIndex(currentIndex);
+        playSound(newSequence[currentIndex]);
+        console.log(`Showing color ${currentIndex}: ${newSequence[currentIndex].color}`);
         
-        if (index === newSequence.length - 1) {
-          setTimeout(() => {
-            setGameState('guessing');
-            setIsPlaying(false);
-            setCurrentShowingIndex(-1);
-          }, 1500); // Longer pause after sequence
-        }
-      }, index * 1500); // Slower timing for better processing
-    });
+        setTimeout(() => {
+          currentIndex++;
+          if (currentIndex < newSequence.length) {
+            showNextColor();
+          } else {
+            setTimeout(() => {
+              setGameState('guessing');
+              setIsPlaying(false);
+              setCurrentShowingIndex(-1);
+              console.log('Ready for color guessing. Sequence:', newSequence.map(c => `${c.color}:${c.frequency}`));
+            }, 1500);
+          }
+        }, 1500);
+      }
+    };
+    
+    showNextColor();
   };
 
   const handleColorClick = (colorSound: ColorSound) => {
@@ -200,13 +215,16 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
     const expectedColor = sequence[currentPosition];
     
     // Compare the clicked color with the expected color at this position
-    const isCorrect = colorSound.id === expectedColor.id;
+    const isCorrect = colorSound.color === expectedColor.color && colorSound.frequency === expectedColor.frequency;
     
     console.log('Color click debug:', {
       currentPosition,
-      clickedColorId: colorSound.id,
-      expectedColorId: expectedColor.id,
-      isCorrect
+      clickedColor: colorSound.color,
+      expectedColor: expectedColor.color,
+      clickedFreq: colorSound.frequency,
+      expectedFreq: expectedColor.frequency,
+      isCorrect,
+      fullSequence: sequence.map(c => `${c.color}:${c.frequency}`)
     });
     
     if (isCorrect) {

@@ -136,30 +136,41 @@ export function ShapeSequenceGame({ onComplete }: ShapeSequenceGameProps) {
   };
 
   const showSequence = () => {
+    // Clear any existing timeouts
+    setIsShowing(false);
+    setCurrentShowingIndex(-1);
+    
     const newSequence = generateSequence();
-    setSequence(newSequence); // Set sequence before showing
+    setSequence(newSequence);
     setGameState('showing');
-    setCurrentShowingIndex(0);
     setIsShowing(true);
     
     console.log('Generated sequence:', newSequence.map((s, i) => `${i}: ${s.id}`));
     
-    // Show the sequence
-    newSequence.forEach((shape, index) => {
-      setTimeout(() => {
-        setCurrentShowingIndex(index);
-        console.log(`Showing shape ${index}: ${shape.id}`);
+    let currentIndex = 0;
+    
+    const showNextShape = () => {
+      if (currentIndex < newSequence.length) {
+        setCurrentShowingIndex(currentIndex);
+        console.log(`Showing shape ${currentIndex}: ${newSequence[currentIndex].id}`);
         
-        if (index === newSequence.length - 1) {
-          setTimeout(() => {
-            setGameState('guessing');
-            setIsShowing(false);
-            setCurrentShowingIndex(-1);
-            console.log('Ready for guessing. Sequence:', newSequence.map(s => s.id));
-          }, 1500); // Longer pause after sequence
-        }
-      }, index * 1500); // Slower timing for better visibility
-    });
+        setTimeout(() => {
+          currentIndex++;
+          if (currentIndex < newSequence.length) {
+            showNextShape();
+          } else {
+            setTimeout(() => {
+              setGameState('guessing');
+              setIsShowing(false);
+              setCurrentShowingIndex(-1);
+              console.log('Ready for guessing. Sequence:', newSequence.map(s => s.id));
+            }, 1500);
+          }
+        }, 1500);
+      }
+    };
+    
+    showNextShape();
   };
 
   const handleShapeClick = (shape: Shape) => {
