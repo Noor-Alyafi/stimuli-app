@@ -72,7 +72,10 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
               <Button 
                 variant="ghost" 
                 size="sm"
-                onClick={() => window.location.href = "/api/login"}
+                onClick={() => {
+                  const event = new CustomEvent('showSaveModal');
+                  window.dispatchEvent(event);
+                }}
                 className="text-gray-500 hover:text-gray-700 flex items-center space-x-1"
                 title="Save your progress"
               >

@@ -81,7 +81,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <h2 className="text-3xl font-inter font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                    Welcome back{(user as any)?.firstName ? `, ${(user as any).firstName}` : ''}!
+                    Welcome back{(user as any)?.username ? `, ${(user as any).username}` : ''}!
                   </h2>
                 </div>
                 <p className="text-gray-600 text-lg mb-6">

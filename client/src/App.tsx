@@ -12,10 +12,12 @@ import Journal from "@/pages/Journal";
 import Store from "@/pages/Store";
 import Garden from "@/pages/Garden";
 import { SaveProgressNotification } from "@/components/SaveProgressNotification";
+import { SaveProgressModal } from "@/components/SaveProgressModal";
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState("home");
   const [showSaveNotification, setShowSaveNotification] = useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
 
   // Listen for navigation events
   useEffect(() => {
@@ -27,16 +29,24 @@ function AppContent() {
     return () => window.removeEventListener('navigate', handleNavigate);
   }, []);
 
-  // Show save notification when user leaves the page
+  // Show save modal when user leaves the page or clicks save button
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      setShowSaveNotification(true);
+      setShowSaveModal(true);
       event.preventDefault();
-      event.returnValue = '';
+      event.returnValue = 'You have unsaved progress. Would you like to save your progress before leaving?';
+    };
+
+    const handleShowSaveModal = () => {
+      setShowSaveModal(true);
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('showSaveModal', handleShowSaveModal);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('showSaveModal', handleShowSaveModal);
+    };
   }, []);
 
   const renderContent = () => {
@@ -69,6 +79,10 @@ function AppContent() {
       <SaveProgressNotification 
         show={showSaveNotification} 
         onClose={() => setShowSaveNotification(false)} 
+      />
+      <SaveProgressModal 
+        isOpen={showSaveModal} 
+        onClose={() => setShowSaveModal(false)} 
       />
     </div>
   );

@@ -1,16 +1,23 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { AuthService } from "./auth";
+import { sessionMiddleware } from "./session";
 import { 
   insertGameProgressSchema, 
   insertJournalEntrySchema,
   insertUserTreeSchema,
   insertCoinTransactionSchema,
-  insertStoreItemSchema 
+  insertStoreItemSchema,
+  registerUserSchema,
+  loginUserSchema
 } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Add session middleware
+  app.use(sessionMiddleware);
+
   // Create a demo user for testing
   const demoUserId = "demo-user";
   
@@ -23,6 +30,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await storage.upsertUser({
           id: demoUserId,
           email: "demo@stimuli.com",
+          username: "demo",
+          password: "$2a$10$dummy.hash", // Dummy hash for demo user
           firstName: "Demo",
           lastName: "User",
           profileImageUrl: null,
@@ -204,11 +213,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Initialize database asynchronously
   initializeDatabase().catch(console.error);
 
-  // Auth routes (simplified for demo)
-  app.get('/api/auth/user', async (req: any, res) => {
+  // Auth middleware
+  const requireAuth = (req: any, res: any, next: any) => {
+    if (!req.session.userId) {
+      // For demo purposes, use demo user
+      req.session.userId = demoUserId;
+    }
+    next();
+  };
+
+  // Auth routes
+  app.post('/api/auth/register', async (req: any, res) => {
     try {
-      const user = await storage.getUser(demoUserId);
+      const userData = registerUserSchema.parse(req.body);
+      const user = await AuthService.registerUser(userData);
+      req.session.userId = user.id;
+      res.status(201).json(user);
+    } catch (error: any) {
+      console.error("Registration error:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post('/api/auth/login', async (req: any, res) => {
+    try {
+      const credentials = loginUserSchema.parse(req.body);
+      const user = await AuthService.loginUser(credentials);
+      req.session.userId = user.id;
       res.json(user);
+    } catch (error: any) {
+      console.error("Login error:", error);
+      res.status(401).json({ message: error.message });
+    }
+  });
+
+  app.post('/api/auth/logout', (req: any, res) => {
+    req.session.destroy((err: any) => {
+      if (err) {
+        console.error("Logout error:", err);
+        return res.status(500).json({ message: "Failed to logout" });
+      }
+      res.json({ message: "Logged out successfully" });
+    });
+  });
+
+  app.get('/api/auth/user', requireAuth, async (req: any, res) => {
+    try {
+      const user = await storage.getUser(req.session.userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      const { password: _, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
@@ -216,9 +272,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Game progress routes
-  app.post('/api/game-progress', async (req: any, res) => {
+  app.post('/api/game-progress', requireAuth, async (req: any, res) => {
     try {
-      const userId = demoUserId;
+      const userId = req.session.userId;
       const progressData = insertGameProgressSchema.parse({
         ...req.body,
         userId,
@@ -264,9 +320,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/game-progress', async (req: any, res) => {
+  app.get('/api/game-progress', requireAuth, async (req: any, res) => {
     try {
-      const userId = demoUserId;
+      const userId = req.session.userId;
       const { gameType } = req.query;
       
       const progress = await storage.getUserGameProgress(userId, gameType as string);
@@ -277,9 +333,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/best-scores', async (req: any, res) => {
+  app.get('/api/best-scores', requireAuth, async (req: any, res) => {
     try {
-      const userId = demoUserId;
+      const userId = req.session.userId;
       const bestScores = await storage.getUserBestScores(userId);
       res.json(bestScores);
     } catch (error) {

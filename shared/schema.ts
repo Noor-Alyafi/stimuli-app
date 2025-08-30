@@ -24,10 +24,12 @@ export const sessions = pgTable(
   (table) => [index("IDX_session_expire").on(table.expire)],
 );
 
-// User storage table (mandatory for Replit Auth)
+// User storage table
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().notNull(),
-  email: varchar("email").unique(),
+  email: varchar("email").unique().notNull(),
+  username: varchar("username").unique().notNull(),
+  password: text("password").notNull(),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
@@ -165,3 +167,20 @@ export const insertUserTreeSchema = createInsertSchema(userTrees);
 export const insertCoinTransactionSchema = createInsertSchema(coinTransactions);
 export const insertStoreItemSchema = createInsertSchema(storeItems);
 export const insertUserInventorySchema = createInsertSchema(userInventory);
+
+// Auth schemas
+export const registerUserSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  username: z.string().min(3, "Username must be at least 3 characters").max(20, "Username must be less than 20 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+});
+
+export const loginUserSchema = z.object({
+  username: z.string(),
+  password: z.string(),
+});
+
+export type RegisterUser = z.infer<typeof registerUserSchema>;
+export type LoginUser = z.infer<typeof loginUserSchema>;
