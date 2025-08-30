@@ -18,8 +18,9 @@ export default function Journal() {
   const [focusLevel, setFocusLevel] = useState([7]);
   const [energyLevel, setEnergyLevel] = useState("medium");
   const [reflection, setReflection] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!reflection.trim()) {
@@ -31,21 +32,27 @@ export default function Journal() {
       return;
     }
 
-    if (user) {
-      addJournalEntry({
-        focusLevel: focusLevel[0],
-        energyLevel,
-        reflection: reflection.trim(),
-      });
+    if (user && !isSubmitting) {
+      setIsSubmitting(true);
       
-      setReflection("");
-      setFocusLevel([7]);
-      setEnergyLevel("medium");
-      
-      toast({
-        title: "Journal entry saved!",
-        description: "Thanks for checking in. XP earned!",
-      });
+      try {
+        addJournalEntry({
+          focusLevel: focusLevel[0],
+          energyLevel,
+          reflection: reflection.trim(),
+        });
+        
+        setReflection("");
+        setFocusLevel([7]);
+        setEnergyLevel("medium");
+        
+        toast({
+          title: "Journal entry saved!",
+          description: "Thanks for checking in. XP earned!",
+        });
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -145,9 +152,9 @@ export default function Journal() {
                 <Button 
                   type="submit" 
                   className="w-full bg-navy hover:bg-navy/90"
-                  disabled={submitJournalMutation.isPending}
+                  disabled={isSubmitting}
                 >
-                  {submitJournalMutation.isPending ? "Saving..." : "Save Entry (+5 XP)"}
+                  {isSubmitting ? "Saving..." : "Save Entry (+5 XP)"}
                 </Button>
               </form>
             </CardContent>

@@ -6,8 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Trophy, Zap, Timer, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
+import { useStaticGameProgress } from "@/hooks/useStaticData";
 import { NotificationSystem, useNotifications } from "@/components/NotificationSystem";
 
 interface GameContainerProps {
@@ -43,7 +42,7 @@ export function GameContainer({
   const [finalTime, setFinalTime] = useState(0);
   const [showCelebration, setShowCelebration] = useState(false);
   const { toast } = useToast();
-  const queryClient = useQueryClient();
+  const { addGameProgress } = useStaticGameProgress();
   const {
     notifications,
     removeNotification,
@@ -53,60 +52,47 @@ export function GameContainer({
     showAchievement,
   } = useNotifications();
 
-  const gameProgressMutation = useMutation({
-    mutationFn: async (gameData: { gameType: string; score: number; timeTaken: number }) => {
-      const response = await apiRequest("POST", "/api/game-progress", gameData);
-      return response;
-    },
-    onSuccess: (data: any) => {
-      queryClient.invalidateQueries({ queryKey: ["/api/best-scores"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/user-achievements"] });
+  const handleGameProgressSave = async (gameData: { gameType: string; score: number; timeTaken: number }) => {
+    try {
+      const result = addGameProgress(gameData);
       
-      // Calculate rewards based on score and performance
-      const baseXP = 15; // Base XP for completing a game
-      const bonusXP = Math.floor(finalScore / 50); // Bonus XP based on score
-      const xpEarned = baseXP + bonusXP;
-      const coinsEarned = Math.floor(finalScore / 10); // Coins based on score
-      
-      // Show advanced animated reward notifications similar to tree growth
-      setTimeout(() => {
-        showXPGain(xpEarned);
-      }, 500);
-      
-      setTimeout(() => {
-        showCoinsGained(coinsEarned);
-      }, 1000);
-      
-      setTimeout(() => {
-        showCongratulations(`Game completed! Well done!`);
-      }, 1500);
-      
-      // Show celebration if new achievements unlocked
-      if (data.newAchievements?.length > 0) {
-        setShowCelebration(true);
+      if (result) {
+        // Calculate rewards based on score and performance
+        const baseXP = 15; // Base XP for completing a game
+        const bonusXP = Math.floor(gameData.score / 50); // Bonus XP based on score
+        const xpEarned = baseXP + bonusXP;
+        const coinsEarned = result.coinsEarned || Math.floor(gameData.score / 10); // Coins based on score
+        
+        // Show advanced animated reward notifications similar to tree growth
         setTimeout(() => {
-          showAchievement(`🏆 ${data.newAchievements[0].achievement?.name || "New Achievement"} Unlocked!`);
-        }, 2000);
+          showXPGain(xpEarned);
+        }, 500);
+        
+        setTimeout(() => {
+          showCoinsGained(coinsEarned);
+        }, 1000);
+        
+        setTimeout(() => {
+          showCongratulations(`Game completed! Well done!`);
+        }, 1500);
       }
-    },
-    onError: (error) => {
+    } catch (error) {
       console.error("Error saving progress:", error);
       toast({
         title: "Error",
         description: "Failed to save progress. Please try again.",
         variant: "destructive",
       });
-    },
-  });
+    }
+  };
 
   const handleGameComplete = (score: number, timeTaken: number) => {
     setFinalScore(score);
     setFinalTime(timeTaken);
     setGameCompleted(true);
     
-    // Save progress to database
-    gameProgressMutation.mutate({
+    // Save progress using static data
+    handleGameProgressSave({
       gameType,
       score,
       timeTaken,
