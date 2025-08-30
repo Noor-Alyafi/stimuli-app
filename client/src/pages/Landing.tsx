@@ -16,9 +16,11 @@ export default function Landing() {
             className="mb-8"
           >
             <div className="flex items-center justify-center space-x-3 mb-6">
-              <div className="w-16 h-16 bg-gradient-to-r from-navy to-cyan rounded-2xl flex items-center justify-center">
-                <Brain className="text-white" size={32} />
-              </div>
+              <img 
+                src="/attached_assets/generated_images/Brain_logo_gradient_icon_bda34921.png" 
+                alt="Stimuli Brain Logo" 
+                className="w-16 h-16"
+              />
               <h1 className="text-5xl font-inter font-bold text-navy">Stimuli</h1>
             </div>
             <p className="text-xl text-gray-600 mb-8">

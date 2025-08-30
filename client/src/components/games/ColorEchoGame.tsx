@@ -401,7 +401,7 @@ export function ColorEchoGame({ onComplete }: ColorEchoGameProps) {
                 className={`
                   aspect-square rounded-xl border-4 transition-all duration-300
                   ${gameState === 'guessing' ? 'hover:scale-105 cursor-pointer' : 'cursor-not-allowed'}
-                  ${currentShowingIndex === index ? 'scale-110 border-white shadow-lg' : 'border-gray-300 dark:border-gray-600'}
+                  ${isPlaying && sequence[currentShowingIndex]?.color === colorSound.color ? 'scale-110 border-white shadow-lg' : 'border-gray-300 dark:border-gray-600'}
                   ${gameState !== 'guessing' ? 'opacity-70' : ''}
                 `}
                 style={{ backgroundColor: colorSound.color }}

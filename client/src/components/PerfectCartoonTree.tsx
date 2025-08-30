@@ -118,33 +118,23 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
   const getGnomePositions = (count: number, treeWidth: number) => {
     if (count === 0) return [];
     
-    const centerX = 0; // Tree center
-    const baseDistance = treeWidth * 0.6; // Equal distance from center
+    const radius = treeWidth * 0.4; // Distance from tree center
+    const positions = [];
     
-    if (count === 1) {
-      return [{ x: centerX + baseDistance, side: 'right' as const }];
+    // Place gnomes in a semicircle around the tree base
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI / (count + 1)) * (i + 1); // Spread evenly in semicircle
+      const x = Math.cos(angle) * radius; // Positive = right, negative = left
+      const z = Math.sin(angle) * radius * 0.3; // Depth illusion (smaller effect)
+      
+      positions.push({ 
+        x: x, 
+        z: z,
+        side: x > 0 ? 'right' as const : (x < 0 ? 'left' as const : 'center' as const)
+      });
     }
-    if (count === 2) {
-      return [
-        { x: centerX - baseDistance, side: 'left' as const },
-        { x: centerX + baseDistance, side: 'right' as const }
-      ];
-    }
-    if (count === 3) {
-      return [
-        { x: centerX - baseDistance, side: 'left' as const },
-        { x: centerX, side: 'center' as const },
-        { x: centerX + baseDistance, side: 'right' as const }
-      ];
-    }
-    // 4 gnomes with equal spacing
-    const spacing = baseDistance * 0.7;
-    return [
-      { x: centerX - baseDistance, side: 'left' as const },
-      { x: centerX - spacing, side: 'left' as const },
-      { x: centerX + spacing, side: 'right' as const },
-      { x: centerX + baseDistance, side: 'right' as const }
-    ];
+    
+    return positions;
   };
   
   // Render multiple gnomes with different colors and positions
@@ -160,11 +150,11 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
       return (
         <div 
           key={gnome.id}
-          className="absolute bottom-0 transform"
+          className="absolute bottom-0"
           style={{ 
             zIndex: 5,
-            left: `${position.x}px`,
-            transform: 'translateY(0)'
+            left: '50%',
+            transform: `translateX(calc(-50% + ${position.x}px)) translateY(${position.z || 0}px)`,
           }}
         >
           <svg 
