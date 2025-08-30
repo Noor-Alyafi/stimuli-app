@@ -90,7 +90,7 @@ const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow, onDecora
         </div>
         
         {/* Decoration Buttons */}
-        <>
+        <div>
           {onDecorate && (
             <div className="flex gap-2">
               <Button
@@ -113,7 +113,7 @@ const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow, onDecora
               </Button>
             </div>
           )}
-        </>
+        </div>
         
         {/* Gnome Status Display */}
         {tree.decorations && Array.isArray(tree.decorations) && tree.decorations.filter((d: any) => typeof d === 'string' && (d === 'gnome' || d.startsWith('gnome_'))).length > 0 && (

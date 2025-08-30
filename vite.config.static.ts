@@ -30,7 +30,7 @@ export default defineConfig({
     include: ['react', 'react-dom', 'framer-motion']
   },
   server: {
-    port: 3000,
+    port: 5000,
     host: true,
     allowedHosts: [
       '7d0980b3-01e3-4587-8612-a9ce5ad6d453-00-1vgxiw318d61u.spock.replit.dev'
