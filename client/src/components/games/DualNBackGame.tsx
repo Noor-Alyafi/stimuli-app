@@ -12,7 +12,11 @@ interface Trial {
   sound: string;
 }
 
-export default function DualNBackGame() {
+interface DualNBackGameProps {
+  onComplete: (score: number, timeTaken: number) => void;
+}
+
+export default function DualNBackGame({ onComplete }: DualNBackGameProps) {
   const [nLevel, setNLevel] = useState(2); // Start with 2-back
   const [currentTrial, setCurrentTrial] = useState(0);
   const [trials, setTrials] = useState<Trial[]>([]);
@@ -116,7 +120,7 @@ export default function DualNBackGame() {
       name={`Dual ${nLevel}-Back`}
       score={score}
       timeLeft={timeLeft}
-      onGameComplete={(score, timeTaken) => {}}
+      onGameComplete={onComplete}
       gameType="dual-n-back"
       onBack={() => {}}
     >

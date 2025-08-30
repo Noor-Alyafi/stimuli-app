@@ -221,10 +221,6 @@ export function useStaticStore() {
       throw new Error("Insufficient coins");
     }
 
-    // Deduct coins
-    const updatedUser = { ...user, coins: user.coins - totalCost };
-    LocalStorageManager.updateUser(updatedUser);
-
     // Add to inventory
     LocalStorageManager.addToInventory({
       userId: user.id,
@@ -232,7 +228,7 @@ export function useStaticStore() {
       quantity,
     });
 
-    // Add transaction
+    // Add transaction (this will automatically deduct coins)
     LocalStorageManager.addCoinTransaction({
       userId: user.id,
       amount: -totalCost,

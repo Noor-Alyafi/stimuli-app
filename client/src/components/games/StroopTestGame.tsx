@@ -13,7 +13,11 @@ interface StroopItem {
   isCongruent: boolean;
 }
 
-export default function StroopTestGame() {
+interface StroopTestGameProps {
+  onComplete: (score: number, timeTaken: number) => void;
+}
+
+export default function StroopTestGame({ onComplete }: StroopTestGameProps) {
   const [currentItem, setCurrentItem] = useState<StroopItem | null>(null);
   const [score, setScore] = useState(0);
   const [round, setRound] = useState(1);
@@ -79,7 +83,7 @@ export default function StroopTestGame() {
       name="Stroop Test"
       score={score}
       timeLeft={timeLeft}
-      onGameComplete={(score, timeTaken) => {}}
+      onGameComplete={onComplete}
       gameType="stroop-test"
       onBack={() => {}}
     >

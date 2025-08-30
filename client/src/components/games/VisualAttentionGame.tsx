@@ -12,7 +12,11 @@ interface Stimulus {
   flankerType: 'congruent' | 'incongruent' | 'neutral';
 }
 
-export default function VisualAttentionGame() {
+interface VisualAttentionGameProps {
+  onComplete: (score: number, timeTaken: number) => void;
+}
+
+export default function VisualAttentionGame({ onComplete }: VisualAttentionGameProps) {
   const [score, setScore] = useState(0);
   const [round, setRound] = useState(1);
   const [gameActive, setGameActive] = useState(false);
@@ -144,7 +148,7 @@ export default function VisualAttentionGame() {
       name="Visual Attention Training"
       score={score}
       timeLeft={timeLeft}
-      onGameComplete={(score, timeTaken) => {}}
+      onGameComplete={onComplete}
       gameType="visual-attention"
       onBack={() => {}}
     >
