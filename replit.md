@@ -121,11 +121,14 @@ The application is designed to be a comprehensive brain training platform with p
 - **Store Cleanup**: Removed duplicate "Willow Tree Seed" items, kept unified "Willow Seed"
 - **Notification Polish**: Removed duplicate XP notifications, streamlined reward display system
 
-### Critical Bug Fixes (Latest Update)
+### Critical Bug Fixes (Latest Update - August 30, 2025)
 - **Money Reset Bug**: Fixed purchase system where user coins reset to zero after buying items by removing double coin deduction
-- **Game Matching Logic**: Fixed Color Echo and Shape Sequence games where correct answers registered as incorrect
-- **Game Timing**: Improved sequence display timing in both games (1500ms intervals instead of 1000-1200ms)
+- **Color Echo Game Logic**: Completely rebuilt sequence matching to properly compare colors and frequencies, fixed visual highlighting during sequence display
+- **Shape Sequence Game Logic**: Fixed multiple sequence generation conflicts, rebuilt timing system with sequential display to prevent overlapping sequences
+- **Game Timing**: Improved sequence display timing in both games (1500ms intervals) with proper sequential logic
 - **Sequence Length**: Reduced maximum sequence length for better accessibility (ColorEcho: 6, ShapeSequence: 5)
 - **Achievement Rewards**: Added 20-coin rewards for each achievement unlock with proper notifications and sound effects
-- **Store Card Consistency**: Standardized all store item cards with uniform heights and aligned content layout
+- **Store Card Consistency**: Standardized all store item cards with uniform heights and aligned content layout using flexbox
 - **Sound Feedback**: Added proper audio feedback for correct/incorrect answers in all games with visual notifications
+- **Gnome Positioning**: Enhanced decoration system with mathematical semicircle positioning for perfect centering around trees with increased spacing (100% radius)
+- **Navigation Branding**: Added custom SVG brain logo to navigation header next to "Stimuli" title with gradient background

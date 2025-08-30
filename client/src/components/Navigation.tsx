@@ -34,12 +34,17 @@ export function Navigation({ activeTab, onTabChange }: NavigationProps) {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-r from-navy to-cyan rounded-xl flex items-center justify-center">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="white"/>
-                  <path d="M8.5 9C8.78 9 9 8.78 9 8.5S8.78 8 8.5 8S8 8.22 8 8.5S8.22 9 8.5 9Z" fill="white"/>
-                  <path d="M15.5 9C15.78 9 16 8.78 16 8.5S15.78 8 15.5 8S15 8.22 15 8.5S15.22 9 15.5 9Z" fill="white"/>
-                  <path d="M12 6.5C10.62 6.5 9.5 7.62 9.5 9H10.5C10.5 8.17 11.17 7.5 12 7.5S13.5 8.17 13.5 9H14.5C14.5 7.62 13.38 6.5 12 6.5Z" fill="white"/>
-                  <path d="M9 11.5C9 12.33 9.67 13 10.5 13H13.5C14.33 13 15 12.33 15 11.5H14C14 11.78 13.78 12 13.5 12H10.5C10.22 12 10 11.78 10 11.5H9Z" fill="white"/>
+                <svg width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* Head outline */}
+                  <path d="M20 30 Q20 20 30 20 L70 20 Q80 20 80 30 L80 70 Q80 80 70 80 L30 80 Q20 80 20 70 Z" fill="white" stroke="white" strokeWidth="2"/>
+                  {/* Brain sections */}
+                  <path d="M25 25 Q50 20 75 25 Q75 40 50 35 Q25 40 25 25" fill="white"/>
+                  <path d="M25 45 Q50 40 75 45 Q75 60 50 55 Q25 60 25 45" fill="white"/>
+                  <path d="M25 65 Q50 60 75 65 Q75 75 50 75 Q25 75 25 65" fill="white"/>
+                  {/* Brain detail lines */}
+                  <path d="M30 30 Q45 25 60 30" stroke="rgba(255,255,255,0.7)" strokeWidth="1" fill="none"/>
+                  <path d="M30 50 Q45 45 60 50" stroke="rgba(255,255,255,0.7)" strokeWidth="1" fill="none"/>
+                  <path d="M30 70 Q45 65 60 70" stroke="rgba(255,255,255,0.7)" strokeWidth="1" fill="none"/>
                 </svg>
               </div>
               <h1 className="text-2xl font-inter font-bold text-navy">Stimuli</h1>
