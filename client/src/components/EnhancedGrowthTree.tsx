@@ -8,7 +8,7 @@ import { useStaticAuth } from '@/hooks/useStaticAuth';
 import { useStaticTrees, useStaticStore } from '@/hooks/useStaticData';
 import { useToast } from '@/hooks/use-toast';
 import { NotificationSystem, useNotifications } from '@/components/NotificationSystem';
-import { UserTree, User, UserInventory, StoreItem } from '@shared/schema';
+import { UserTree, User, UserInventory, StoreItem } from '@/lib/localStorage';
 import { Coins, Sparkles, Droplet, TreePine, Plus, Package } from 'lucide-react';
 import { TreeVisual3D } from './TreeVisual3D';
 import { useLocation } from 'wouter';
@@ -17,9 +17,9 @@ import { motion } from 'framer-motion';
 
 interface TreeVisualProps {
   tree: UserTree;
-  onWater: (treeId: number) => void;
-  onGrow: (treeId: number) => void;
-  onDecorate?: (treeId: number, decorationType: string) => void;
+  onWater: (treeId: string) => void;
+  onGrow: (treeId: string) => void;
+  onDecorate?: (treeId: string, decorationType: string) => void;
 }
 
 const TreeVisual: React.FC<TreeVisualProps> = ({ tree, onWater, onGrow, onDecorate }) => {

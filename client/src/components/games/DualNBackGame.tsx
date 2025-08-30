@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import GameContainer from './GameContainer';
+import { GameContainer } from './GameContainer';
 
 // Scientifically-backed Dual N-Back for working memory training
 const GRID_SIZE = 3;
@@ -113,17 +113,12 @@ export default function DualNBackGame() {
 
   return (
     <GameContainer
-      title={`Dual ${nLevel}-Back`}
-      description="Train your working memory with this scientifically-proven cognitive training task. Track both position and sound patterns!"
+      name={`Dual ${nLevel}-Back`}
       score={score}
-      isActive={gameActive}
       timeLeft={timeLeft}
-      onGameEnd={() => ({
-        gameType: 'dual-n-back',
-        score: accuracy,
-        difficulty: `${nLevel}-back`,
-        timeTaken: 120 - timeLeft,
-      })}
+      onGameComplete={(score, timeTaken) => {}}
+      gameType="dual-n-back"
+      onBack={() => {}}
     >
       <div className="space-y-6">
         {!gameActive && timeLeft === 120 ? (

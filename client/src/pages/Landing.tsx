@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Brain, Gamepad2, TrendingUp, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { SaveProgressModal } from "@/components/SaveProgressModal";
 
 export default function Landing() {
+  const [showAuthModal, setShowAuthModal] = useState(false);
   return (
     <div className="min-h-screen bg-gradient-to-br from-light-gray to-white">
       {/* Hero Section */}
@@ -44,7 +47,7 @@ export default function Landing() {
             <Button 
               size="lg"
               className="bg-navy hover:bg-navy/90 text-white px-8 py-4 text-lg font-medium"
-              onClick={() => window.location.href = "/api/login"}
+              onClick={() => setShowAuthModal(true)}
             >
               Start Your Journey
             </Button>
@@ -172,13 +175,19 @@ export default function Landing() {
               size="lg"
               variant="secondary"
               className="bg-white text-navy hover:bg-gray-100 px-8 py-4 text-lg font-medium"
-              onClick={() => window.location.href = "/api/login"}
+              onClick={() => setShowAuthModal(true)}
             >
               Get Started Today
             </Button>
           </motion.div>
         </div>
       </section>
+
+      {/* Authentication Modal */}
+      <SaveProgressModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)} 
+      />
     </div>
   );
 }

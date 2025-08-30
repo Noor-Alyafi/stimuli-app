@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import GameContainer from './GameContainer';
+import { GameContainer } from './GameContainer';
 
 // Visual attention training based on Attention Network Test (ANT)
 interface Stimulus {
@@ -141,17 +141,12 @@ export default function VisualAttentionGame() {
 
   return (
     <GameContainer
-      title="Visual Attention Training"
-      description="Improve your attention networks with this scientifically-based attention training task."
+      name="Visual Attention Training"
       score={score}
-      isActive={gameActive}
       timeLeft={timeLeft}
-      onGameEnd={() => ({
-        gameType: 'visual-attention',
-        score: Math.round((score / Math.max(round - 1, 1)) * 100),
-        difficulty: 'normal',
-        timeTaken: 90 - timeLeft,
-      })}
+      onGameComplete={(score, timeTaken) => {}}
+      gameType="visual-attention"
+      onBack={() => {}}
     >
       <div className="space-y-6">
         {!gameActive && timeLeft === 90 ? (

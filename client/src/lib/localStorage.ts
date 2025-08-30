@@ -49,6 +49,7 @@ export interface StoredTree {
   xpContributed: number;
   plantedAt: string;
   decorations: string[];
+  lastWatered?: string;
 }
 
 export interface StoredInventoryItem {
@@ -88,6 +89,12 @@ export interface StoredStoreItem {
   category: string;
   isAvailable: boolean;
 }
+
+// Type aliases for compatibility with components expecting @shared types
+export type User = StoredUser;
+export type UserTree = StoredTree;
+export type UserInventory = StoredInventoryItem;
+export type StoreItem = StoredStoreItem;
 
 // Initialize default data
 const defaultAchievements: StoredAchievement[] = [

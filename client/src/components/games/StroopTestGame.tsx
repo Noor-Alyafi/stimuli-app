@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import GameContainer from './GameContainer';
+import { GameContainer } from './GameContainer';
 
 // Scientifically-backed Stroop Test for attention and cognitive flexibility
 const COLORS = ['red', 'blue', 'green', 'yellow', 'orange', 'purple'];
@@ -76,17 +76,12 @@ export default function StroopTestGame() {
 
   return (
     <GameContainer
-      title="Stroop Test"
-      description="Test your cognitive flexibility and attention control. Name the COLOR of the word, not what the word says!"
+      name="Stroop Test"
       score={score}
-      isActive={gameActive}
       timeLeft={timeLeft}
-      onGameEnd={() => ({
-        gameType: 'stroop-test',
-        score,
-        difficulty: 'normal',
-        timeTaken: 60 - timeLeft,
-      })}
+      onGameComplete={(score, timeTaken) => {}}
+      gameType="stroop-test"
+      onBack={() => {}}
     >
       <div className="space-y-6">
         {!gameActive && timeLeft === 60 ? (
