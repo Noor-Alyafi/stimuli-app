@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useStaticGameProgress } from "@/hooks/useStaticData";
+import { useStaticAuth } from "@/hooks/useStaticAuth";
 import { GameCard } from "@/components/GameCard";
 import { GameContainer } from "@/components/games/GameContainer";
 import { ColorEchoGame } from "@/components/games/ColorEchoGame";
@@ -16,8 +17,7 @@ import { PatternRecognitionGame } from "@/components/games/PatternRecognitionGam
 // import VisualAttentionGame from "@/components/games/VisualAttentionGame";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
-import { isUnauthorizedError } from "@/lib/authUtils";
-import { apiRequest } from "@/lib/queryClient";
+
 
 const games = [
   // Original Synesthesia Games
@@ -111,52 +111,28 @@ const games = [
 
 export default function Training() {
   const { toast } = useToast();
-  const queryClient = useQueryClient();
+  const { user } = useStaticAuth();
+  const { addGameProgress, gameProgress } = useStaticGameProgress();
   const [activeGame, setActiveGame] = useState<string | null>(null);
-  
-  const { data: bestScores, isLoading } = useQuery({
-    queryKey: ["/api/best-scores"],
-    retry: false,
-  });
-
-  const gameProgressMutation = useMutation({
-    mutationFn: async (gameData: { gameType: string; score: number; timeTaken: number }) => {
-      await apiRequest("POST", "/api/game-progress", gameData);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/best-scores"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
-      toast({
-        title: "Great job!",
-        description: "Your progress has been saved. +10 XP earned!",
-      });
-    },
-    onError: (error) => {
-      if (isUnauthorizedError(error)) {
-        toast({
-          title: "Unauthorized",
-          description: "You are logged out. Logging in again...",
-          variant: "destructive",
-        });
-        setTimeout(() => {
-          window.location.href = "/api/login";
-        }, 500);
-        return;
-      }
-      toast({
-        title: "Error",
-        description: "Failed to save progress. Please try again.",
-        variant: "destructive",
-      });
-    },
-  });
 
   const handlePlayGame = (gameType: string) => {
     setActiveGame(gameType);
   };
 
   const handleGameComplete = (gameType: string, score: number, timeTaken: number) => {
-    // The GameContainer will handle the API call and feedback
+    if (user) {
+      addGameProgress({
+        gameType,
+        score,
+        timeTaken,
+        difficulty: 'normal'
+      });
+      
+      toast({
+        title: "Great job!",
+        description: "Your progress has been saved. XP earned!",
+      });
+    }
     setActiveGame(null);
   };
 

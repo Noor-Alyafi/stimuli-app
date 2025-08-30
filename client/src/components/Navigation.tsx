@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Home, Gamepad2, TrendingUp, Trophy, BookOpen, User as UserIcon, LogOut, Save, ShoppingCart, TreePine, Coins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useQuery } from "@tanstack/react-query";
-import { User } from "@shared/schema";
+import { useStaticAuth } from "@/hooks/useStaticAuth";
 
 interface NavigationProps {
   activeTab: string;
@@ -21,10 +20,7 @@ const tabs = [
 ];
 
 export function Navigation({ activeTab, onTabChange }: NavigationProps) {
-  const { data: user } = useQuery<User>({
-    queryKey: ["/api/auth/user"],
-    retry: false,
-  });
+  const { user } = useStaticAuth();
 
   return (
     <>

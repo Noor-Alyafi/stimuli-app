@@ -1,4 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
+import { useStaticGameProgress } from "@/hooks/useStaticData";
+import { useStaticAuth } from "@/hooks/useStaticAuth";
 import { ProgressChart } from "@/components/ProgressChart";
 import { GrowthTree } from "@/components/GrowthTree";
 import { motion } from "framer-motion";
@@ -6,22 +7,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
 export default function ProgressPage() {
-  const { data: user } = useQuery({
-    queryKey: ["/api/auth/user"],
-    retry: false,
-  });
-  
-  const { data: gameProgress } = useQuery({
-    queryKey: ["/api/game-progress"],
-    retry: false,
-  });
+  const { user, isLoading } = useStaticAuth();
+  const { gameProgress } = useStaticGameProgress();
 
-  const { data: skillProgress } = useQuery({
-    queryKey: ["/api/skill-progress"],
-    retry: false,
-  });
-
-  if (!user) return null;
+  if (isLoading || !user) return null;
 
   // Transform game progress data for chart
   const chartData = gameProgress?.slice(0, 10).reverse().map((progress: any, index: number) => ({
@@ -37,7 +26,7 @@ export default function ProgressPage() {
     { skillType: "pattern", level: 90 },
   ];
 
-  const skills = skillProgress?.length ? skillProgress : defaultSkills;
+  const skills = defaultSkills; // Using default skills for static version
 
   const skillNames = {
     memory: "Memory",

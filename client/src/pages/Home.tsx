@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useStaticAuth } from "@/hooks/useStaticAuth";
 import { GrowthTree } from "@/components/GrowthTree";
 import { PerfectCartoonTree } from "@/components/PerfectCartoonTree";
 import { motion } from "framer-motion";
@@ -18,12 +18,9 @@ const dailyQuotes = [
 ];
 
 export default function Home() {
-  const { data: user } = useQuery({
-    queryKey: ["/api/auth/user"],
-    retry: false,
-  });
+  const { user, isLoading } = useStaticAuth();
   
-  if (!user) return (
+  if (isLoading || !user) return (
     <div className="min-h-screen bg-light-gray flex items-center justify-center">
       <div className="text-center">
         <div className="w-16 h-16 bg-gradient-to-r from-navy to-cyan rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -34,8 +31,8 @@ export default function Home() {
     </div>
   );
 
-  const currentXP = (user as any)?.xp || 0;
-  const currentLevel = (user as any)?.level || 1;
+  const currentXP = user?.xp || 0;
+  const currentLevel = user?.level || 1;
   
   // Calculate next level XP based on new system
   let nextLevelXP: number;
@@ -81,7 +78,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <h2 className="text-3xl font-inter font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                    Welcome back{(user as any)?.username ? `, ${(user as any).username}` : ''}!
+                    Welcome back{user?.username ? `, ${user.username}` : ''}!
                   </h2>
                 </div>
                 <p className="text-gray-600 text-lg mb-6">

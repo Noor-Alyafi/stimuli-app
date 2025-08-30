@@ -5,9 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { useMutation } from "@tanstack/react-query";
-import { apiRequest, queryClient } from "@/lib/queryClient";
-import { RegisterUser, LoginUser } from "@shared/schema";
+import { useStaticAuth } from "@/hooks/useStaticAuth";
 
 interface SaveProgressModalProps {
   isOpen: boolean;
@@ -17,6 +15,7 @@ interface SaveProgressModalProps {
 export function SaveProgressModal({ isOpen, onClose }: SaveProgressModalProps) {
   const [activeTab, setActiveTab] = useState("register");
   const { toast } = useToast();
+  const { login, register } = useStaticAuth();
 
   const [registerForm, setRegisterForm] = useState({
     email: "",
@@ -31,58 +30,40 @@ export function SaveProgressModal({ isOpen, onClose }: SaveProgressModalProps) {
     password: "",
   });
 
-  const registerMutation = useMutation({
-    mutationFn: async (userData: RegisterUser) => {
-      const res = await apiRequest("POST", "/api/auth/register", userData);
-      return await res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      await register(registerForm);
       toast({
         title: "Account created successfully!",
         description: "Your progress has been saved and you're now registered.",
       });
       onClose();
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Registration failed",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
+    } catch (error) {
+      // Error handling is done in the useStaticAuth hook
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const loginMutation = useMutation({
-    mutationFn: async (credentials: LoginUser) => {
-      const res = await apiRequest("POST", "/api/auth/login", credentials);
-      return await res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      await login(loginForm.username, loginForm.password);
       toast({
         title: "Logged in successfully!",
         description: "Welcome back! Your progress has been saved.",
       });
       onClose();
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Login failed",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
-
-  const handleRegister = (e: React.FormEvent) => {
-    e.preventDefault();
-    registerMutation.mutate(registerForm);
-  };
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    loginMutation.mutate(loginForm);
+    } catch (error) {
+      // Error handling is done in the useStaticAuth hook
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -158,10 +139,10 @@ export function SaveProgressModal({ isOpen, onClose }: SaveProgressModalProps) {
               <Button 
                 type="submit" 
                 className="w-full" 
-                disabled={registerMutation.isPending}
+                disabled={isLoading}
                 data-testid="button-register"
               >
-                {registerMutation.isPending ? "Creating Account..." : "Create Account"}
+                {isLoading ? "Creating Account..." : "Create Account"}
               </Button>
             </form>
           </TabsContent>
@@ -192,10 +173,10 @@ export function SaveProgressModal({ isOpen, onClose }: SaveProgressModalProps) {
               <Button 
                 type="submit" 
                 className="w-full" 
-                disabled={loginMutation.isPending}
+                disabled={isLoading}
                 data-testid="button-login"
               >
-                {loginMutation.isPending ? "Logging In..." : "Log In"}
+                {isLoading ? "Logging In..." : "Log In"}
               </Button>
             </form>
           </TabsContent>

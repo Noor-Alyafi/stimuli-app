@@ -1,4 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
+import { useStaticAchievements } from "@/hooks/useStaticData";
+import { useStaticAuth } from "@/hooks/useStaticAuth";
 import { AchievementBadge } from "@/components/AchievementBadge";
 import { motion } from "framer-motion";
 

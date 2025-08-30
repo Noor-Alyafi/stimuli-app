@@ -10,34 +10,31 @@ Preferred communication style: Simple, everyday language.
 
 ## System Architecture
 
-### Frontend Architecture
-- **Framework**: React 18 with TypeScript
+### Frontend Architecture (Static Deployment)
+- **Framework**: React 18 with TypeScript (static build)
 - **UI Library**: Radix UI components with shadcn/ui styling system
 - **Styling**: Tailwind CSS with custom design tokens
-- **State Management**: TanStack React Query for server state
+- **State Management**: Custom static data hooks with localStorage persistence
 - **Navigation**: Custom tab-based navigation system
 - **Animations**: Framer Motion for smooth transitions and interactions
+- **Data Storage**: Browser localStorage for all user data and game progress
+- **Authentication**: Client-side authentication with password hashing and session management
 
-### Backend Architecture
-- **Framework**: Express.js with TypeScript
-- **Runtime**: Node.js with ES modules
-- **Database ORM**: Drizzle ORM with PostgreSQL
-- **Authentication**: Replit Auth with OpenID Connect
-- **Session Management**: PostgreSQL-backed sessions with connect-pg-simple
-
-### Database Architecture
-- **Database**: PostgreSQL (via Neon serverless)
-- **ORM**: Drizzle ORM for type-safe database operations
-- **Schema**: Defined in TypeScript with Zod validation
-- **Migration**: Drizzle Kit for database migrations
+### Data Persistence Architecture
+- **Storage**: Browser localStorage for all application data
+- **Data Structure**: Structured JSON objects for users, game progress, achievements, and transactions
+- **Authentication**: Static authentication service with password hashing
+- **Session Management**: localStorage-based user sessions
+- **Data Validation**: TypeScript interfaces for type safety
 
 ## Key Components
 
-### Authentication System
-- **Provider**: Replit Auth with OpenID Connect
-- **Session Storage**: PostgreSQL-backed sessions
-- **User Management**: Automatic user creation and profile management
-- **Security**: HTTP-only cookies with secure session handling
+### Authentication System (Static)
+- **Provider**: Custom static authentication service
+- **Session Storage**: localStorage-based sessions
+- **User Management**: Client-side user registration and login
+- **Security**: Password hashing and localStorage-based session management
+- **Registration**: Email and username validation with duplicate prevention
 
 ### Game Progress Tracking
 - **Progress Logging**: Individual game session tracking with scores and timing
@@ -56,13 +53,14 @@ Preferred communication style: Simple, everyday language.
 - **Responsive Design**: Mobile-first approach with adaptive layouts
 - **Interactive Elements**: Growth tree visualization, progress charts, and animated feedback
 
-## Data Flow
+## Data Flow (Static)
 
-1. **User Authentication**: Users authenticate via Replit Auth, creating or updating user profiles
-2. **Game Sessions**: Users play games, with progress automatically tracked and stored
-3. **Progress Calculation**: XP, levels, and streaks are calculated and updated in real-time
-4. **Achievement Checking**: New achievements are evaluated and unlocked after each session
-5. **Data Visualization**: Progress data is transformed and displayed in charts and visual components
+1. **User Authentication**: Users register/login via client-side authentication stored in localStorage
+2. **Game Sessions**: Users play games, with progress automatically tracked and stored in localStorage
+3. **Progress Calculation**: XP, levels, and streaks are calculated and updated in real-time using static data hooks
+4. **Achievement Checking**: New achievements are evaluated and unlocked after each session with coin rewards
+5. **Data Visualization**: Progress data is transformed from localStorage and displayed in charts and visual components
+6. **Data Persistence**: All user data persists in browser localStorage across sessions
 
 ## External Dependencies
 
@@ -98,7 +96,7 @@ Preferred communication style: Simple, everyday language.
 
 The application is designed to be a comprehensive brain training platform with professional-grade user experience, robust data tracking, and engaging gamification elements specifically tailored for neurodivergent users.
 
-## Recent Changes (January 28, 2025)
+## Recent Changes (August 30, 2025)
 
 ### Growth Tree Level System Restructure
 - **Level Progression**: Levels 1-9 progress every 200 XP, level 10 reached at exactly 2000 XP
@@ -132,3 +130,13 @@ The application is designed to be a comprehensive brain training platform with p
 - **Sound Feedback**: Added proper audio feedback for correct/incorrect answers in all games with visual notifications
 - **Gnome Positioning**: Enhanced decoration system with mathematical semicircle positioning for perfect centering around trees with increased spacing (100% radius)
 - **Navigation Branding**: Added custom SVG brain logo to navigation header next to "Stimuli" title with gradient background
+
+### Static Deployment Conversion (August 30, 2025)
+- **Architecture Change**: Converted entire application from full-stack to static frontend-only for GitHub Pages deployment
+- **Data Management**: Replaced PostgreSQL database with localStorage-based persistence
+- **Authentication System**: Implemented client-side authentication using localStorage with password hashing
+- **React Query Replacement**: Removed all @tanstack/react-query dependencies and replaced with custom static data hooks
+- **API Layer Removal**: Eliminated all server API routes and database connections
+- **Build Configuration**: Created static-specific Vite configuration optimized for GitHub Pages
+- **Data Persistence**: All user progress, achievements, game sessions, and purchases now stored in browser localStorage
+- **Deployment Ready**: Application now fully compatible with GitHub Pages hosting without backend requirements

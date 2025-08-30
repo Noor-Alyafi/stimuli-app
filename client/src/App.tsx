@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Navigation } from "@/components/Navigation";
@@ -11,13 +9,18 @@ import Achievements from "@/pages/Achievements";
 import Journal from "@/pages/Journal";
 import Store from "@/pages/Store";
 import Garden from "@/pages/Garden";
-import { SaveProgressNotification } from "@/components/SaveProgressNotification";
 import { SaveProgressModal } from "@/components/SaveProgressModal";
+import { AuthProvider } from "@/hooks/useStaticAuth";
+import { LocalStorageManager } from "@/lib/localStorage";
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState("home");
-  const [showSaveNotification, setShowSaveNotification] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
+
+  // Initialize local storage data
+  useEffect(() => {
+    LocalStorageManager.initializeData();
+  }, []);
 
   // Listen for navigation events
   useEffect(() => {
@@ -76,10 +79,6 @@ function AppContent() {
       <main>
         {renderContent()}
       </main>
-      <SaveProgressNotification 
-        show={showSaveNotification} 
-        onClose={() => setShowSaveNotification(false)} 
-      />
       <SaveProgressModal 
         isOpen={showSaveModal} 
         onClose={() => setShowSaveModal(false)} 
@@ -90,12 +89,12 @@ function AppContent() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <AuthProvider>
       <TooltipProvider>
         <Toaster />
         <AppContent />
       </TooltipProvider>
-    </QueryClientProvider>
+    </AuthProvider>
   );
 }
 
