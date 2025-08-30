@@ -118,14 +118,14 @@ export const PerfectCartoonTree: React.FC<PerfectCartoonTreeProps> = ({
   const getGnomePositions = (count: number, treeWidth: number) => {
     if (count === 0) return [];
     
-    const radius = treeWidth * 0.4; // Distance from tree center
+    const radius = treeWidth * 0.7; // Increased distance from tree center
     const positions = [];
     
     // Place gnomes in a semicircle around the tree base
     for (let i = 0; i < count; i++) {
       const angle = (Math.PI / (count + 1)) * (i + 1); // Spread evenly in semicircle
       const x = Math.cos(angle) * radius; // Positive = right, negative = left
-      const z = Math.sin(angle) * radius * 0.3; // Depth illusion (smaller effect)
+      const z = Math.sin(angle) * radius * 0.2; // Reduced depth effect for better spacing
       
       positions.push({ 
         x: x, 
