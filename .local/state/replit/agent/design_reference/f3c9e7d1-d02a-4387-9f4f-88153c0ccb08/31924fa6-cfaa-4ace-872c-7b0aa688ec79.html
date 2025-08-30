@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stimuli - Train Your Brain in Color</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'electric-blue': '#0057E7',
+                        'soft-white': '#F5FAFF',
+                        'cyan-highlight': '#00C2CB',
+                        'dark-bg': '#121212',
+                    },
+                    animation: {
+                        'bounce-gentle': 'bounceGentle 2s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s ease-in-out infinite',
+                        'grow': 'grow 0.5s ease-out',
+                    },
+                    keyframes: {
+                        bounceGentle: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        grow: {
+                            '0%': { transform: 'scale(0.8)' },
+                            '100%': { transform: 'scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-poppins bg-soft-white dark:bg-dark-bg text-gray-800 dark:text-white transition-colors duration-300">
+    <!-- @COMPONENT: AppContainer -->
+    <div class="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen shadow-xl">
+        <!-- Header -->
+        <header class="bg-electric-blue dark:bg-gray-800 text-white p-4 rounded-b-3xl">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <h1 class="text-2xl font-bold">Stimuli 🧠</h1>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <!-- Dark Mode Toggle -->
+                    <button id="darkModeToggle" class="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors">
+                        <span class="text-lg">🌙</span>
+                    </button>
+                    <!-- Level Badge -->
+                    <div class="bg-cyan-highlight px-3 py-1 rounded-full text-sm font-semibold">
+                        <span data-bind="user.level">Neural Explorer</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="bg-white dark:bg-gray-800 px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex justify-around">
+                <button class="tab-btn active flex flex-col items-center py-2 px-3 rounded-lg transition-colors" data-tab="home">
+                    <span class="text-xl mb-1">🏠</span>
+                    <span class="text-xs font-medium">Home</span>
+                </button>
+                <button class="tab-btn flex flex-col items-center py-2 px-3 rounded-lg transition-colors" data-tab="games">
+                    <span class="text-xl mb-1">🎮</span>
+                    <span class="text-xs font-medium">Games</span>
+                </button>
+                <button class="tab-btn flex flex-col items-center py-2 px-3 rounded-lg transition-colors" data-tab="progress">
+                    <span class="text-xl mb-1">📈</span>
+                    <span class="text-xs font-medium">Progress</span>
+                </button>
+                <button class="tab-btn flex flex-col items-center py-2 px-3 rounded-lg transition-colors" data-tab="achievements">
+                    <span class="text-xl mb-1">🏆</span>
+                    <span class="text-xs font-medium">Badges</span>
+                </button>
+                <button class="tab-btn flex flex-col items-center py-2 px-3 rounded-lg transition-colors" data-tab="journal">
+                    <span class="text-xl mb-1">📓</span>
+                    <span class="text-xs font-medium">Journal</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Tab Content -->
+        <main class="p-4 pb-20">
+            <!-- Home Tab -->
+            <div id="home" class="tab-content">
+                <!-- Welcome Section -->
+                <div class="text-center mb-6">
+                    <h2 class="text-3xl font-bold mb-2 text-electric-blue dark:text-cyan-highlight">Welcome to Stimuli!</h2>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg">Train your brain in color 🌈</p>
+                </div>
+
+                <!-- Tree Visualization -->
+                <div class="bg-gradient-to-b from-blue-50 to-green-50 dark:from-gray-800 dark:to-gray-700 rounded-3xl p-6 mb-6 text-center">
+                    <div class="tree-container relative">
+                        <!-- Tree Stage: Currently showing blooming tree (51-100 XP) -->
+                        <div class="text-8xl mb-4 animate-bounce-gentle">🌸</div>
+                        <div class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Your Progress Tree</div>
+                        <div class="text-2xl font-bold text-electric-blue dark:text-cyan-highlight" data-bind="user.xp">85 XP</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">15 XP to next stage! 🌳</div>
+                    </div>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div class="text-2xl mb-2">🔥</div>
+                        <div class="text-2xl font-bold text-electric-blue dark:text-cyan-highlight" data-bind="user.streak">7</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">Day Streak</div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div class="text-2xl mb-2">🎯</div>
+                        <div class="text-2xl font-bold text-electric-blue dark:text-cyan-highlight" data-bind="user.gamesPlayed">23</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">Games Played</div>
+                    </div>
+                </div>
+
+                <!-- Daily Quote -->
+                <div class="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900 dark:to-pink-900 p-4 rounded-2xl mb-6">
+                    <div class="text-center">
+                        <div class="text-2xl mb-2">✨</div>
+                        <p class="text-lg font-medium text-purple-800 dark:text-purple-200" data-bind="dailyQuote">"You're literally smarter than yesterday"</p>
+                    </div>
+                </div>
+
+                <!-- Play Today's Game Button -->
+                <button class="w-full bg-electric-blue hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-2xl text-lg transition-all duration-200 transform hover:scale-105 active:scale-95 mb-4">
+                    🎮 Start Today's Game
+                </button>
+
+                <!-- Quick Stats -->
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <h3 class="font-semibold mb-3 text-gray-800 dark:text-gray-200">Today's Progress</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">XP Progress</span>
+                            <span class="text-sm font-medium">85/100</span>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                            <div class="bg-electric-blue h-2 rounded-full transition-all duration-500" style="width: 85%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Games Tab -->
+            <div id="games" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-6 text-center text-electric-blue dark:text-cyan-highlight">Brain Training Games</h2>
+                
+                <div class="space-y-4">
+                    <!-- Game Card 1 -->
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center space-x-4">
+                            <div class="text-4xl">🎨</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-lg">Color Echo</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Match the color to the sound — how strong are your senses today?</p>
+                            </div>
+                            <button class="bg-electric-blue hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-medium transition-colors">
+                                Play
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Game Card 2 -->
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center space-x-4">
+                            <div class="text-4xl">🔤</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-lg">Synesthetic Recall</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Connect words to colors in this memory-boosting challenge!</p>
+                            </div>
+                            <button class="bg-electric-blue hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-medium transition-colors">
+                                Play
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Game Card 3 -->
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center space-x-4">
+                            <div class="text-4xl">🔲</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-lg">Shape Sequence</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Remember the pattern and repeat it back. Test your visual memory!</p>
+                            </div>
+                            <button class="bg-electric-blue hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-medium transition-colors">
+                                Play
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Game Card 4 -->
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center space-x-4">
+                            <div class="text-4xl">🔍</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-lg">Spotlight</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Find the odd one out in this attention-training game!</p>
+                            </div>
+                            <button class="bg-electric-blue hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-medium transition-colors">
+                                Play
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game Instructions -->
+                <div class="mt-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-2xl">
+                    <h3 class="font-bold text-electric-blue dark:text-cyan-highlight mb-2">💡 How to Play</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Each game takes about 2 minutes. Complete games to earn XP and grow your tree! 🌱</p>
+                </div>
+            </div>
+
+            <!-- Progress Tab -->
+            <div id="progress" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-6 text-center text-electric-blue dark:text-cyan-highlight">Your Progress</h2>
+                
+                <!-- Tree Growth Stages -->
+                <div class="bg-gradient-to-b from-blue-50 to-green-50 dark:from-gray-800 dark:to-gray-700 rounded-3xl p-6 mb-6">
+                    <h3 class="font-bold text-center mb-4">Tree Growth Journey</h3>
+                    <div class="grid grid-cols-4 gap-2 text-center">
+                        <div class="opacity-100">
+                            <div class="text-3xl mb-2">🌱</div>
+                            <div class="text-xs text-gray-600 dark:text-gray-400">0-10 XP</div>
+                        </div>
+                        <div class="opacity-100">
+                            <div class="text-3xl mb-2">🌿</div>
+                            <div class="text-xs text-gray-600 dark:text-gray-400">11-50 XP</div>
+                        </div>
+                        <div class="opacity-100 ring-2 ring-electric-blue rounded-lg p-2">
+                            <div class="text-3xl mb-2">🌸</div>
+                            <div class="text-xs text-electric-blue dark:text-cyan-highlight font-bold">51-100 XP</div>
+                        </div>
+                        <div class="opacity-50">
+                            <div class="text-3xl mb-2">🌳</div>
+                            <div class="text-xs text-gray-600 dark:text-gray-400">100+ XP</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Stats -->
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div class="text-2xl mb-2">⚡</div>
+                        <div class="text-2xl font-bold text-electric-blue dark:text-cyan-highlight">85</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">Total XP</div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div class="text-2xl mb-2">🏆</div>
+                        <div class="text-2xl font-bold text-electric-blue dark:text-cyan-highlight">Neural Explorer</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">Current Level</div>
+                    </div>
+                </div>
+
+                <!-- Performance Chart -->
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
+                    <h3 class="font-bold mb-4">Weekly Performance</h3>
+                    <div class="flex items-end justify-between h-32 space-x-2">
+                        <div class="flex flex-col items-center">
+                            <div class="bg-electric-blue w-8 rounded-t" style="height: 60%"></div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 mt-2">Mon</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="bg-electric-blue w-8 rounded-t" style="height: 80%"></div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 mt-2">Tue</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="bg-electric-blue w-8 rounded-t" style="height: 45%"></div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 mt-2">Wed</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="bg-electric-blue w-8 rounded-t" style="height: 90%"></div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 mt-2">Thu</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="bg-electric-blue w-8 rounded-t" style="height: 100%"></div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 mt-2">Fri</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="bg-electric-blue w-8 rounded-t" style="height: 70%"></div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 mt-2">Sat</span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="bg-cyan-highlight w-8 rounded-t" style="height: 85%"></div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 mt-2">Sun</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Streak Progress -->
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <h3 class="font-bold mb-4">🔥 Streak Progress</h3>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm text-gray-600 dark:text-gray-400">Current Streak</span>
+                        <span class="text-sm font-medium">7 days</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-4">
+                        <div class="bg-gradient-to-r from-orange-400 to-red-500 h-2 rounded-full" style="width: 70%"></div>
+                    </div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">3 more days to reach 10-day streak! 🎯</div>
+                </div>
+            </div>
+
+            <!-- Achievements Tab -->
+            <div id="achievements" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-6 text-center text-electric-blue dark:text-cyan-highlight">Achievements</h2>
+                
+                <div class="space-y-4">
+                    <!-- Earned Badges -->
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center space-x-4">
+                            <div class="text-4xl">🧠</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-lg">Neural Spark</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">First game completed!</p>
+                                <p class="text-xs text-cyan-highlight">Earned: 3 days ago</p>
+                            </div>
+                            <div class="bg-green-100 dark:bg-green-900 px-3 py-1 rounded-full">
+                                <span class="text-xs text-green-800 dark:text-green-200 font-medium">✓ Unlocked</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center space-x-4">
+                            <div class="text-4xl">🔥</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-lg">Streak Keeper</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Maintained a 5-day streak!</p>
+                                <p class="text-xs text-cyan-highlight">Earned: 2 days ago</p>
+                            </div>
+                            <div class="bg-green-100 dark:bg-green-900 px-3 py-1 rounded-full">
+                                <span class="text-xs text-green-800 dark:text-green-200 font-medium">✓ Unlocked</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center space-x-4">
+                            <div class="text-4xl">🌺</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-lg">Tree Bloomer</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Grew your tree to blooming stage!</p>
+                                <p class="text-xs text-cyan-highlight">Earned: Yesterday</p>
+                            </div>
+                            <div class="bg-green-100 dark:bg-green-900 px-3 py-1 rounded-full">
+                                <span class="text-xs text-green-800 dark:text-green-200 font-medium">✓ Unlocked</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Locked Badges -->
+                    <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 opacity-60">
+                        <div class="flex items-center space-x-4">
+                            <div class="text-4xl grayscale">🌳</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-lg">Forest Master</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Reach 100 XP to unlock the full tree!</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Progress: 85/100 XP</p>
+                            </div>
+                            <div class="bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
+                                <span class="text-xs text-gray-600 dark:text-gray-400 font-medium">🔒 Locked</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 opacity-60">
+                        <div class="flex items-center space-x-4">
+                            <div class="text-4xl grayscale">👑</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-lg">Streak Royalty</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Achieve a 30-day streak!</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Progress: 7/30 days</p>
+                            </div>
+                            <div class="bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
+                                <span class="text-xs text-gray-600 dark:text-gray-400 font-medium">🔒 Locked</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievement Progress -->
+                <div class="mt-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-2xl">
+                    <h3 class="font-bold text-electric-blue dark:text-cyan-highlight mb-2">🎯 Next Goal</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">You're 15 XP away from unlocking Forest Master! Keep playing to grow your tree! 🌳</p>
+                </div>
+            </div>
+
+            <!-- Journal Tab -->
+            <div id="journal" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-6 text-center text-electric-blue dark:text-cyan-highlight">Daily Journal</h2>
+                
+                <!-- Mood Tracker -->
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
+                    <h3 class="font-bold mb-4">How focused do you feel today?</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-4">
+                            <span class="text-2xl">😴</span>
+                            <input type="range" min="1" max="5" value="4" class="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none slider">
+                            <span class="text-2xl">🚀</span>
+                        </div>
+                        <div class="text-center">
+                            <span class="text-lg font-medium text-electric-blue dark:text-cyan-highlight">Very Focused</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mood History -->
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
+                    <h3 class="font-bold mb-4">This Week's Mood</h3>
+                    <div class="grid grid-cols-7 gap-2">
+                        <div class="text-center">
+                            <div class="text-2xl mb-1">😊</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Mon</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl mb-1">🚀</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Tue</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl mb-1">😐</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Wed</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl mb-1">😊</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Thu</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl mb-1">🚀</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Fri</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl mb-1">😊</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Sat</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl mb-1 ring-2 ring-electric-blue rounded-full p-1">🚀</div>
+                            <div class="text-xs text-electric-blue dark:text-cyan-highlight font-bold">Sun</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reflection -->
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
+                    <h3 class="font-bold mb-4">What did today's games make you feel?</h3>
+                    <textarea 
+                        class="w-full h-24 p-3 border border-gray-200 dark:border-gray-600 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-electric-blue dark:bg-gray-700 dark:text-white" 
+                        placeholder="Share your thoughts about today's brain training session..."
+                        data-implementation="Should save to database and award +5 XP on submission"></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button class="w-full bg-electric-blue hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-2xl transition-all duration-200 transform hover:scale-105 active:scale-95 mb-4">
+                    💾 Save Journal Entry (+5 XP)
+                </button>
+
+                <!-- Recent Entries -->
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <h3 class="font-bold mb-4">Recent Entries</h3>
+                    <div class="space-y-3">
+                        <div class="border-l-4 border-electric-blue pl-3">
+                            <div class="text-sm font-medium">Yesterday</div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">"The Color Echo game really helped me focus. I noticed I was much more aware of colors around me afterward!"</p>
+                        </div>
+                        <div class="border-l-4 border-gray-300 pl-3">
+                            <div class="text-sm font-medium">2 days ago</div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">"Struggled with Shape Sequence today but I can feel my memory improving gradually."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- @END_COMPONENT: AppContainer -->
+
+    <script>
+        // Tab switching functionality
+        (function() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabName = this.dataset.tab;
+                    
+                    // Remove active class from all buttons
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    // Hide all tab contents
+                    tabContents.forEach(content => content.classList.add('hidden'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    // Show corresponding tab content
+                    document.getElementById(tabName).classList.remove('hidden');
+                });
+            });
+        })();
+
+        // Dark mode toggle
+        (function() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const html = document.documentElement;
+            
+            darkModeToggle.addEventListener('click', function() {
+                html.classList.toggle('dark');
+                const isDark = html.classList.contains('dark');
+                this.innerHTML = isDark ? '<span class="text-lg">☀️</span>' : '<span class="text-lg">🌙</span>';
+            });
+        })();
+
+        // Mood slider interaction
+        (function() {
+            const moodSlider = document.querySelector('input[type="range"]');
+            const moodLabel = document.querySelector('.text-lg.font-medium');
+            const moodEmojis = ['😴', '😐', '😊', '🙂', '🚀'];
+            const moodLabels = ['Very Sleepy', 'Tired', 'Okay', 'Good', 'Very Focused'];
+            
+            if (moodSlider) {
+                moodSlider.addEventListener('input', function() {
+                    const value = parseInt(this.value);
+                    moodLabel.textContent = moodLabels[value - 1];
+                    
+                    // Add visual feedback
+                    moodLabel.classList.add('animate-pulse');
+                    setTimeout(() => {
+                        moodLabel.classList.remove('animate-pulse');
+                    }, 200);
+                });
+            }
+        })();
+
+        // Button click animations
+        (function() {
+            const buttons = document.querySelectorAll('button');
+            
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // TODO: Implement actual game launching, XP tracking, and data persistence
+                    
+                    // Add visual feedback
+                    this.classList.add('animate-grow');
+                    setTimeout(() => {
+                        this.classList.remove('animate-grow');
+                    }, 500);
+                });
+            });
+        })();
+
+        // Add custom styles for active tab
+        const style = document.createElement('style');
+        style.textContent = `
+            .tab-btn.active {
+                background-color: #0057E7;
+                color: white;
+            }
+            
+            .dark .tab-btn.active {
+                background-color: #00C2CB;
+                color: white;
+            }
+            
+            .slider::-webkit-slider-thumb {
+                appearance: none;
+                width: 24px;
+                height: 24px;
+                background: #0057E7;
+                cursor: pointer;
+                border-radius: 50%;
+                box-shadow: 0 2px 8px rgba(0, 87, 231, 0.3);
+            }
+            
+            .dark .slider::-webkit-slider-thumb {
+                background: #00C2CB;
+                box-shadow: 0 2px 8px rgba(0, 194, 203, 0.3);
+            }
+            
+            .animate-grow {
+                animation: grow 0.5s ease-out;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

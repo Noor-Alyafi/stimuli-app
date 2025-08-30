@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stimuli - Train Your Mind</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'open-sans': ['Open Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        'navy': '#002E5D',
+                        'cyan': '#00C2CB',
+                        'light-gray': '#F9FAFB',
+                        'dark-bg': '#121212',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'pulse-gentle': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-light-gray font-open-sans">
+    <!-- @COMPONENT: App Container -->
+    <div class="min-h-screen bg-gradient-to-br from-light-gray to-white">
+        <!-- @COMPONENT: Header -->
+        <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-r from-navy to-cyan rounded-xl flex items-center justify-center">
+                            <i class="fas fa-brain text-white text-lg"></i>
+                        </div>
+                        <h1 class="text-2xl font-inter font-bold text-navy">Stimuli</h1>
+                    </div>
+                    
+                    <!-- @COMPONENT: User Profile -->
+                    <div class="flex items-center space-x-4">
+                        <div class="hidden sm:flex items-center space-x-2 bg-gray-100 px-4 py-2 rounded-full">
+                            <i class="fas fa-fire text-orange-500"></i>
+                            <span class="text-sm font-medium text-gray-700" data-bind="user.streak">7 Day Streak</span>
+                        </div>
+                        <div class="w-10 h-10 bg-gradient-to-r from-cyan to-blue-500 rounded-full flex items-center justify-center">
+                            <span class="text-white font-medium text-sm" data-bind="user.level">3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- @COMPONENT: Navigation Tabs -->
+        <nav class="bg-white border-b border-gray-200 sticky top-16 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex space-x-8 overflow-x-auto">
+                    <button class="tab-button active py-4 px-2 border-b-2 border-navy text-navy font-medium text-sm whitespace-nowrap" data-tab="home">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </button>
+                    <button class="tab-button py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm whitespace-nowrap" data-tab="training">
+                        <i class="fas fa-gamepad mr-2"></i>Training
+                    </button>
+                    <button class="tab-button py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm whitespace-nowrap" data-tab="progress">
+                        <i class="fas fa-chart-line mr-2"></i>Progress
+                    </button>
+                    <button class="tab-button py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm whitespace-nowrap" data-tab="achievements">
+                        <i class="fas fa-trophy mr-2"></i>Achievements
+                    </button>
+                    <button class="tab-button py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm whitespace-nowrap" data-tab="journal">
+                        <i class="fas fa-book mr-2"></i>Journal
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- @COMPONENT: Main Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            
+            <!-- @COMPONENT: Home Tab -->
+            <div class="tab-content" id="home-tab">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Welcome Section -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="bg-white rounded-2xl shadow-sm p-8 animate-fade-in">
+                            <h2 class="text-3xl font-inter font-bold text-navy mb-2">Welcome back!</h2>
+                            <p class="text-gray-600 text-lg mb-6">Ready to train your mind today?</p>
+                            
+                            <!-- XP Progress Bar -->
+                            <div class="mb-6">
+                                <div class="flex justify-between text-sm text-gray-600 mb-2">
+                                    <span>Level 3 - Neural Explorer</span>
+                                    <span data-bind="user.xp">180 / 250 XP</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-3">
+                                    <div class="bg-gradient-to-r from-navy to-cyan h-3 rounded-full transition-all duration-500" style="width: 72%"></div>
+                                </div>
+                            </div>
+
+                            <!-- Daily Challenge -->
+                            <div class="bg-gradient-to-r from-cyan/10 to-blue-500/10 rounded-xl p-6 border-l-4 border-cyan">
+                                <h3 class="font-inter font-semibold text-navy mb-2">Today's Challenge</h3>
+                                <p class="text-gray-600 mb-4">Complete 2 training sessions to maintain your streak</p>
+                                <button class="bg-navy text-white px-6 py-3 rounded-xl font-medium hover:bg-navy/90 transition-colors">
+                                    Start Training
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Daily Quote -->
+                        <div class="bg-white rounded-2xl shadow-sm p-6 animate-fade-in">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <i class="fas fa-quote-left text-cyan text-xl"></i>
+                                <h3 class="font-inter font-semibold text-navy">Daily Motivation</h3>
+                            </div>
+                            <p class="text-gray-700 text-lg italic" data-mock="true">"Your mind is like a muscle - the more you challenge it, the stronger it becomes."</p>
+                        </div>
+                    </div>
+
+                    <!-- Growth Tree Visualization -->
+                    <div class="bg-white rounded-2xl shadow-sm p-8 animate-fade-in">
+                        <h3 class="font-inter font-semibold text-navy mb-6 text-center">Your Growth Tree</h3>
+                        
+                        <!-- @FUNCTIONALITY: SVG Tree that grows with XP levels -->
+                        <div class="flex justify-center mb-6">
+                            <svg width="200" height="240" viewBox="0 0 200 240" class="drop-shadow-sm">
+                                <!-- Tree Trunk -->
+                                <rect x="95" y="180" width="10" height="40" fill="#8B4513" rx="2"/>
+                                
+                                <!-- Tree Base -->
+                                <ellipse cx="100" cy="220" rx="15" ry="8" fill="#22C55E" opacity="0.3"/>
+                                
+                                <!-- Level 1 Branches -->
+                                <circle cx="100" cy="160" r="25" fill="#22C55E" opacity="0.8"/>
+                                
+                                <!-- Level 2 Branches -->
+                                <circle cx="85" cy="140" r="20" fill="#16A34A" opacity="0.9"/>
+                                <circle cx="115" cy="140" r="20" fill="#16A34A" opacity="0.9"/>
+                                
+                                <!-- Level 3 Branches (Current) -->
+                                <circle cx="100" cy="120" r="18" fill="#15803D"/>
+                                <circle cx="75" cy="125" r="15" fill="#15803D"/>
+                                <circle cx="125" cy="125" r="15" fill="#15803D"/>
+                                
+                                <!-- Achievement Flowers -->
+                                <g class="animate-pulse-gentle">
+                                    <circle cx="90" cy="115" r="4" fill="#F59E0B"/>
+                                    <circle cx="110" cy="115" r="4" fill="#F59E0B"/>
+                                    <circle cx="100" cy="105" r="4" fill="#EF4444"/>
+                                </g>
+                                
+                                <!-- Next Level Preview (faded) -->
+                                <circle cx="100" cy="90" r="12" fill="#22C55E" opacity="0.3"/>
+                                <circle cx="85" cy="95" r="10" fill="#22C55E" opacity="0.3"/>
+                                <circle cx="115" cy="95" r="10" fill="#22C55E" opacity="0.3"/>
+                            </svg>
+                        </div>
+                        
+                        <!-- Tree Stats -->
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-600">Current Level</span>
+                                <span class="font-medium text-navy" data-bind="user.level">Neural Explorer</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-600">Branches Grown</span>
+                                <span class="font-medium text-green-600" data-bind="user.branches">7</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-600">Flowers Earned</span>
+                                <span class="font-medium text-yellow-600" data-bind="user.flowers">3</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Tooltip for XP -->
+                        <div class="mt-4 p-3 bg-gray-50 rounded-lg text-center">
+                            <p class="text-sm text-gray-600">XP: <span class="font-medium text-navy" data-bind="user.xp">180</span> | Level: <span class="font-medium text-navy" data-bind="user.level">3</span></p>
+                            <p class="text-xs text-gray-500 mt-1">Your mind is blooming! 🌸</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- @COMPONENT: Training Tab -->
+            <div class="tab-content hidden" id="training-tab">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-inter font-bold text-navy mb-2">Cognitive Training</h2>
+                    <p class="text-gray-600">Challenge your mind with scientifically-designed exercises</p>
+                </div>
+
+                <!-- @MAP: games.map(game => ( -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Color Echo Game -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow animate-fade-in">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-palette text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-inter font-semibold text-navy">Color Echo</h3>
+                                <p class="text-sm text-gray-500">Synesthetic Memory</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">Match colors to sounds and strengthen cross-sensory connections.</p>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-sm text-gray-500">Best Score: <span class="font-medium text-navy" data-bind="game.colorEcho.bestScore">85%</span></span>
+                            <span class="text-sm text-gray-500">+10 XP</span>
+                        </div>
+                        <button class="w-full bg-navy text-white py-3 rounded-xl font-medium hover:bg-navy/90 transition-colors" data-event="click:startColorEcho">
+                            Start Training
+                        </button>
+                    </div>
+
+                    <!-- Pattern Memory Game -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow animate-fade-in">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan text-white rounded-xl flex items-center justify-center">
+                                <i class="fas fa-shapes text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-inter font-semibold text-navy">Shape Sequence</h3>
+                                <p class="text-sm text-gray-500">Pattern Recognition</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">Remember and reproduce complex visual patterns.</p>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-sm text-gray-500">Best Score: <span class="font-medium text-navy" data-bind="game.shapeSequence.bestScore">78%</span></span>
+                            <span class="text-sm text-gray-500">+10 XP</span>
+                        </div>
+                        <button class="w-full bg-navy text-white py-3 rounded-xl font-medium hover:bg-navy/90 transition-colors" data-event="click:startShapeSequence">
+                            Start Training
+                        </button>
+                    </div>
+
+                    <!-- Attention Focus Game -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow animate-fade-in">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-eye text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-inter font-semibold text-navy">Spotlight</h3>
+                                <p class="text-sm text-gray-500">Attention Training</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">Find the odd one out and improve focused attention.</p>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-sm text-gray-500">Best Score: <span class="font-medium text-navy" data-bind="game.spotlight.bestScore">92%</span></span>
+                            <span class="text-sm text-gray-500">+10 XP</span>
+                        </div>
+                        <button class="w-full bg-navy text-white py-3 rounded-xl font-medium hover:bg-navy/90 transition-colors" data-event="click:startSpotlight">
+                            Start Training
+                        </button>
+                    </div>
+
+                    <!-- Word Association Game -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow animate-fade-in">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-font text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-inter font-semibold text-navy">Synesthetic Recall</h3>
+                                <p class="text-sm text-gray-500">Word-Color Memory</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">Connect words with colors to enhance semantic memory.</p>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-sm text-gray-500">Best Score: <span class="font-medium text-navy" data-bind="game.synestheticRecall.bestScore">73%</span></span>
+                            <span class="text-sm text-gray-500">+10 XP</span>
+                        </div>
+                        <button class="w-full bg-navy text-white py-3 rounded-xl font-medium hover:bg-navy/90 transition-colors" data-event="click:startSynestheticRecall">
+                            Start Training
+                        </button>
+                    </div>
+
+                    <!-- Working Memory Game -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow animate-fade-in">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-memory text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-inter font-semibold text-navy">Memory Matrix</h3>
+                                <p class="text-sm text-gray-500">Working Memory</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">Remember and manipulate information in your mind.</p>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-sm text-gray-500">Best Score: <span class="font-medium text-navy" data-bind="game.memoryMatrix.bestScore">68%</span></span>
+                            <span class="text-sm text-gray-500">+10 XP</span>
+                        </div>
+                        <button class="w-full bg-navy text-white py-3 rounded-xl font-medium hover:bg-navy/90 transition-colors" data-event="click:startMemoryMatrix">
+                            Start Training
+                        </button>
+                    </div>
+
+                    <!-- Speed Processing Game -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow animate-fade-in">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-tachometer-alt text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-inter font-semibold text-navy">Quick Response</h3>
+                                <p class="text-sm text-gray-500">Processing Speed</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">React quickly to visual stimuli and improve mental speed.</p>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-sm text-gray-500">Best Score: <span class="font-medium text-navy" data-bind="game.quickResponse.bestScore">89%</span></span>
+                            <span class="text-sm text-gray-500">+10 XP</span>
+                        </div>
+                        <button class="w-full bg-navy text-white py-3 rounded-xl font-medium hover:bg-navy/90 transition-colors" data-event="click:startQuickResponse">
+                            Start Training
+                        </button>
+                    </div>
+                </div>
+                <!-- @END_MAP -->
+            </div>
+
+            <!-- @COMPONENT: Progress Tab -->
+            <div class="tab-content hidden" id="progress-tab">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-inter font-bold text-navy mb-2">Your Progress</h2>
+                    <p class="text-gray-600">Track your cognitive development over time</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Progress Chart -->
+                    <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm p-8">
+                        <h3 class="font-inter font-semibold text-navy mb-6">Performance Trends</h3>
+                        
+                        <!-- @FUNCTIONALITY: Chart showing performance over time -->
+                        <div class="h-64 bg-gray-50 rounded-xl flex items-center justify-center mb-6">
+                            <svg width="600" height="200" viewBox="0 0 600 200" class="w-full h-full">
+                                <!-- Chart Lines -->
+                                <defs>
+                                    <linearGradient id="performanceGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#00C2CB;stop-opacity:0.3" />
+                                        <stop offset="100%" style="stop-color:#00C2CB;stop-opacity:0" />
+                                    </linearGradient>
+                                </defs>
+                                
+                                <!-- Grid Lines -->
+                                <g stroke="#E5E7EB" stroke-width="1" opacity="0.5">
+                                    <line x1="50" y1="20" x2="50" y2="180" />
+                                    <line x1="150" y1="20" x2="150" y2="180" />
+                                    <line x1="250" y1="20" x2="250" y2="180" />
+                                    <line x1="350" y1="20" x2="350" y2="180" />
+                                    <line x1="450" y1="20" x2="450" y2="180" />
+                                    <line x1="550" y1="20" x2="550" y2="180" />
+                                </g>
+                                
+                                <!-- Progress Line -->
+                                <polyline fill="none" stroke="#00C2CB" stroke-width="3" points="50,150 150,130 250,110 350,95 450,80 550,70" />
+                                <polygon fill="url(#performanceGradient)" points="50,150 150,130 250,110 350,95 450,80 550,70 550,180 50,180" />
+                                
+                                <!-- Data Points -->
+                                <circle cx="50" cy="150" r="4" fill="#002E5D" />
+                                <circle cx="150" cy="130" r="4" fill="#002E5D" />
+                                <circle cx="250" cy="110" r="4" fill="#002E5D" />
+                                <circle cx="350" cy="95" r="4" fill="#002E5D" />
+                                <circle cx="450" cy="80" r="4" fill="#002E5D" />
+                                <circle cx="550" cy="70" r="4" fill="#00C2CB" />
+                            </svg>
+                        </div>
+                        
+                        <!-- Performance Metrics -->
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="text-center p-4 bg-cyan/10 rounded-xl">
+                                <div class="text-2xl font-bold text-cyan" data-bind="metrics.overall">82%</div>
+                                <div class="text-sm text-gray-600">Overall Score</div>
+                            </div>
+                            <div class="text-center p-4 bg-green-50 rounded-xl">
+                                <div class="text-2xl font-bold text-green-600" data-bind="metrics.improvement">+15%</div>
+                                <div class="text-sm text-gray-600">Improvement</div>
+                            </div>
+                            <div class="text-center p-4 bg-blue-50 rounded-xl">
+                                <div class="text-2xl font-bold text-blue-600" data-bind="metrics.consistency">7 days</div>
+                                <div class="text-sm text-gray-600">Consistency</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tree Growth & Stats -->
+                    <div class="space-y-6">
+                        <!-- Tree Progress -->
+                        <div class="bg-white rounded-2xl shadow-sm p-6">
+                            <h3 class="font-inter font-semibold text-navy mb-4">Growth Tree</h3>
+                            
+                            <!-- Simplified Tree -->
+                            <div class="flex justify-center mb-4">
+                                <svg width="120" height="140" viewBox="0 0 120 140">
+                                    <!-- Tree structure similar to home but smaller -->
+                                    <rect x="55" y="110" width="8" height="25" fill="#8B4513" rx="2"/>
+                                    <ellipse cx="60" cy="135" rx="12" ry="6" fill="#22C55E" opacity="0.3"/>
+                                    <circle cx="60" cy="100" r="18" fill="#22C55E" opacity="0.8"/>
+                                    <circle cx="50" cy="85" r="14" fill="#16A34A" opacity="0.9"/>
+                                    <circle cx="70" cy="85" r="14" fill="#16A34A" opacity="0.9"/>
+                                    <circle cx="60" cy="72" r="12" fill="#15803D"/>
+                                    <circle cx="46" cy="76" r="10" fill="#15803D"/>
+                                    <circle cx="74" cy="76" r="10" fill="#15803D"/>
+                                    <circle cx="55" cy="65" r="3" fill="#F59E0B"/>
+                                    <circle cx="65" cy="65" r="3" fill="#F59E0B"/>
+                                    <circle cx="60" cy="58" r="3" fill="#EF4444"/>
+                                </svg>
+                            </div>
+                            
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Total XP</span>
+                                    <span class="font-medium text-navy" data-bind="user.totalXP">1,240</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Level</span>
+                                    <span class="font-medium text-navy" data-bind="user.level">Neural Explorer</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Days Active</span>
+                                    <span class="font-medium text-navy" data-bind="user.daysActive">23</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Breakdown -->
+                        <div class="bg-white rounded-2xl shadow-sm p-6">
+                            <h3 class="font-inter font-semibold text-navy mb-4">Skill Breakdown</h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span class="text-gray-600">Memory</span>
+                                        <span class="font-medium text-navy" data-bind="skills.memory">85%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-blue-500 h-2 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span class="text-gray-600">Attention</span>
+                                        <span class="font-medium text-navy" data-bind="skills.attention">78%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-green-500 h-2 rounded-full" style="width: 78%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span class="text-gray-600">Processing Speed</span>
+                                        <span class="font-medium text-navy" data-bind="skills.speed">82%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-yellow-500 h-2 rounded-full" style="width: 82%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span class="text-gray-600">Pattern Recognition</span>
+                                        <span class="font-medium text-navy" data-bind="skills.pattern">90%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-purple-500 h-2 rounded-full" style="width: 90%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- @COMPONENT: Achievements Tab -->
+            <div class="tab-content hidden" id="achievements-tab">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-inter font-bold text-navy mb-2">Achievements</h2>
+                    <p class="text-gray-600">Celebrate your cognitive milestones</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Earned Achievements -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6 border-2 border-cyan/20">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-cyan to-blue-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-brain text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-inter font-semibold text-navy">Neural Spark</h3>
+                                <p class="text-sm text-cyan">Unlocked!</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">Complete your first brain training session</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">Earned: Jan 15, 2024</span>
+                            <span class="text-sm font-medium text-cyan">+50 XP</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm p-6 border-2 border-orange-200">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-fire text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-inter font-semibold text-navy">Focused Flame</h3>
+                                <p class="text-sm text-orange-600">Unlocked!</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">Maintain a 7-day training streak</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">Earned: Jan 22, 2024</span>
+                            <span class="text-sm font-medium text-orange-600">+100 XP</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm p-6 border-2 border-purple-200">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-palette text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-inter font-semibold text-navy">Synesthetic Pro</h3>
+                                <p class="text-sm text-purple-600">Unlocked!</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4">Master all color-sound matching games</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">Earned: Jan 18, 2024</span>
+                            <span class="text-sm font-medium text-purple-600">+75 XP</span>
+                        </div>
+                    </div>
+
+                    <!-- Locked Achievements -->
+                    <div class="bg-white rounded-2xl shadow-sm p-6 border-2 border-gray-200 opacity-75">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
+                                <i class="fas fa-lock text-gray-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-inter font-semibold text-gray-700">Memory Master</h3>
+                                <p class="text-sm text-gray-500">Locked</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-500 mb-4">Score 95% or higher on all memory games</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">Progress: 3/6 games</span>
+                            <span class="text-sm font-medium text-gray-400">+150 XP</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm p-6 border-2 border-gray-200 opacity-75">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
+                                <i class="fas fa-rocket text-gray-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-inter font-semibold text-gray-700">Speed Demon</h3>
+                                <p class="text-sm text-gray-500">Locked</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-500 mb-4">Complete 10 games in under 5 minutes each</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">Progress: 4/10 games</span>
+                            <span class="text-sm font-medium text-gray-400">+200 XP</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm p-6 border-2 border-gray-200 opacity-75">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
+                                <i class="fas fa-tree text-gray-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-inter font-semibold text-gray-700">Tree Sage</h3>
+                                <p class="text-sm text-gray-500">Locked</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-500 mb-4">Grow your tree to maximum level</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">Progress: Level 3/10</span>
+                            <span class="text-sm font-medium text-gray-400">+500 XP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- @COMPONENT: Journal Tab -->
+            <div class="tab-content hidden" id="journal-tab">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-inter font-bold text-navy mb-2">Mind Journal</h2>
+                    <p class="text-gray-600">Track your thoughts and cognitive wellness</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Daily Check-in -->
+                    <div class="bg-white rounded-2xl shadow-sm p-8">
+                        <h3 class="font-inter font-semibold text-navy mb-6">Daily Check-in</h3>
+                        
+                        <form class="space-y-6" data-implementation="Should save to Google Sheets">
+                            <!-- Mood Slider -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-3">How focused do you feel today?</label>
+                                <div class="relative">
+                                    <input type="range" min="1" max="10" value="7" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider" id="focus-range">
+                                    <div class="flex justify-between text-sm text-gray-500 mt-2">
+                                        <span>Scattered</span>
+                                        <span>Laser-focused</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Energy Level -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-3">Energy Level</label>
+                                <div class="flex space-x-2">
+                                    <button type="button" class="mood-btn px-4 py-2 rounded-full border-2 border-gray-200 text-gray-600 hover:border-red-300 hover:text-red-600">
+                                        <i class="fas fa-battery-quarter mr-2"></i>Low
+                                    </button>
+                                    <button type="button" class="mood-btn px-4 py-2 rounded-full border-2 border-gray-200 text-gray-600 hover:border-yellow-300 hover:text-yellow-600">
+                                        <i class="fas fa-battery-half mr-2"></i>Medium
+                                    </button>
+                                    <button type="button" class="mood-btn px-4 py-2 rounded-full border-2 border-cyan border-cyan text-cyan">
+                                        <i class="fas fa-battery-full mr-2"></i>High
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Reflection -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-3">What did today's training make you feel?</label>
+                                <textarea 
+                                    class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan focus:border-transparent resize-none" 
+                                    rows="4" 
+                                    placeholder="Describe your experience, insights, or any challenges you faced..."
+                                    data-mock="true"
+                                ></textarea>
+                            </div>
+
+                            <!-- Submit -->
+                            <button type="submit" class="w-full bg-navy text-white py-3 rounded-xl font-medium hover:bg-navy/90 transition-colors" data-event="click:submitJournal">
+                                Save Entry (+5 XP)
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Journal History -->
+                    <div class="bg-white rounded-2xl shadow-sm p-8">
+                        <h3 class="font-inter font-semibold text-navy mb-6">Recent Entries</h3>
+                        
+                        <div class="space-y-4">
+                            <!-- Entry 1 -->
+                            <div class="border-l-4 border-cyan pl-4 py-3" data-mock="true">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="text-sm font-medium text-gray-700">January 23, 2024</span>
+                                    <span class="text-sm text-gray-500">Focus: 8/10</span>
+                                </div>
+                                <p class="text-gray-600 text-sm">Felt really sharp today! The color-sound games are starting to click. I noticed I'm getting faster at pattern recognition.</p>
+                            </div>
+
+                            <!-- Entry 2 -->
+                            <div class="border-l-4 border-yellow-400 pl-4 py-3" data-mock="true">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="text-sm font-medium text-gray-700">January 22, 2024</span>
+                                    <span class="text-sm text-gray-500">Focus: 6/10</span>
+                                </div>
+                                <p class="text-gray-600 text-sm">Distracted today but pushed through my training anyway. The consistency is what matters most!</p>
+                            </div>
+
+                            <!-- Entry 3 -->
+                            <div class="border-l-4 border-green-400 pl-4 py-3" data-mock="true">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="text-sm font-medium text-gray-700">January 21, 2024</span>
+                                    <span class="text-sm text-gray-500">Focus: 9/10</span>
+                                </div>
+                                <p class="text-gray-600 text-sm">Amazing session! I can feel my working memory improving. The tree visualization is so motivating.</p>
+                            </div>
+                        </div>
+
+                        <!-- Mood Trends -->
+                        <div class="mt-8 pt-6 border-t border-gray-200">
+                            <h4 class="font-medium text-navy mb-4">Weekly Mood Trends</h4>
+                            <div class="h-24 bg-gray-50 rounded-xl flex items-center justify-center">
+                                <svg width="200" height="60" viewBox="0 0 200 60">
+                                    <polyline fill="none" stroke="#00C2CB" stroke-width="2" points="10,45 30,35 50,40 70,25 90,30 110,20 130,25 150,15 170,20 190,10" />
+                                    <circle cx="10" cy="45" r="2" fill="#00C2CB" />
+                                    <circle cx="30" cy="35" r="2" fill="#00C2CB" />
+                                    <circle cx="50" cy="40" r="2" fill="#00C2CB" />
+                                    <circle cx="70" cy="25" r="2" fill="#00C2CB" />
+                                    <circle cx="90" cy="30" r="2" fill="#00C2CB" />
+                                    <circle cx="110" cy="20" r="2" fill="#00C2CB" />
+                                    <circle cx="130" cy="25" r="2" fill="#00C2CB" />
+                                    <circle cx="150" cy="15" r="2" fill="#00C2CB" />
+                                    <circle cx="170" cy="20" r="2" fill="#00C2CB" />
+                                    <circle cx="190" cy="10" r="2" fill="#00C2CB" />
+                                </svg>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">Your focus levels are trending upward! 📈</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- @END_COMPONENT: App Container -->
+
+    <script>
+        // Tab switching functionality
+        (() => {
+            const tabs = document.querySelectorAll('.tab-button');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Remove active state from all tabs
+                    tabs.forEach(t => {
+                        t.classList.remove('active', 'border-navy', 'text-navy');
+                        t.classList.add('border-transparent', 'text-gray-500');
+                    });
+                    
+                    // Add active state to clicked tab
+                    tab.classList.add('active', 'border-navy', 'text-navy');
+                    tab.classList.remove('border-transparent', 'text-gray-500');
+                    
+                    // Hide all content
+                    contents.forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    
+                    // Show selected content
+                    const targetTab = tab.dataset.tab;
+                    const targetContent = document.getElementById(`${targetTab}-tab`);
+                    if (targetContent) {
+                        targetContent.classList.remove('hidden');
+                    }
+                });
+            });
+
+            // Mood button interactions
+            const moodButtons = document.querySelectorAll('.mood-btn');
+            moodButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Remove active state from all mood buttons
+                    moodButtons.forEach(b => {
+                        b.classList.remove('border-cyan', 'text-cyan');
+                        b.classList.add('border-gray-200', 'text-gray-600');
+                    });
+                    
+                    // Add active state to clicked button
+                    btn.classList.add('border-cyan', 'text-cyan');
+                    btn.classList.remove('border-gray-200', 'text-gray-600');
+                });
+            });
+
+            // Focus range slider interaction
+            const focusRange = document.getElementById('focus-range');
+            if (focusRange) {
+                focusRange.addEventListener('input', (e) => {
+                    const value = e.target.value;
+                    // TODO: Update UI to reflect focus level
+                    console.log('Focus level:', value);
+                });
+            }
+
+            // Game start buttons
+            const gameButtons = document.querySelectorAll('[data-event*="start"]');
+            gameButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // TODO: Implement game loading/embedding logic
+                    console.log('Starting game:', btn.dataset.event);
+                });
+            });
+
+            // Form submission
+            const journalForm = document.querySelector('form[data-implementation*="Google Sheets"]');
+            if (journalForm) {
+                journalForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    // TODO: Implement form submission to Google Sheets
+                    console.log('Submitting journal entry');
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
