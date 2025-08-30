@@ -284,9 +284,9 @@ export class LocalStorageManager {
     if (!localStorage.getItem('stimuli_achievements')) {
       localStorage.setItem('stimuli_achievements', JSON.stringify(defaultAchievements));
     }
-    if (!localStorage.getItem('stimuli_store_items')) {
-      localStorage.setItem('stimuli_store_items', JSON.stringify(defaultStoreItems));
-    }
+    // Always update store items to include new tree seeds
+    localStorage.setItem('stimuli_store_items', JSON.stringify(defaultStoreItems));
+    
     if (!localStorage.getItem('stimuli_demo_user')) {
       this.createDemoUser();
     }

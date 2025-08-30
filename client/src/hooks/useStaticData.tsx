@@ -244,6 +244,8 @@ export function useStaticStore() {
   };
 
   const refreshStore = () => {
+    // Force refresh store items from localStorage
+    LocalStorageManager.initializeData(); // Ensure latest store items
     setStoreItems(LocalStorageManager.getStoreItems());
   };
 
