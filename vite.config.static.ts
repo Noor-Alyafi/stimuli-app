@@ -4,8 +4,8 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/stimuli-app/',   // 👈 must match your GitHub repo name
   plugins: [react()],
-  base: '/stimuli/', // Change this to match your GitHub repository name
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./client/src"),
