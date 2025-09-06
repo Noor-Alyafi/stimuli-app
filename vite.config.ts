@@ -4,7 +4,7 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
-  base: './',
+  base: './', // relative paths so both Vercel & GitHub Pages work
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './client/src'),
@@ -12,6 +12,6 @@ export default defineConfig({
       '@assets': path.resolve(__dirname, './attached_assets'),
     },
   },
-  build: { outDir: 'dist' },
+  build: { outDir: 'dist' },     // build to /dist at the project root
   server: { port: 3000, host: true },
 })
