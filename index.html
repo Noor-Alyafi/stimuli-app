@@ -5,31 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Stimuli - Sensory Training for Neurodivergent Minds</title>
     <meta name="description" content="A professional sensory training application designed to support neurodivergent users through an engaging, interactive tree growth metaphor." />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/manifest.json" />
+
+    <!-- use RELATIVE paths so they work everywhere -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#1a365d" />
-    
-    <!-- Open Graph tags for social sharing -->
-    <meta property="og:title" content="Stimuli - Sensory Training for Neurodivergent Minds" />
-    <meta property="og:description" content="Train your cognitive abilities through gamified brain training exercises with beautiful tree growth visualization." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://yourusername.github.io/stimuli/" />
-    <meta property="og:image" content="https://yourusername.github.io/stimuli/og-image.png" />
-    
-    <!-- Twitter Card tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Stimuli - Sensory Training for Neurodivergent Minds" />
-    <meta name="twitter:description" content="Train your cognitive abilities through gamified brain training exercises with beautiful tree growth visualization." />
-    <meta name="twitter:image" content="https://yourusername.github.io/stimuli/og-image.png" />
-    
-    <!-- Preload critical fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- (optional) social tags you had are fine to keep -->
   </head>
   <body>
     <div id="root"></div>
+    <!-- ✅ point to where your real entry file is -->
     <script type="module" src="/client/src/main.tsx"></script>
   </body>
 </html>
