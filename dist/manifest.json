@@ -1,0 +1,21 @@
+{
+  "name": "Stimuli - Sensory Training",
+  "short_name": "Stimuli",
+  "description": "A professional sensory training application designed to support neurodivergent users",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7fafc",
+  "theme_color": "#1a365d",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
