@@ -2,11 +2,10 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
-// https://vitejs.dev/config/
 export default defineConfig({
+  root: 'client',            // index.html is in /client
   plugins: [react()],
-  // ✅ Use relative paths so the same build works on GitHub Pages *and* Vercel
-  base: './',
+  base: './',                // relative paths → works everywhere
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './client/src'),
@@ -15,12 +14,8 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'dist',
-    // (optional) generate sourcemaps if you want easier debugging:
-    // sourcemap: true,
+    outDir: 'dist',          // final build goes to client/dist
+    // sourcemap: true,      // (optional) turn on if you need to debug
   },
-  server: {
-    port: 3000,
-    host: true,
-  },
+  server: { port: 3000, host: true },
 })
